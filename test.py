@@ -16,7 +16,6 @@ from __future__ import unicode_literals
 
 import os
 import sys
-
 from argparse import ArgumentParser
 
 from flask import Flask, request, abort
@@ -63,15 +62,6 @@ def callback():
 
     return 'OK'
 
-def rand(min=1,max=5):
-    a = random.randrange(min, max+1)
-    b = random.randrange(min, max+1)
-    c = random.randrange(min, max+1)
-    d = random.randrange(min, max+1)
-    e = random.randrange(min, max+1)
-
-    rand = random.choice([a,b,c,d,e])
-    return rand
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -80,25 +70,14 @@ def message_text(event):
             event.reply_token,
             TextSendMessage(text=event.message.text)
         )
-    elif "Rand" in event.message.text:
-        text = event.message.text.split(" ")
-        reply = rand(text[1],text[2])
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=reply)
-        )
     else :
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage("...")
         )
 
-if __name__ == "__main__":
-    arg_parser = ArgumentParser(
-        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
-    )
-    arg_parser.add_argument('-p', '--port', default=8000, help='port')
-    arg_parser.add_argument('-d', '--debug', default=False, help='debug')
-    options = arg_parser.parse_args()
 
-    app.run(debug=options.debug, port=options.port)
+
+
+
+
