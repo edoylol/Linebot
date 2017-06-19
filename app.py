@@ -32,7 +32,6 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-# get channel_secret and channel_access_token from your environment variable
 # Megumi chat bot
 """  
 channel_secret = '9d1e7500a205ddaec1c6f2ae0d190e6e'
@@ -88,13 +87,16 @@ def message_text(event):
         )
     elif "push" in event.message.text.lower():
         try:
-            line_bot_api.push_message(event.source.group_id, TextSendMessage(text='Hello World!'))
+            address = event.source.group_id
+            if address is None :
+                address = event.source.user_id
+            line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
         except LineBotApiError as e:
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
         #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
-        line_bot_api.reply_message(event.reply_token,TextSendMessage("..."))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
     else :
         line_bot_api.reply_message(event.reply_token, TextSendMessage("..."))
 
