@@ -86,7 +86,7 @@ def message_text(event):
 
     if any(word in text.lower() for word in megumi):
 
-        if "echo" in text.lower() : echo()
+        if "echo" in text.lower() : Function.echo()
 
 
         elif "rand" in text.lower():
@@ -110,17 +110,19 @@ def message_text(event):
 
 """=====================================  List of Usable Function  =============================================="""
 
-def rand(min=1,max=5):
-    a = random.randrange(min, max+1)
-    b = random.randrange(min, max+1)
-    c = random.randrange(min, max+1)
-    d = random.randrange(min, max+1)
-    e = random.randrange(min, max+1)
+class Function :
+    def rand(min=1,max=5):
+        a = random.randrange(min, max+1)
+        b = random.randrange(min, max+1)
+        c = random.randrange(min, max+1)
+        d = random.randrange(min, max+1)
+        e = random.randrange(min, max+1)
 
-    rand = random.choice([a,b,c,d,e])
-    return rand
-def echo():
-    line_bot_api.reply_message(token, TextSendMessage(text=text))
+        rand = random.choice([a,b,c,d,e])
+        return rand
+
+    def echo():
+        line_bot_api.reply_message(token, TextSendMessage(text=text))
 
 """=============================================================================================================="""
 
