@@ -92,7 +92,7 @@ def message_text(event):
         try:
             line_bot_api.push_message(event.source.user_id, TextSendMessage(text='Hello World!'))
         except :
-            pass
+            print("push error")
         sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
         line_bot_api.reply_message(event.reply_token,sticker_message)
 
