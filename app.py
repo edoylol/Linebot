@@ -40,14 +40,12 @@ channel_access_token = 'f/jBF6+aFLuvzEmI0NbPNWjfrsK3Kjwxzzl1XUeLun+3uRs6AbDEQGph
 
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
-
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
 if channel_access_token is None:
     print('Specify LINE_CHANNEL_ACCESS_TOKEN as environment variable.')
     sys.exit(1)
-
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
@@ -69,43 +67,43 @@ def callback():
 
     return 'OK'
 
-
+def get_receiver_addr():
+    global address
+    try:
+        address = event.source.group_id
+    except:
+        address = event.source.user_id
+    return address
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     text = event.message.text
+    token = event.reply_token
+    get_receiver_addr()
 
     if "echo" in text.lower() :
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=text)
-        )
+        line_bot_api.reply_message(token,TextSendMessage(text=text))
+
     elif "rand" in text.lower():
         text = text.split(" ")
         reply = rand(int(text[1]),int(text[2]))
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=reply)
-        )
+        line_bot_api.reply_message(token,TextSendMessage(text=reply))
+
     elif "push " in text.lower():
         try:
-            try :
-                address = event.source.group_id
-            except :
-                address = event.source.user_id
-
-            line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
-
+             line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
         except LineBotApiError as e:
             print("push error\n")
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
-        #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
-        line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
+
+        line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
 
     else :
-        line_bot_api.reply_message(event.reply_token, TextSendMessage("..."))
+        line_bot_api.reply_message(token, TextSendMessage("..."))
+
+"""=====================================  List of Usable Function  =============================================="""
 
 def rand(min=1,max=5):
     a = random.randrange(min, max+1)
@@ -117,7 +115,7 @@ def rand(min=1,max=5):
     rand = random.choice([a,b,c,d,e])
     return rand
 
-
+"""=============================================================================================================="""
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
