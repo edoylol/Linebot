@@ -103,7 +103,7 @@ def message_text(event):
         #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
         line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
 
-    elif "push test" in text.lower():
+    elif "pushtest" in text.lower():
         try:
             address = event.source.user_id
             print (address)
