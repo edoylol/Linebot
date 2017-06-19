@@ -88,8 +88,8 @@ def message_text(event):
     if any(word in text for word in Lines.megumi()):
 
         if "say " in text : Function.echo()
-        elif ("pick " and "num") in text : Function.rand_int()
-        elif ("choose " or "which one") in text : Function.choose_one()
+        elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
+        elif any(word in text for word in ["choose ","which one"])  : Function.choose_one()
         elif "command2 " in text : Function.notyetcreated()
         elif "command3 " in text : Function.notyetcreated()
         elif "command4 " in text : Function.notyetcreated()
