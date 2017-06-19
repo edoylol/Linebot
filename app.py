@@ -93,6 +93,9 @@ def message_text(event):
             event.reply_token,
             TextSendMessage("...")
         )
+        sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
+        line_bot_api.reply_message(event.reply_token,TextSendMessage(sticker_message))
+
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
