@@ -89,18 +89,14 @@ def message_text(event):
 
         if "say " in text : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
-        elif any(word in text for word in ["choose ","which one"])  : Function.choose_one()
+        elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
         elif "command2 " in text : Function.notyetcreated()
         elif "command3 " in text : Function.notyetcreated()
         elif "command4 " in text : Function.notyetcreated()
         elif "command5 " in text : Function.notyetcreated()
 
-        elif "push " in text:
-
-            line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
-
-        else :
-            line_bot_api.reply_message(token, TextSendMessage(Lines.false()))
+        elif "push " in text                                        : Function.push()
+        else                                                        : Function.false()
 
 """=====================================  List of Usable Function  =============================================="""
 
@@ -176,10 +172,28 @@ class Function :
         result = random.choice(found_options)
         reply = Lines.choose_one() % str(result)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+    def choose_one_simple():
+        splitted_text = text.split(" ")
+        found_options = []
+        for word in splitted_text:
+            if '#' in word:
+                try:
+                    word = OtherUtil.remove_symbols(word)
+                    found_options.append(word)
+                except:
+                    pass
+        result = random.choice(found_options)
+        reply = Lines.choose_one() % str(result)
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-
+    def push():
+        reply = "push message success ~ "
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def notyetcreated():
         reply = Lines.notyetcreated()
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+    def false():
+        reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 class Lines : # class to store respond lines
@@ -234,6 +248,14 @@ class Lines : # class to store respond lines
                  " .-. ? ",
                  " what ?? ._. "]
         return random.choice(lines)
+
+class OtherUtil :
+    def remove_symbols(word):
+        symbols = "1234567890!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
+        for i in range(0, len(symbols)):
+            word = word.replace(symbols[i], "")  # strong syntax to remove symbols
+        if len(word) > 0:
+            return word
 
 """=============================================================================================================="""
 
