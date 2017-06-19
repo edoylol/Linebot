@@ -88,7 +88,7 @@ def message_text(event):
         )
     elif "push" in event.message.text.lower():
         try:
-            line_bot_api.push_message(event.source.user_id, TextSendMessage(text='Hello World!'))
+            line_bot_api.push_message("U77035fb1a3a4a460be5631c408526d0b", TextSendMessage(text='Hello World!'))
         except LineBotApiError as e:
             print(e.status_code)
             print(e.error.message)
