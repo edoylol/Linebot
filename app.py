@@ -89,30 +89,15 @@ def message_text(event):
         )
     elif "push " in text.lower():
         try:
-            address = event.source.group_id
-            print (address)
-
-            if address is None :
+            try :
+                address = event.source.group_id
+            except :
                 address = event.source.user_id
-                print(address)
-            line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
-        except LineBotApiError as e:
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-        #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
-        line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
 
-    elif "pushtest" in text.lower():
-        try:
-            address = event.source.user_id
-            print (address)
-
-            if address is None :
-                address = event.source.user_id
-                print(address)
             line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
+
         except LineBotApiError as e:
+            print("push error\n")
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
