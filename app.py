@@ -74,6 +74,7 @@ def message_text(event):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage("...")
+        )
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
