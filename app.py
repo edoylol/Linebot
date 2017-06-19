@@ -89,7 +89,7 @@ def message_text(event):
 
         if "say " in text : Function.echo()
         elif ("pick " and "num") in text : Function.rand_int()
-        elif "command1 " in text : Function.notyetcreated()
+        elif ("choose " or "which one") in text : Function.choose_one()
         elif "command2 " in text : Function.notyetcreated()
         elif "command3 " in text : Function.notyetcreated()
         elif "command4 " in text : Function.notyetcreated()
@@ -131,6 +131,51 @@ class Function :
         start_index = text.find("say ")+4
         reply = Lines.echo() % str(original_text[start_index:])
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+    def choose_one():
+        splitted_text = text.replace(",", " , ").split(" ")
+        print(splitted_text)
+        found_options = []
+        cursor = 0
+        for word in splitted_text:
+            # print(word)
+            if word == "or":
+                # get the previous and after 'or' :
+                try:
+                    if splitted_text[cursor - 1] != "" and len(splitted_text[cursor - 1]) >= 2:
+                        found_options.append(splitted_text[cursor - 1])
+                    if splitted_text[cursor + 1] != "" and len(splitted_text[cursor + 1]) >= 2:
+                        found_options.append(splitted_text[cursor + 1])
+                except:
+                    pass
+
+                # check for natural language just in case people use comma, TBH not really important ...
+
+                coloniterate = cursor - 2
+                for i in range(0, 4):  # check back 3 times
+                    try:
+                        if splitted_text[coloniterate - i] == ",":
+                            for j in range(1, 4):
+                                try:
+                                    if coloniterate - i - j >= 0:
+                                        if splitted_text[coloniterate - i - j] != "" and len(
+                                                splitted_text[coloniterate - i - j]) >= 2:
+                                            found_options.append(splitted_text[coloniterate - i - j])
+                                            break
+                                except:
+                                    pass
+                    except:
+                        pass
+
+                # natural language check end here for each loop ~
+
+            cursor = cursor + 1
+
+        avoid_list = ['megumi', 'kato', 'meg', 'choose', 'or', 'and', ',', ' ']
+        found_options = list(set(found_options) - set(avoid_list))
+
+        result = random.choice(found_options)
+        reply = Lines.choose_one() % str(result)
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
     def notyetcreated():
@@ -158,6 +203,17 @@ class Lines : # class to store respond lines
                  "\"%s\",, is that good ?",
                  "I don't understand, but \"%s\""]
         return random.choice(lines)
+    def choose_one():
+        lines = ["I think I will choose %s",
+                 "How about %s ?",
+                 "%s I guess (?)",
+                 "Maybe %s (?)",
+                 "%s (?)",
+                 "I think %s (?)",
+                 "%s then..",
+                 "I prefer %s I think.."]
+        return random.choice(lines)
+
     def notyetcreated():
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
@@ -171,12 +227,12 @@ class Lines : # class to store respond lines
     def false():
         lines = ["Gomen,, what was that ?",
                  "Are you calling me ?",
-                 "Gomen,, I can't do that",
+                 "Hmm ? ",
                  "I wonder what is that",
                  "Maybe you should try to call 'megumi help' (?)",
                  "hmmm... I wonder what is that",
-                 "He hasn't taught me about that yet",
-                 "I don't understand.., but I wish I could help"]
+                 " .-. ? ",
+                 " what ?? ._. "]
         return random.choice(lines)
 
 """=============================================================================================================="""
