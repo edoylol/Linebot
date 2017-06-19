@@ -67,7 +67,7 @@ def callback():
 
     return 'OK'
 
-def get_receiver_addr():
+def get_receiver_addr(event):
     global address
     try:
         address = event.source.group_id
@@ -79,7 +79,7 @@ def get_receiver_addr():
 def message_text(event):
     text = event.message.text
     token = event.reply_token
-    get_receiver_addr()
+    get_receiver_addr(event)
 
     if "echo" in text.lower() :
         line_bot_api.reply_message(token,TextSendMessage(text=text))
