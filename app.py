@@ -49,7 +49,7 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-megumi = ['megumi', 'kato']
+megumi = ['megumi', 'kato', 'meg']
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -80,7 +80,7 @@ def get_receiver_addr(event):
 def message_text(event):
     global token,original_text,text
     original_text = event.message.text
-    text = original_text.lower()
+    lowered_text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
 
@@ -88,10 +88,8 @@ def message_text(event):
     if any(word in text for word in megumi):
 
         if "say " in text : Function.echo()
-        elif "rand " in text :
-            text = text.split(" ")
-            reply = rand(int(text[1]),int(text[2]))
-            line_bot_api.reply_message(token,TextSendMessage(text=reply))
+        elif ("pick " and "numbers ") in text : Function.rand_int()
+
 
         elif "push " in text:
             try:
@@ -110,20 +108,40 @@ def message_text(event):
 """=====================================  List of Usable Function  =============================================="""
 
 class Function :
-    def rand(min=1,max=5):
-        a = random.randrange(min, max+1)
-        b = random.randrange(min, max+1)
-        c = random.randrange(min, max+1)
-        d = random.randrange(min, max+1)
-        e = random.randrange(min, max+1)
+    def rand_int():
 
-        rand = random.choice([a,b,c,d,e])
-        return rand
+        ans_lines = ["I think I will pick %s",
+                 "How about %s ?",
+                 "%s I guess ?",
+                 "Let's try %s",
+                 "%s ?",
+                 "I think %s ?"]
+
+        def random_number(min=1,max=5):
+            a = random.randrange(min, max+1)
+            b = random.randrange(min, max+1)
+            c = random.randrange(min, max+1)
+            d = random.randrange(min, max+1)
+            e = random.randrange(min, max+1)
+
+            return random.choice([a,b,c,d,e])
+
+        text = lowered_text.split(" ")
+        found_num = []
+        for word in text:
+            try:
+                found_num.append(int(word))
+            except:
+                continue
+        result = random_number(found_num[0],found_num[1])
+        reply = random.choice(ans_lines) % str(result)
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
 
     def echo():
-        start_index = original_text.lower().find("say ")+4
-        text = original_text[start_index:]
-        line_bot_api.reply_message(token, TextSendMessage(text=text))
+        start_index = lowered_text.find("say ")+4
+        reply = original_text[start_index:]
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 """=============================================================================================================="""
 
