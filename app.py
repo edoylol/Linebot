@@ -104,13 +104,6 @@ def message_text(event):
 class Function :
     def rand_int():
 
-        ans_lines = ["I think I will pick %s",
-                 "How about %s ?",
-                 "%s I guess ?",
-                 "Let's try %s",
-                 "%s ?",
-                 "I think %s ?"]
-
         def random_number(min=1,max=5):
             a = random.randrange(min, max+1)
             b = random.randrange(min, max+1)
@@ -127,15 +120,35 @@ class Function :
                 found_num.append(int(word))
             except:
                 continue
+
         result = random_number(found_num[0],found_num[1])
-        reply = random.choice(ans_lines) % str(result)
+        reply = Lines.rand_int() % str(result)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
     def echo():
         start_index = text.find("say ")+4
-        reply = original_text[start_index:]
+        reply = Lines.echo() % str(original_text[start_index:])
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+class Lines : # class to store respond lines
+    def rand_int():
+        lines = ["I think I will pick %s",
+                 "How about %s ?",
+                 "%s I guess ?",
+                 "Let's try %s",
+                 "%s ?",
+                 "I think %s ?"]
+        return random.choice(lines)
+
+    def echo():
+        lines = ["%s",
+                 "%s :v",
+                 "wutt... \n\n but whatever, %s",
+                 "no xD ! #pfft \n\n\n JK JK okay... \n %s xD",
+                 "... \n\n\n\n\n %s I guess (?)",
+                 "hee... %s"]
+        return random.choice(lines)
 
 """=============================================================================================================="""
 
