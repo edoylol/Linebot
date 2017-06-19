@@ -119,13 +119,20 @@ class Function :
                 found_num.append(int(word))
             except:
                 continue
+        try :
+            result = random_number(found_num[0],found_num[1])
+            reply = Lines.rand_int() % str(result)
+        except :
+            reply = "Seems something wrong, try again maybe ?"
 
-        result = random_number(found_num[0],found_num[1])
-        reply = Lines.rand_int() % str(result)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def echo():
-        start_index = text.find("say ")+4
-        reply = Lines.echo() % str(original_text[start_index:])
+        try :
+            start_index = text.find("say ")+4
+            reply = Lines.echo() % str(original_text[start_index:])
+        except :
+            reply = "What should I say?"
+
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def choose_one():
         splitted_text = text.replace(",", " , ").split(" ")
@@ -168,9 +175,11 @@ class Function :
 
         avoid_list = ['megumi', 'kato', 'meg', 'choose', 'or', 'and', ',', ' ']
         found_options = list(set(found_options) - set(avoid_list))
-
-        result = random.choice(found_options)
-        reply = Lines.choose_one() % str(result)
+        try :
+            result = random.choice(found_options)
+            reply = Lines.choose_one() % str(result)
+        except :
+            reply = " Oops, something wrong... I don't see anything to pick.."
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def choose_one_simple():
         splitted_text = text.split(" ")
@@ -182,8 +191,12 @@ class Function :
                     found_options.append(word)
                 except:
                     pass
-        result = random.choice(found_options)
-        reply = Lines.choose_one() % str(result)
+        try :
+            result = random.choice(found_options)
+            reply = Lines.choose_one() % str(result)
+        except :
+            reply = "Try to add '#' before the item, like #this or #that"
+
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def push():
@@ -251,7 +264,7 @@ class Lines : # class to store respond lines
 
 class OtherUtil :
     def remove_symbols(word):
-        symbols = "1234567890!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
+        symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
         if len(word) > 0:
