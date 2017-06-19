@@ -49,7 +49,7 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-megumi = ['megumi', 'kato', 'meg', 'megumi,','kato,','meg,']
+
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -85,19 +85,22 @@ def message_text(event):
     get_receiver_addr(event)
 
 
-    if any(word in text for word in megumi):
+    if any(word in text for word in Lines.megumi()):
 
         if "say " in text : Function.echo()
         elif ("pick " and "num") in text : Function.rand_int()
-
+        elif "command1 " in text : Function.notyetcreated()
+        elif "command2 " in text : Function.notyetcreated()
+        elif "command3 " in text : Function.notyetcreated()
+        elif "command4 " in text : Function.notyetcreated()
+        elif "command5 " in text : Function.notyetcreated()
 
         elif "push " in text:
-
 
             line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
 
         else :
-            line_bot_api.reply_message(token, TextSendMessage("Gomen,, what was that ?"))
+            line_bot_api.reply_message(token, TextSendMessage(Lines.false()))
 
 """=====================================  List of Usable Function  =============================================="""
 
@@ -124,14 +127,19 @@ class Function :
         result = random_number(found_num[0],found_num[1])
         reply = Lines.rand_int() % str(result)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-
     def echo():
         start_index = text.find("say ")+4
         reply = Lines.echo() % str(original_text[start_index:])
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+
+    def notyetcreated():
+        reply = Lines.notyetcreated()
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
 class Lines : # class to store respond lines
+    def megumi():
+        return ['megumi', 'kato', 'meg', 'megumi,','kato,','meg,']
     def rand_int():
         lines = ["I think I will pick %s",
                  "How about %s ?",
@@ -140,14 +148,35 @@ class Lines : # class to store respond lines
                  "%s ?",
                  "I think %s ?"]
         return random.choice(lines)
-
     def echo():
         lines = ["%s",
                  "%s :v",
-                 "wutt... \n\n but whatever, %s",
-                 "no xD ! #pfft \n\n\n JK JK okay... \n %s xD",
-                 "... \n\n\n\n\n %s I guess (?)",
-                 "hee... %s"]
+                 "wutt... \n\nbut whatever,,, \"%s\" ahahah",
+                 "no xD ! #pfft \n\n\nJK JK okay... \n\"%s\" xD",
+                 "... \n\n\n\n\n\"%s\",, I guess (?)",
+                 "hee... %s",
+                 "\"%s\",, is that good ?",
+                 "I don't understand, but \"%s\""]
+        return random.choice(lines)
+    def notyetcreated():
+        lines = ["Gomen,, this function is not ready..",
+                 "Gomen,, please try again later :)",
+                 "Gomen,, I can't do that yet :\">",
+                 "Gomen,, this function is under maintenance :< ",
+                 "Gomen,, please try ask me others",
+                 "Gomen,, I'm still learning this..",
+                 "Gomen,, He hasn't taught me about this yet",
+                 "Gomen,, I don't understand this yet.., but I wish I could help :)"]
+        return random.choice(lines)
+    def false():
+        lines = ["Gomen,, what was that ?",
+                 "Are you calling me ?",
+                 "Gomen,, I can't do that",
+                 "I wonder what is that",
+                 "Maybe you should try to call 'megumi help' (?)",
+                 "hmmm... I wonder what is that",
+                 "He hasn't taught me about that yet",
+                 "I don't understand.., but I wish I could help"]
         return random.choice(lines)
 
 """=============================================================================================================="""
