@@ -49,7 +49,7 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-megumi = ['megumi', 'kato', 'meg']
+megumi = ['megumi', 'kato', 'meg', 'megumi,','kato,','meg,']
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -85,20 +85,14 @@ def message_text(event):
     get_receiver_addr(event)
 
 
-    if any(word in text for word in megumi):
+    if any(word in lowered_text for word in megumi):
 
         if "say " in text : Function.echo()
         elif ("pick " and "numbers ") in text : Function.rand_int()
 
 
         elif "push " in text:
-            try:
-                 line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
-            except LineBotApiError as e:
-                print("push error\n")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+
 
             line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
 
