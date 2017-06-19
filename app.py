@@ -19,7 +19,6 @@ import sys
 import random
 
 from argparse import ArgumentParser
-
 from flask import Flask, request, abort
 from linebot import (
     LineBotApi, WebhookHandler
@@ -34,8 +33,15 @@ from linebot.models import (
 app = Flask(__name__)
 
 # get channel_secret and channel_access_token from your environment variable
+# Megumi chat bot
+"""  
 channel_secret = '9d1e7500a205ddaec1c6f2ae0d190e6e'
 channel_access_token = 'f/jBF6+aFLuvzEmI0NbPNWjfrsK3Kjwxzzl1XUeLun+3uRs6AbDEQGphezyssudufYiyiHBoLQWWjEBqTtV00P0jLOJuVlrEQly/Xjo7ZQXY0YMEoKm869aWpCnu9Jhog4zt4nb4DYB4zVMWApdjCQdB04t89/1O/w1cDnyilFU='
+"""
+
+channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
+channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
+
 if channel_secret is None:
     print('Specify LINE_CHANNEL_SECRET as environment variable.')
     sys.exit(1)
@@ -64,15 +70,7 @@ def callback():
 
     return 'OK'
 
-def rand(min=1,max=5):
-    a = random.randrange(min, max+1)
-    b = random.randrange(min, max+1)
-    c = random.randrange(min, max+1)
-    d = random.randrange(min, max+1)
-    e = random.randrange(min, max+1)
 
-    rand = random.choice([a,b,c,d,e])
-    return rand
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -88,7 +86,7 @@ def message_text(event):
             event.reply_token,
             TextSendMessage(text=reply)
         )
-    else :
+    elif "push" in event.message.text.lower():
         try:
             line_bot_api.push_message(event.source.user_id, TextSendMessage(text='Hello World!'))
         except LineBotApiError as e:
@@ -96,7 +94,20 @@ def message_text(event):
             print(e.error.message)
             print(e.error.details)
         #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
-        line_bot_api.reply_message(event.reply_token,TextSendMessage("asdf \n sdlfkj \n slkdfj"))
+        line_bot_api.reply_message(event.reply_token,TextSendMessage("..."))
+    else :
+        line_bot_api.reply_message(event.reply_token, TextSendMessage("..."))
+
+def rand(min=1,max=5):
+    a = random.randrange(min, max+1)
+    b = random.randrange(min, max+1)
+    c = random.randrange(min, max+1)
+    d = random.randrange(min, max+1)
+    e = random.randrange(min, max+1)
+
+    rand = random.choice([a,b,c,d,e])
+    return rand
+
 
 
 if __name__ == "__main__":
