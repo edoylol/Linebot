@@ -73,21 +73,25 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    if "echo" in event.message.text.lower() :
+    text = event.message.text
+
+    if "echo" in text.lower() :
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=event.message.text)
+            TextSendMessage(text=text)
         )
-    elif "rand" in event.message.text.lower():
-        text = event.message.text.split(" ")
+    elif "rand" in text.lower():
+        text = text.split(" ")
         reply = rand(int(text[1]),int(text[2]))
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=reply)
         )
-    elif "push" in event.message.text.lower():
+    elif "push" in text.lower():
         try:
             address = event.source.group_id
+            print (address)
+            print (event.source.user_id)
             if address is None :
                 address = event.source.user_id
             line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
