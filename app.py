@@ -78,6 +78,7 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
+    global token,text
     text = event.message.text
     token = event.reply_token
     get_receiver_addr(event)
@@ -85,8 +86,8 @@ def message_text(event):
 
     if any(word in text.lower() for word in megumi):
 
-        if "echo" in text.lower() :
-            line_bot_api.reply_message(token,TextSendMessage(text=text))
+        if "echo" in text.lower() : echo()
+
 
         elif "rand" in text.lower():
             text = text.split(" ")
@@ -118,6 +119,8 @@ def rand(min=1,max=5):
 
     rand = random.choice([a,b,c,d,e])
     return rand
+def echo():
+    line_bot_api.reply_message(token, TextSendMessage(text=text))
 
 """=============================================================================================================="""
 
