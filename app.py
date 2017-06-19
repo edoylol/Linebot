@@ -90,8 +90,8 @@ def message_text(event):
         )
     else :
         try:
-            line_bot_api.push_message(event.source.userID, TextSendMessage(text='Hello World!'))
-        except LineBotApiError as e:
+            line_bot_api.push_message(event.source.user_id, TextSendMessage(text='Hello World!'))
+        except :
             pass
         sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
         line_bot_api.reply_message(event.reply_token,sticker_message)
