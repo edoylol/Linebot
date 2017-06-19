@@ -87,13 +87,14 @@ def message_text(event):
             event.reply_token,
             TextSendMessage(text=reply)
         )
-    elif "push" in text.lower():
+    elif "push " in text.lower():
         try:
             address = event.source.group_id
             print (address)
-            print (event.source.user_id)
+
             if address is None :
                 address = event.source.user_id
+                print(address)
             line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
         except LineBotApiError as e:
             print(e.status_code)
@@ -101,6 +102,23 @@ def message_text(event):
             print(e.error.details)
         #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
         line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
+
+    elif "push test" in text.lower():
+        try:
+            address = event.source.user_id
+            print (address)
+
+            if address is None :
+                address = event.source.user_id
+                print(address)
+            line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
+        except LineBotApiError as e:
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+        #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
+        line_bot_api.reply_message(event.reply_token,TextSendMessage("push success ~ "))
+
     else :
         line_bot_api.reply_message(event.reply_token, TextSendMessage("..."))
 
