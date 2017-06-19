@@ -16,6 +16,7 @@ from __future__ import unicode_literals
 
 import os
 import sys
+import random
 
 from argparse import ArgumentParser
 
@@ -75,14 +76,14 @@ def rand(min=1,max=5):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    if ("echo" or "Echo") in event.message.text :
+    if "echo" in event.message.text.lower() :
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=event.message.text)
         )
-    elif "Rand" in event.message.text:
+    elif "rand" in event.message.text.lower():
         text = event.message.text.split(" ")
-        reply = rand(text[1],text[2])
+        reply = rand(int(text[1]),int(text[2]))
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=reply)
