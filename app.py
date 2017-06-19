@@ -88,7 +88,7 @@ def message_text(event):
     if any(word in text for word in megumi):
 
         if "say " in text : Function.echo()
-        elif ("pick " and "numbers ") in text : Function.rand_int()
+        elif ("pick " and "num") in text : Function.rand_int()
 
 
         elif "push " in text:
@@ -120,9 +120,9 @@ class Function :
 
             return random.choice([a,b,c,d,e])
 
-        text = text.split(" ")
+        splitted_text = text.split(" ")
         found_num = []
-        for word in text:
+        for word in splitted_text:
             try:
                 found_num.append(int(word))
             except:
