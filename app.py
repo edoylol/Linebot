@@ -80,12 +80,12 @@ def get_receiver_addr(event):
 def message_text(event):
     global token,original_text,text
     original_text = event.message.text
-    lowered_text = original_text.lower()
+    text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
 
 
-    if any(word in lowered_text for word in megumi):
+    if any(word in text for word in megumi):
 
         if "say " in text : Function.echo()
         elif ("pick " and "numbers ") in text : Function.rand_int()
@@ -120,7 +120,7 @@ class Function :
 
             return random.choice([a,b,c,d,e])
 
-        text = lowered_text.split(" ")
+        text = text.split(" ")
         found_num = []
         for word in text:
             try:
@@ -133,7 +133,7 @@ class Function :
 
 
     def echo():
-        start_index = lowered_text.find("say ")+4
+        start_index = text.find("say ")+4
         reply = original_text[start_index:]
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
