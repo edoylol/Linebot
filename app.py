@@ -25,7 +25,7 @@ from linebot import (
     LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
-    InvalidSignatureError
+    InvalidSignatureError,LineBotApiError,
 )
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,StickerSendMessage
@@ -91,8 +91,10 @@ def message_text(event):
     else :
         try:
             line_bot_api.push_message(event.source.user_id, TextSendMessage(text='Hello World!'))
-        except :
-            print("push error")
+        except LineBotApiError as e:
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
         sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
         line_bot_api.reply_message(event.reply_token,sticker_message)
 
