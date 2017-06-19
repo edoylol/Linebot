@@ -104,7 +104,11 @@ class Function :
     def rand_int():
 
         def random_number(min=1,max=5):
-            if min > max : OtherUtil.swap(min,max)
+            # just in case
+            if min > max :
+                temp = min
+                min = max
+                max = temp
 
             a = random.randrange(min, max+1)
             b = random.randrange(min, max+1)
@@ -271,10 +275,7 @@ class OtherUtil :
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
         if len(word) > 0:
             return word
-    def swap(a,b):
-        temp = a
-        a = b
-        b = temp
+
 
 """=============================================================================================================="""
 
