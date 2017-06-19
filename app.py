@@ -95,8 +95,8 @@ def message_text(event):
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
-        sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
-        line_bot_api.reply_message(event.reply_token,sticker_message)
+        #sticker_message = StickerSendMessage(package_id='2',sticker_id='151')
+        line_bot_api.reply_message(event.reply_token,"asdf \n sdlfkj \n slkdfj")
 
 
 if __name__ == "__main__":
