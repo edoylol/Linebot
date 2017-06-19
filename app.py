@@ -65,11 +65,15 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text+"123")
-    )
-
+    if "echo" in event.message.text :
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=event.message.text)
+        )
+    else :
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage("...")
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
