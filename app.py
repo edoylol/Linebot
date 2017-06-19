@@ -78,23 +78,22 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token,text
-    text = event.message.text
+    global token,original_text,text
+    original_text = event.message.text
+    text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
 
 
-    if any(word in text.lower() for word in megumi):
+    if any(word in text for word in megumi):
 
-        if "echo" in text.lower() : Function.echo()
-
-
-        elif "rand" in text.lower():
+        if "say " in text : Function.echo()
+        elif "rand " in text :
             text = text.split(" ")
             reply = rand(int(text[1]),int(text[2]))
             line_bot_api.reply_message(token,TextSendMessage(text=reply))
 
-        elif "push " in text.lower():
+        elif "push " in text:
             try:
                  line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
             except LineBotApiError as e:
@@ -106,7 +105,7 @@ def message_text(event):
             line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
 
         else :
-            line_bot_api.reply_message(token, TextSendMessage("..."))
+            line_bot_api.reply_message(token, TextSendMessage("Gomen,, what was that ?"))
 
 """=====================================  List of Usable Function  =============================================="""
 
@@ -122,6 +121,8 @@ class Function :
         return rand
 
     def echo():
+        start_index = original_text.lower().find("say ")+4
+        text = original_text[start_index:]
         line_bot_api.reply_message(token, TextSendMessage(text=text))
 
 """=============================================================================================================="""
