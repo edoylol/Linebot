@@ -49,6 +49,7 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
+megumi = ['megumi', 'kato']
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -81,27 +82,30 @@ def message_text(event):
     token = event.reply_token
     get_receiver_addr(event)
 
-    if "echo" in text.lower() :
-        line_bot_api.reply_message(token,TextSendMessage(text=text))
 
-    elif "rand" in text.lower():
-        text = text.split(" ")
-        reply = rand(int(text[1]),int(text[2]))
-        line_bot_api.reply_message(token,TextSendMessage(text=reply))
+    if any(word in text.lower() for word in megumi):
 
-    elif "push " in text.lower():
-        try:
-             line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
-        except LineBotApiError as e:
-            print("push error\n")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        if "echo" in text.lower() :
+            line_bot_api.reply_message(token,TextSendMessage(text=text))
 
-        line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
+        elif "rand" in text.lower():
+            text = text.split(" ")
+            reply = rand(int(text[1]),int(text[2]))
+            line_bot_api.reply_message(token,TextSendMessage(text=reply))
 
-    else :
-        line_bot_api.reply_message(token, TextSendMessage("..."))
+        elif "push " in text.lower():
+            try:
+                 line_bot_api.push_message(address, TextSendMessage(text='Konichiwa ^^ !!'))
+            except LineBotApiError as e:
+                print("push error\n")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
+
+            line_bot_api.reply_message(token,TextSendMessage("push success ~ "))
+
+        else :
+            line_bot_api.reply_message(token, TextSendMessage("..."))
 
 """=====================================  List of Usable Function  =============================================="""
 
