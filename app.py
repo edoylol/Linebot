@@ -29,7 +29,7 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent
 )
 
 app = Flask(__name__)
@@ -97,8 +97,8 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave()
-        elif all(word in text for word in ["report","bug"])         : Function.report_bug()
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event.source.group_id)
+        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event.source.user_id)
         else                                                        : Function.false()
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -272,11 +272,11 @@ class Function:
 
 
 
-    def report_bug():
+    def report_bug(user_id):
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
             try :
-                sender = line_bot_api.get_profile(event.source.user_id).display_name
+                sender = line_bot_api.get_profile(user_id).display_name
             except :
                 sender = "Anonymous"
             report = Lines.report_note() % (original_text,sender)
@@ -287,11 +287,11 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def leave():
+    def leave(group_id):
         try :
             reply = Lines.leave()
             line_bot_api.push_message(address, TextSendMessage(text=reply))
-            line_bot_api.leave_group(event.source.group_id)
+            line_bot_api.leave_group(group_id)
 
         except LineBotApiError as e:
             print(e.status_code)
@@ -309,11 +309,11 @@ class Function:
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-'''
+
 @handler.add(LeaveEvent)
 def handle_leave():
     app.logger.info("Got leave event")
-'''
+
 
 class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
