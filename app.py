@@ -74,7 +74,10 @@ def get_receiver_addr(event):
     try:
         address = event.source.group_id
     except:
-        address = event.source.user_id
+        try:
+            address = event.source.room_id
+        except:
+            address = event.source.user_id
     return address
 
 
@@ -295,8 +298,8 @@ class Function:
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
 
-            #reply = Lines.leave("leave")
-            #line_bot_api.push_message(group_id, TextSendMessage(text=reply))
+            reply = Lines.leave("leave")
+            line_bot_api.push_message(str(group_id), TextSendMessage(text=reply))
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
@@ -308,8 +311,8 @@ class Function:
         elif isinstance(event.source, SourceRoom):
             room_id = event.source.room_id
 
-            #reply = Lines.leave("leave")
-            #line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+            reply = Lines.leave("leave")
+            line_bot_api.push_message(str(room_id), TextSendMessage(text=reply))
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
@@ -442,11 +445,11 @@ class Lines:  # class to store respond lines
                      'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
                      ]
         elif cond == "regards" :
-            lines = ["See you later my friend.., bye~ \n\n         ~ Megumi ~",
-                     'Wish you guys very best in everything.., bye~ \n\n         ~ Megumi ~',
-                     'I hope this is not the end of us :> , bye~ \n\n         ~ Megumi ~',
-                     'Try adding me sometimes okay ? :> I will wait for it.. bye for now !\n\n         ~ Megumi ~',
-                     'Hope can see you again in the future ^^ .. , bye ~\n\n         ~ Megumi ~'
+            lines = ["See you later my friend.., bye~ \n\n              ~ Megumi ~",
+                     'Wish you guys very best in everything.., bye~ \n\n              ~ Megumi ~',
+                     'I hope this is not the end of us :> , bye~ \n\n              ~ Megumi ~',
+                     'Try adding me sometimes okay ? :> I will wait for it.. bye for now !\n\n              ~ Megumi ~',
+                     'Hope can see you again in the future ^^ .. , bye ~\n\n              ~ Megumi ~'
                      ]
             return random.choice(lines)
         else :
