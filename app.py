@@ -110,7 +110,7 @@ def message_text(event):
 
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
-                                             "mention", "notify"])      : Function.set_tag_notifier()
+                                             "notif", "mention"])      : Function.set_tag_notifier()
             else                                                        : Function.false()
 
         elif "command4 " in text                                    : Function.notyetcreated()
@@ -375,6 +375,7 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def tag_notifier(event):
+        global tag_notifier_on
         if tag_notifier_on :
             if any(word in text for word in Lines.jessin()) :
                 try :
