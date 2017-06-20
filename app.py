@@ -104,7 +104,7 @@ def message_text(event):
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
         elif any(word in text for word in ["what ","show "])        :
-            if any(word in text for word in ["date","time"])            : Function.time_date()
+            if any(word in text for word in ["date","time","day"])  : Function.time_date()
             else                                                        : Function.false()
         elif "command3 " in text                                    : Function.notyetcreated()
         elif "command4 " in text                                    : Function.notyetcreated()
