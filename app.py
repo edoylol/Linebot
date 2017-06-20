@@ -381,14 +381,6 @@ class Function:
         if tag_notifier_on :
             if any(word in text for word in Lines.jessin()) :
                 try :
-                    print(event.source)
-                except LineBotApiError as e:
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
-
-                try :
-
                     sender = line_bot_api.get_profile(event.source.user_id).display_name
                 except :
                     sender = "someone"
