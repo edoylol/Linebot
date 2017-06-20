@@ -116,9 +116,13 @@ def message_text(event):
 
 
 @handler.add(JoinEvent)
-def handle_join():
-    Function.join()
-
+def handle_join(event):
+    try :
+        Function.join()
+    except LineBotApiError as e:
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
 
 """===================================  List of Usable Function & Class ============================================"""
 
