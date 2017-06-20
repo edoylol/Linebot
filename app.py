@@ -55,7 +55,7 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
-
+tag_notifier = True
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -91,7 +91,7 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token, original_text, text, jessin_userid
+    global token, original_text, text, jessin_userid, tag_notifier
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
@@ -103,10 +103,16 @@ def message_text(event):
         if "say " in text : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
+
         elif any(word in text for word in ["what ","show "])        :
-            if any(word in text for word in ["date","time","day"])  : Function.time_date()
+            if any(word in text for word in ["date","time","day"])      : Function.time_date()
             else                                                        : Function.false()
-        elif "command3 " in text                                    : Function.notyetcreated()
+
+        elif any(word in text for word in ["turn ","able"])         :
+            if any(word in text for word in ["tag notifier",
+                                             "mention", "notify"])      : Function.set_tag_notifier()
+            else                                                        : Function.false()
+
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
@@ -114,6 +120,8 @@ def message_text(event):
         elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
         else                                                        : Function.false()
 
+    # special function
+    tag_notifier(event)
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -352,6 +360,29 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def set_tag_notifier():
+        global  tag_notifier
+        if any(word in text for word in ["on ","enable "]) :
+            tag_notifier = True
+            reply = Lines.set_tag_notifier("on")
+
+        elif any(word in text for word in ["off ","disable "]) :
+            tag_notifier = False
+            reply = Lines.set_tag_notifier("off")
+
+        else :
+            reply = Lines.join("other")
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+    def tag_notifier(event):
+        if tag_notifier == True :
+            if any(word in text for word in Lines.jessin()) :
+                try :
+                    sender = line_bot_api.get_profile(event.source.user_id).display_name
+                except :
+                    sender = "someone"
+                report = Lines.tag_notifier() % (sender,original_text)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def notyetcreated():
         reply = Lines.notyetcreated()
@@ -529,6 +560,37 @@ class Lines:  # class to store respond lines
                  " what ?? ._. "]
         return random.choice(lines)
 
+    def tag_notifier():
+        lines = ['Master, I think %s is calling you.. \nHere\'s the detailed message : \n"%s"',
+                 '%s is calling you master.. \nHere\'s the detailed message : \n"%s"',
+                 'Master, I think your name is being called by %s..\nHere\'s the detailed message : \n"%s"',
+                 'Master,.. tag message from %s \nHere\'s the detailed message : \n"%s"',
+                 'Check this out .. \nMessage from %s : \n"%s"',
+                 ]
+        return random.choice(lines)
+
+    def set_tag_notifier(cond):
+        if cond == "on" :
+            lines = ["OK, I will tell you if someone tag you master ~",
+                     "Tag notifier is on active mode :> ",
+                     "Sure, I will notify you",
+                     "Roger..",
+                     "Done.., itterasai :3 ~"]
+            return random.choice(lines)
+        elif cond == "off" :
+            lines = ["Okaeri.. :3",
+                     "OK, welcome back ~",
+                     "Roger.. :3 ",
+                     "Done,, Tag notifier is off now..",
+                     "Sure,, glad to see you again.."]
+            return random.choice(lines)
+        else :
+            lines = ["Gomen, I don't catch that.. :/",
+                     "Hmm.. try to do it one more time.. ^^",
+                     "Gomen, seems something is wrong...",
+                     "I think you gave wrong instruction (?) xD"]
+            return random.choice(lines)
+
     def template():
         lines = ["",
                  "",
@@ -544,6 +606,9 @@ class Lines:  # class to store respond lines
 
     def megumi():
         return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
+
+    def jessin():
+        return ['jessin','jes','@jessin d','jess','jssin',]
 
     def day():
         return {'Mon' : 'Monday' ,
