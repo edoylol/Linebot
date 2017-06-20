@@ -298,8 +298,14 @@ class Function:
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
 
-            reply = Lines.leave("leave")
-            line_bot_api.push_message(str(group_id), TextSendMessage(text=reply))
+            try :
+                reply = Lines.leave("leave")
+                line_bot_api.push_message(str(group_id), TextSendMessage(text=reply))
+            except LineBotApiError as e:
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
+
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
