@@ -120,7 +120,7 @@ def handle_join(event):
     global token,jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     token = event.reply_token
-    get_receiver_addr(event
+    get_receiver_addr(event)
 
     Function.join()
 
@@ -276,7 +276,7 @@ class Function:
                 mm = splitted_hour[1]
                 ss = splitted_hour[2]
 
-                if "date" in text:
+                if any(word in text for word in ["date","day"]):
                     reply = Lines.date(day, DD, MM, YYYY)
                 elif "time" in text:
                     AmPm = "Am"
