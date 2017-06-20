@@ -292,9 +292,12 @@ class Function:
         try :
             reply = Lines.leave()
             line_bot_api.push_message(address, TextSendMessage(text=reply))
-            line_bot_api.leave_group(group_id=str(event.source.group_id))
+            line_bot_api.leave_group(group_id=event.source.group_id)
 
-        except :
+        except LineBotApiError as e:
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
             reply = "I can't leave..."
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
