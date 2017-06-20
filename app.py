@@ -99,7 +99,7 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif "push " in text                                        : Function.push()
+        elif all(word in text for word in ["report","bug"])          : Function.report_bug()
         else                                                        : Function.false()
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -211,7 +211,6 @@ class Function :
     def time_date():
         def find_GMT():
             split_text = text.split(" ")
-            print(split_text)
             GMT_found_index = 0
             for word in split_text:
                 GMT_found_index += 1
@@ -266,9 +265,22 @@ class Function :
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def push():
-        reply = "push message success ~ "
+    def report_bug():
+        jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+        try:
+            try :
+                sender = line_bot_api.get_profile(address).display_name
+            except :
+                sender = "Annonymous"
+            report = Lines.report_note() % (original_text,sender)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            reply = Lines.report_bug("success")
+
+
+        except:
+            reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def notyetcreated():
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -324,6 +336,27 @@ class Lines : # class to store respond lines
                  "I think it's %s %s" %(MM,DD)] # I think it's June 16
         return random.choice(lines)
 
+    def report_bug(cond):
+        if cond == "success" :
+            lines = ["Thank you for your report :>",
+                     "Arigatoo... wish me luck to fix this problem :\")",
+                     "Arigatoo, I'll let master know about this",
+                     "Arigatoo, I'll tell master later ~",
+                     "Sankyu for your feedback :)",
+                     "Gomenne, hope I can fix this soon...\nthanks for the report btw :)",
+                     "Gomenne,.. thanks for the feedback though ^^",
+                     ]
+        elif cond == "fail" :
+            lines = ["Gomen,, try to send it again..",
+                     "Gomen,, master is busy fixing other stuff :'> ",
+                     "Gomenne,, seems report function is not working properly ...",
+                     "Gomenne,, please try to tell master by personal chat .. ",
+                     "Gomen,, can you repeat the report please ? .. :'> ",
+                     "Gomen,, I'm still learning how to report stuff... :'> ",
+                     ]
+        return random.choice(lines)
+
+
     def notyetcreated():
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
@@ -334,6 +367,16 @@ class Lines : # class to store respond lines
                  "Gomen,, He hasn't taught me about this yet",
                  "Gomen,, I don't understand this yet.., but I wish I could help :)"]
         return random.choice(lines)
+    def report_note():
+        lines = ["Master, here is the report... : \n\n%s \n\nSubmitted by : %s",
+                 "Master, I think there are some problems... : \n\n%s \n\nSubmitted by : %s",
+                 "Master, I've got you a report :3 \n\n%s \n\nSubmitted by : %s",
+                 "Master, please take a look at this... : \n\n%s \n\nSubmitted by : %s",
+                 "Master, how should I solve this ? \n\n%s \n\nSubmitted by : %s",
+                 "Master, please fix this :3 \n\n%s \n\nSubmitted by : %s",
+                 "Master, try to fix this owkay ?? :3 \n\n%s \n\nSubmitted by : %s",
+                 "Master, seems something is not working properly.. : \n\n%s \n\nSubmitted by : %s"]
+        return random.choice(lines)
     def false():
         lines = ["Gomen,, what was that ?",
                  "Are you calling me ?",
@@ -343,6 +386,17 @@ class Lines : # class to store respond lines
                  "hmmm... I wonder what is that",
                  " .-. ? ",
                  " what ?? ._. "]
+        return random.choice(lines)
+
+    def template():
+        lines = ["",
+                 "",
+                 "",
+                 "",
+                 "",
+                 "",
+                 "",
+                 ""]
         return random.choice(lines)
 
     """=================== some extra Lines Storage ======================="""
