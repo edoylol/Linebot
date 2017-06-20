@@ -29,7 +29,8 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent,
+    SourceGroup, SourceRoom, SourceUser
 )
 
 app = Flask(__name__)
@@ -79,7 +80,8 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token, original_text, text
+    global token, original_text, text, jessin_userid
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
@@ -97,9 +99,10 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event.source.group_id)
-        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event.source.user_id)
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
+        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
         else                                                        : Function.false()
+
 
 """===================================  List of Usable Function & Class ============================================"""
 
@@ -272,11 +275,11 @@ class Function:
 
 
 
-    def report_bug(user_id):
-        jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    def report_bug(event):
+
         try:
             try :
-                sender = line_bot_api.get_profile(user_id).display_name
+                sender = line_bot_api.get_profile(event.source.user_id).display_name
             except :
                 sender = "Anonymous"
             report = Lines.report_note() % (original_text,sender)
@@ -287,18 +290,29 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def leave(group_id):
-        try :
-            reply = Lines.leave()
-            line_bot_api.push_message(address, TextSendMessage(text=reply))
+    def leave(event):
+
+        if isinstance(event.source, SourceGroup):
+            group_id = event.source.group_id
+            reply = Lines.leave(True)
+            report = Lines.leave_note() % ('Group',group_id)
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             line_bot_api.leave_group(group_id)
 
-        except LineBotApiError as e:
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-            reply = "I can't leave..."
+        elif isinstance(event.source, SourceRoom):
+            room_id = event.source.room_id
+            reply = Lines.leave(True)
+            report = Lines.leave_note() % ('Chatroom',room_id)
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            line_bot_api.leave_room(room_id)
+
+        else:
+            reply = Lines.leave(False)
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
     def notyetcreated():
@@ -310,9 +324,7 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
-@handler.add(LeaveEvent)
-def handle_leave():
-    app.logger.info("Got leave event")
+
 
 
 class Lines:  # class to store respond lines
@@ -410,17 +422,36 @@ class Lines:  # class to store respond lines
                  'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
         return random.choice(lines)
 
-    def leave():
-        lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
-                 '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
-                 'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
-                 '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
-                 'Even if we walk on different paths, one must always live on as you are able! You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! Let bloom the flowers of light within your hearts.',
-                 'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
-                 'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
-                 'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.']
-        extra_line = "\n\nSee you later my friend..\n\n                                -megumi-"
-        return random.choice(lines)+extra_line
+    def leave(cond = True):
+        if cond :
+            lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
+                     '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
+                     'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
+                     '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
+                     'Even if we walk on different paths, one must always live on as you are able! You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! Let bloom the flowers of light within your hearts.',
+                     'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
+                     'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
+                     'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
+                     ]
+            extra_line = "\n\nSee you later my friend..\n\n                                -megumi-"
+            return random.choice(lines)+extra_line
+        else :
+            lines = ["I can't leave... it's not a group or room .-. ",
+                     'I think you mistaken this for group (?) xD',
+                     'C\'mon, this is private chat xD',
+                     'This is not group lol.. xD',
+                     'I can only leave group and room, even though I don\'t want to TBH'
+                     ]
+            return random.choice(lines)
+
+    def leave_note():
+        lines = ['Master, I\'m done with a group :> \n\n%s : %s',
+                 'Master, I have left a group... xD \n\n%s : %s',
+                 'Master, Megumi is back from a group :3 \n\n%s : %s',
+                 'Master, I think I\'ve been kick out from a group :"> \n\n%s : %s',
+                 'Master, Can you invite me into the group again ? \n\n%s : %s',
+                 ]
+        return random.choice(lines)
 
     def false():
         lines = ["Gomen,, what was that ?",
