@@ -120,14 +120,10 @@ def handle_join(event):
     global token,jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     token = event.reply_token
-    get_receiver_addr(event)
-    try :
+    get_receiver_addr(event
 
-        Function.join()
-    except LineBotApiError as e:
-        print(e.status_code)
-        print(e.error.message)
-        print(e.error.details)
+    Function.join()
+
 
 """===================================  List of Usable Function & Class ============================================"""
 
