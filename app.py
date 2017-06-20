@@ -92,8 +92,8 @@ def message_text(event):
         if "say " in text : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
-        elif any(word in text for word in ["what","show"]) :
-            if any(word in text for word in ["date ","time"])           : Function.time_date()
+        elif any(word in text for word in ["what ","show "]) :
+            if any(word in text for word in ["date","time"])           : Function.time_date()
             else                                                        : Function.false()
         elif "command3 " in text                                    : Function.notyetcreated()
         elif "command4 " in text                                    : Function.notyetcreated()
@@ -123,9 +123,9 @@ class Function :
 
             return random.choice([a,b,c,d,e])
 
-        splitted_text = text.split(" ")
+        split_text = text.split(" ")
         found_num = []
-        for word in splitted_text:
+        for word in split_text:
             try:
                 found_num.append(int(word))
             except:
@@ -146,19 +146,18 @@ class Function :
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def choose_one():
-        splitted_text = text.replace(",", " , ").split(" ")
-        print(splitted_text)
+        split_text = text.replace(",", " , ").split(" ")
         found_options = []
         cursor = 0
-        for word in splitted_text:
+        for word in split_text:
             # print(word)
             if word == "or":
                 # get the previous and after 'or' :
                 try:
-                    if splitted_text[cursor - 1] != "" and len(splitted_text[cursor - 1]) >= 2:
-                        found_options.append(splitted_text[cursor - 1])
-                    if splitted_text[cursor + 1] != "" and len(splitted_text[cursor + 1]) >= 2:
-                        found_options.append(splitted_text[cursor + 1])
+                    if split_text[cursor - 1] != "" and len(split_text[cursor - 1]) >= 2:
+                        found_options.append(split_text[cursor - 1])
+                    if split_text[cursor + 1] != "" and len(split_text[cursor + 1]) >= 2:
+                        found_options.append(split_text[cursor + 1])
                 except:
                     pass
 
@@ -167,13 +166,13 @@ class Function :
                 coloniterate = cursor - 2
                 for i in range(0, 4):  # check back 3 times
                     try:
-                        if splitted_text[coloniterate - i] == ",":
+                        if split_text[coloniterate - i] == ",":
                             for j in range(1, 4):
                                 try:
                                     if coloniterate - i - j >= 0:
-                                        if splitted_text[coloniterate - i - j] != "" and len(
-                                                splitted_text[coloniterate - i - j]) >= 2:
-                                            found_options.append(splitted_text[coloniterate - i - j])
+                                        if split_text[coloniterate - i - j] != "" and len(
+                                                split_text[coloniterate - i - j]) >= 2:
+                                            found_options.append(split_text[coloniterate - i - j])
                                             break
                                 except:
                                     pass
@@ -193,9 +192,9 @@ class Function :
             reply = " Oops, something wrong... I don't see anything to pick.."
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def choose_one_simple():
-        splitted_text = text.split(" ")
+        split_text = text.split(" ")
         found_options = []
-        for word in splitted_text:
+        for word in split_text:
             if '#' in word:
                 try:
                     word = OtherUtil.remove_symbols(word)
@@ -210,33 +209,61 @@ class Function :
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
     def time_date():
-        try:
-            splited_time = time.ctime().split(" ")
-            splitted_hour = splited_time[3].split(":")
-            day = Lines.day()[splited_time[0]]
-            MM = Lines.month()[splited_time[1].lower()]
-            DD = splited_time[2]
-            YYYY = splited_time[4]
-            hh = splitted_hour[0]
-            mm = splitted_hour[1]
-            # ss = splitted_hour[2]
-            # TimeZone = 7
+        def find_GMT():
+            split_text = text.split(" ")
+            print(split_text)
+            GMT_found_index = 0
+            for word in split_text:
+                GMT_found_index += 1
+                if word == "GMT":
+                    try:
+                        for i in range(0, 5):
+                            try:
+                                GMT = int(split_text[GMT_found_index + i])
+                            except:
+                                pass
+                        GMT = int(GMT)
+                    except:
+                        GMT = 0
+            try:
+                GMT = int(GMT)  # if still can't find requested GMT
+            except:
+                GMT = 7  # default GMT+7
+            return GMT
+        def valid_GMT(GMT):
+            if (GMT > 12) or (GMT <(-12)) :
+                return False
+            else :
+                return True
+        if valid_GMT(find_GMT()) :
+            try:
+                GMT = find_GMT()
+                split_time = time.ctime(time.time()+GMT*3600).split(" ")
+                splitted_hour = split_time[3].split(":")
+                day = Lines.day()[split_time[0]]
+                MM = Lines.month()[split_time[1].lower()]
+                DD = split_time[2]
+                YYYY = split_time[4]
+                hh = splitted_hour[0]
+                mm = splitted_hour[1]
+                ss = splitted_hour[2]
 
-        except:
-            reply = "Seems I can't get the date or time, I wonder why..."
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                if "date" in text:
+                    reply = Lines.date(day, DD, MM, YYYY)
+                elif "time" in text:
+                    AmPm = "Am"
+                    if int(hh) > 12:
+                        hh = int(hh)
+                        hh -= 12
+                        hh = str(hh)
+                        AmPm = "Pm"
+                    reply = Lines.time(hh, mm, AmPm)
+            except:
+                reply = "Seems I can't get the date or time, I wonder why..."
 
-        if "date" in text:
-            reply = Lines.date(day, DD, MM, YYYY)
-        elif "time" in text:
-            AmPm = "Am"
-            if int(hh) > 12:
-                hh = int(hh)
-                hh -= 12
-                hh = str(hh)
-                AmPm = "Pm"
+        else : # happen when GMT is not valid
+            reply = "I think the timezone is a little bit off... should be between -12 to 12 isn't ??"
 
-            reply = Lines.time(hh, mm, AmPm)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def push():
