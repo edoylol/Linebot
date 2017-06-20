@@ -289,10 +289,11 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def leave():
+        print(event)
         try :
             reply = Lines.leave()
             line_bot_api.push_message(address, TextSendMessage(text=reply))
-            line_bot_api.leave_group(group_id=event.source.group_id)
+            line_bot_api.leave_group(group_id= event.source.group_id)
 
         except LineBotApiError as e:
             print(e.status_code)
