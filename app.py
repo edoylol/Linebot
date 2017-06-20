@@ -97,8 +97,8 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave()
-        elif all(word in text for word in ["report","bug"])         : Function.report_bug()
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
+        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
         else                                                        : Function.false()
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -272,7 +272,7 @@ class Function:
 
 
 
-    def report_bug():
+    def report_bug(event):
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
             try :
@@ -287,12 +287,12 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def leave():
+    def leave(event):
         print(event)
         try :
             reply = Lines.leave()
             line_bot_api.push_message(address, TextSendMessage(text=reply))
-            line_bot_api.leave_group(group_id= event.source.group_id)
+            line_bot_api.leave_group(event.source.group_id)
 
         except LineBotApiError as e:
             print(e.status_code)
