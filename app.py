@@ -71,13 +71,18 @@ def callback():  # get X-Line-Signature header value
 
 def get_receiver_addr(event):
     global address
-    try:
-        address = event.source.group_id
-    except:
+    if isinstance(event.source, SourceGroup):
+        try:
+            address = event.source.group_id
+        except:
+            address = event.source.user_id
+    elif isinstance(event.source, SourceRoom):
         try:
             address = event.source.room_id
         except:
             address = event.source.user_id
+    else :
+        address = event.source.user_id
     return address
 
 
@@ -298,13 +303,8 @@ class Function:
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
 
-            try :
-                reply = Lines.leave("leave")
-                line_bot_api.push_message(str(group_id), TextSendMessage(text=reply))
-            except LineBotApiError as e:
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            reply = Lines.leave("leave")
+            line_bot_api.push_message(group_id, TextSendMessage(text=reply))
 
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -318,7 +318,8 @@ class Function:
             room_id = event.source.room_id
 
             reply = Lines.leave("leave")
-            line_bot_api.push_message(str(room_id), TextSendMessage(text=reply))
+            line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
@@ -450,6 +451,7 @@ class Lines:  # class to store respond lines
                      'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
                      'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
                      ]
+            return random.choice(lines)
         elif cond == "regards" :
             lines = ["See you later my friend.., bye~ \n\n              ~ Megumi ~",
                      'Wish you guys very best in everything.., bye~ \n\n              ~ Megumi ~',
