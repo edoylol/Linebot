@@ -17,6 +17,8 @@ from __future__ import unicode_literals
 import os
 import sys
 import random
+import time
+import math
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -221,7 +223,8 @@ class Function :
             # TimeZone = 7
 
         except:
-            "Seems I can't get the date or time, I wonder why..."
+            reply = "Seems I can't get the date or time, I wonder why..."
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
         if "date" in text:
             reply = Lines.date(day, DD, MM, YYYY)
