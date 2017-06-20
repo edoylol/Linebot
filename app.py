@@ -472,7 +472,7 @@ class Lines:  # class to store respond lines
     def leave_note():
         lines = ['Master, I\'m done with a group :> \n\n%s : %s',
                  'Master, I have left a group... xD \n\n%s : %s',
-                 'Master, Megumi is back from a group :3 \n\n%s : %s',
+                 'Master, Megumi has returned from a group :3 \n\n%s : %s',
                  'Master, I think I\'ve been kick out from a group :"> \n\n%s : %s',
                  'Master, Can you invite me into the group again ? \n\n%s : %s',
                  ]
