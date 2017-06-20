@@ -90,17 +90,20 @@ def message_text(event):
         if "say " in text : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
-        elif "command2 " in text : Function.notyetcreated()
-        elif "command3 " in text : Function.notyetcreated()
-        elif "command4 " in text : Function.notyetcreated()
-        elif "command5 " in text : Function.notyetcreated()
+        elif any(word in text for word in ["what","show"]) :
+            if any(word in text for word in ["date ","time"])           : Function.time_date()
+            else                                                        : Function.false()
+        elif "command3 " in text                                    : Function.notyetcreated()
+        elif "command4 " in text                                    : Function.notyetcreated()
+        elif "command5 " in text                                    : Function.notyetcreated()
 
         elif "push " in text                                        : Function.push()
         else                                                        : Function.false()
 
-"""=====================================  List of Usable Function  =============================================="""
+"""===================================  List of Usable Function & Class ============================================"""
 
 class Function :
+"""====================== Main Function List ==========================="""
     def rand_int():
 
         def random_number(min=1,max=5):
@@ -204,6 +207,34 @@ class Function :
             reply = "Try to add '#' before the item, like #this or #that"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+    def time_date():
+        try:
+            splited_time = time.ctime().split(" ")
+            splitted_hour = splited_time[3].split(":")
+            day = Lines.day()[splited_time[0]]
+            MM = Lines.month()[splited_time[1].lower()]
+            DD = splited_time[2]
+            YYYY = splited_time[4]
+            hh = splitted_hour[0]
+            mm = splitted_hour[1]
+            # ss = splitted_hour[2]
+            # TimeZone = 7
+
+        except:
+            "Seems I can't get the date or time, I wonder why..."
+
+        if "date" in text:
+            reply = Lines.date(day, DD, MM, YYYY)
+        elif "time" in text:
+            AmPm = "Am"
+            if int(hh) > 12:
+                hh = int(hh)
+                hh -= 12
+                hh = str(hh)
+                AmPm = "Pm"
+
+            reply = Lines.time(hh, mm, AmPm)
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def push():
         reply = "push message success ~ "
@@ -216,8 +247,8 @@ class Function :
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 class Lines : # class to store respond lines
-    def megumi():
-        return ['megumi', 'kato', 'meg', 'megumi,','kato,','meg,']
+"""=================== Main Function Lines Storage ======================="""
+
     def rand_int():
         lines = ["I think I will pick %s",
                  "How about %s ?",
@@ -246,6 +277,22 @@ class Lines : # class to store respond lines
                  "%s then..",
                  "I prefer %s I think.."]
         return random.choice(lines)
+    def time(hh,mm,AmPm):
+        lines = ["It's %s:%s %s" % (hh,mm,AmPm), #It's 12:24 Am
+                 "About %s:%s %s" % (hh,mm,AmPm), #About 12:24 Am
+                 "%s:%s :>" % (hh,mm), # 12:24 :>
+                 "It's %s:%s right now.." % (hh,mm), #It's 12:24 right now..
+                 "Almost %s:%s,," % (hh,mm) ]#Almost 12:24,,
+        return random.choice(lines)
+    def date(day,DD,MM,YYYY):
+        ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
+        lines = ["It's %s, %s %s, %s" % (day, MM,DD,YYYY), #It's Tuesday, June 16, 2017
+                 "It's %s of %s" % (ordinal(int(DD)),MM), #It's 16th of June
+                 "%s %s, %s" % (MM,DD,YYYY), # June 16, 2017
+                 "Today is %s,%s %s" %(day,ordinal(int(DD)),MM), #Today is Tuesday, 16th June
+                 "Today's date is %s" % (DD), # Today's date is 16
+                 "I think it's %s %s" %(MM,DD)] # I think it's June 16
+        return random.choice(lines)
 
     def notyetcreated():
         lines = ["Gomen,, this function is not ready..",
@@ -267,6 +314,32 @@ class Lines : # class to store respond lines
                  " .-. ? ",
                  " what ?? ._. "]
         return random.choice(lines)
+
+"""=================== some extra Lines Storage ======================="""
+
+    def megumi():
+        return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
+    def day():
+        return {'Mon' : 'Monday' ,
+                "Tue" : "Tuesday" ,
+                "Wed" : "Wednesday",
+                "Thu" : "Thursday",
+                "Fri" : "Friday",
+                "Sat" : "Saturday",
+                "Sun" : "Sunday"}
+    def month():
+        return {'jan' : 'January',
+                'feb' : 'February',
+                'mar' : 'March',
+                'apr' : 'April',
+                'may' : 'May',
+                'jun' : 'June',
+                'jul' : 'July',
+                'aug' : 'August',
+                'sep' : 'September',
+                'oct' : 'October',
+                'nov' : 'November',
+                'dec' : 'December'}
 
 class OtherUtil :
     def remove_symbols(word):
