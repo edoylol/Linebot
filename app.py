@@ -291,8 +291,8 @@ class Function:
     def leave():
         try :
 
-            reply = Lines.leave()
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            #reply = Lines.leave()
+            #line_bot_api.reply_message(token, TextSendMessage(text=reply))
             line_bot_api.leave_group(event.source.group_id)
 
         except :
