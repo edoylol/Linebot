@@ -290,14 +290,16 @@ class Function:
 
     def leave():
         try :
+            line_bot_api.leave_room(event.source.room_id)
             reply = Lines.leave()
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
-            line_bot_api.leave_room(event.source.room_id)
+
         except :
             try :
+                line_bot_api.leave_group(event.source.group_id)
                 reply = Lines.leave()
-                #line_bot_api.reply_message(token, TextSendMessage(text=reply))
-                line_bot_api.leave_room(event.source.group_id)
+                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
             except :
                 reply = "I can't leave yet..."
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -416,7 +418,8 @@ class Lines:  # class to store respond lines
                  'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
                  'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
                  'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.']
-        return random.choice(lines)
+        extra_line = "\n\nSee you later my friend..\n\n                                -megumi-"
+        return random.choice(lines)+extra_line
 
     def false():
         lines = ["Gomen,, what was that ?",
