@@ -268,8 +268,12 @@ class Function :
     def report_bug():
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
+            print(event.source)
+            print("------------------")
+            print(event.source.group_id)
+            print(event.source.user_id)
             try :
-                print(event.source)
+
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
             except :
                 sender = "Anonymous"
