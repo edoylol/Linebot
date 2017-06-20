@@ -293,17 +293,11 @@ class Function:
 
             reply = Lines.leave()
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
-            line_bot_api.leave_room(event.source.room_id)
+            line_bot_api.leave_group(event.source.group_id)
+
         except :
-            try :
-
-                reply = Lines.leave()
-                line_bot_api.reply_message(token, TextSendMessage(text=reply))
-                line_bot_api.leave_group(event.source.group_id)
-
-            except :
-                reply = "I can't leave..."
-                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            reply = "I can't leave..."
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
     def notyetcreated():
