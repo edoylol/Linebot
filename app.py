@@ -26,19 +26,20 @@ from linebot import (
     LineBotApi, WebhookHandler
 )
 from linebot.exceptions import (
-    InvalidSignatureError,LineBotApiError,
+    InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,StickerSendMessage
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage
 )
 
 app = Flask(__name__)
 
-# Megumi chat bot
-"""  
-channel_secret = '9d1e7500a205ddaec1c6f2ae0d190e6e'
-channel_access_token = 'f/jBF6+aFLuvzEmI0NbPNWjfrsK3Kjwxzzl1XUeLun+3uRs6AbDEQGphezyssudufYiyiHBoLQWWjEBqTtV00P0jLOJuVlrEQly/Xjo7ZQXY0YMEoKm869aWpCnu9Jhog4zt4nb4DYB4zVMWApdjCQdB04t89/1O/w1cDnyilFU='
-"""
+# Megumi chat bot (note : remove the whitespace )
+
+# channel_secret = '9d1e7500a205ddaec1c6f2ae0d190e6e'
+# channel_access_token = 'f/jBF6+aFLuvzEmI0NbPNWjfrsK3Kjwxzzl1XUeLun+3uRs6AbDEQGphezyssudufYiyiHBoLQWWjEBqTtV00P0jLOJuV
+#                         lrEQly/Xjo7ZQXY0YMEoKm869aWpCnu9Jhog4zt4nb4DYB4zVMWApdjCQdB04t89/1O/w1cDnyilFU='
+
 
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
@@ -52,10 +53,9 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 
-
 @app.route("/callback", methods=['POST'])
-def callback():
-    # get X-Line-Signature header value
+
+def callback():  # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
     # get request body as text
@@ -67,7 +67,6 @@ def callback():
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
-
     return 'OK'
 
 def get_receiver_addr(event):
@@ -78,14 +77,14 @@ def get_receiver_addr(event):
         address = event.source.user_id
     return address
 
+
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token,original_text,text
+    global token, original_text, text
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-
 
     if any(word in text for word in Lines.megumi()):
 
@@ -104,11 +103,13 @@ def message_text(event):
 
 """===================================  List of Usable Function & Class ============================================"""
 
-class Function :
+
+class Function:
     """====================== Main Function List ==========================="""
+
     def rand_int():
 
-        def random_number(min=1,max=5):
+        def random_number(min=1, max=5):
             # just in case
             if min > max :
                 temp = min
@@ -137,6 +138,7 @@ class Function :
             reply = "Seems something wrong, try again maybe ?"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def echo():
         try :
             start_index = text.find("say ")+4
@@ -145,6 +147,7 @@ class Function :
             reply = "What should I say?"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def choose_one():
         split_text = text.replace(",", " , ").split(" ")
         found_options = []
@@ -191,6 +194,7 @@ class Function :
         except :
             reply = " Oops, something wrong... I don't see anything to pick.."
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def choose_one_simple():
         split_text = text.split(" ")
         found_options = []
@@ -208,6 +212,7 @@ class Function :
             reply = "Try to add '#' before the item, like #this or #that"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def time_date():
         def find_GMT():
             split_text = text.split(" ")
@@ -230,11 +235,11 @@ class Function :
                 GMT = 7  # default GMT+7
             return GMT
         def valid_GMT(GMT):
-            if (GMT > 12) or (GMT <(-12)) :
+            if (GMT > 12) or (GMT < (-12)):
                 return False
             else :
                 return True
-        if valid_GMT(find_GMT()) :
+        if valid_GMT(find_GMT()):
             try:
                 GMT = find_GMT()
                 split_time = time.ctime(time.time()+GMT*3600).split(" ")
@@ -265,6 +270,8 @@ class Function :
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+
+
     def report_bug():
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
@@ -276,7 +283,6 @@ class Function :
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             reply = Lines.report_bug("success")
 
-
         except:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -284,11 +290,13 @@ class Function :
     def notyetcreated():
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
     def false():
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-class Lines : # class to store respond lines
+
+class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
 
     def rand_int():
@@ -299,6 +307,7 @@ class Lines : # class to store respond lines
                  "%s ?",
                  "I think %s ?"]
         return random.choice(lines)
+
     def echo():
         lines = ["%s",
                  "%s :v",
@@ -309,6 +318,7 @@ class Lines : # class to store respond lines
                  "\"%s\",, is that good ?",
                  "I don't understand, but \"%s\""]
         return random.choice(lines)
+
     def choose_one():
         lines = ["I think I will choose %s",
                  "How about %s ?",
@@ -319,6 +329,7 @@ class Lines : # class to store respond lines
                  "%s then..",
                  "I prefer %s I think.."]
         return random.choice(lines)
+
     def time(hh,mm,AmPm):
         lines = ["It's %s:%s %s" % (hh,mm,AmPm), #It's 12:24 Am
                  "About %s:%s %s" % (hh,mm,AmPm), #About 12:24 Am
@@ -326,18 +337,21 @@ class Lines : # class to store respond lines
                  "It's %s:%s right now.." % (hh,mm), #It's 12:24 right now..
                  "Almost %s:%s,," % (hh,mm) ]#Almost 12:24,,
         return random.choice(lines)
-    def date(day,DD,MM,YYYY):
+
+    def date(day, DD, MM, YYYY):
         ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
-        lines = ["It's %s, %s %s, %s" % (day, MM,DD,YYYY), #It's Tuesday, June 16, 2017
-                 "It's %s of %s" % (ordinal(int(DD)),MM), #It's 16th of June
-                 "%s %s, %s" % (MM,DD,YYYY), # June 16, 2017
-                 "Today is %s,%s %s" %(day,ordinal(int(DD)),MM), #Today is Tuesday, 16th June
-                 "Today's date is %s" % (DD), # Today's date is 16
-                 "I think it's %s %s" %(MM,DD)] # I think it's June 16
+        lines = ["It's %s, %s %s, %s" % (day, MM, DD, YYYY),  # It's Tuesday, June 16, 2017
+                 "It's %s of %s" % (ordinal(int(DD)), MM),  # It's 16th of June
+                 "%s %s, %s" % (MM, DD, YYYY),  # June 16, 2017
+                 "Today is %s,%s %s" % (day, ordinal(int(DD)), MM),  # Today is Tuesday, 16th June
+                 "Today's date is %s" % DD,  # Today's date is 16
+                 "I think it's %s %s" % (MM, DD)]  # I think it's June 16
         return random.choice(lines)
 
+
+
     def report_bug(cond):
-        if cond == "success" :
+        if cond == "success":
             lines = ["Thank you for your report :>",
                      "Arigatoo... wish me luck to fix this problem :\")",
                      "Arigatoo, I'll let master know about this",
@@ -346,7 +360,7 @@ class Lines : # class to store respond lines
                      "Gomenne, hope I can fix this soon...\nthanks for the report btw :)",
                      "Gomenne,.. thanks for the feedback though ^^",
                      ]
-        elif cond == "fail" :
+        elif cond == "fail":
             lines = ["Gomen,, try to send it again..",
                      "Gomen,, master is busy fixing other stuff :'> ",
                      "Gomenne,, seems report function is not working properly ...",
@@ -355,7 +369,6 @@ class Lines : # class to store respond lines
                      "Gomen,, I'm still learning how to report stuff... :'> ",
                      ]
         return random.choice(lines)
-
 
     def notyetcreated():
         lines = ["Gomen,, this function is not ready..",
@@ -367,6 +380,7 @@ class Lines : # class to store respond lines
                  "Gomen,, He hasn't taught me about this yet",
                  "Gomen,, I don't understand this yet.., but I wish I could help :)"]
         return random.choice(lines)
+
     def report_note():
         lines = ['Master, here is the report... : \n\n"%s" \n\nSubmitted by : %s',
                  'Master, I think there are some problems... : \n\n"%s" \n\nSubmitted by : %s',
@@ -377,6 +391,7 @@ class Lines : # class to store respond lines
                  'Master, try to fix this owkay ?? :3 \n\n"%s" \n\nSubmitted by : %s',
                  'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
         return random.choice(lines)
+
     def false():
         lines = ["Gomen,, what was that ?",
                  "Are you calling me ?",
@@ -403,6 +418,7 @@ class Lines : # class to store respond lines
 
     def megumi():
         return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
+
     def day():
         return {'Mon' : 'Monday' ,
                 "Tue" : "Tuesday" ,
@@ -411,6 +427,7 @@ class Lines : # class to store respond lines
                 "Fri" : "Friday",
                 "Sat" : "Saturday",
                 "Sun" : "Sunday"}
+
     def month():
         return {'jan' : 'January',
                 'feb' : 'February',
@@ -425,7 +442,8 @@ class Lines : # class to store respond lines
                 'nov' : 'November',
                 'dec' : 'December'}
 
-class OtherUtil :
+
+class OtherUtil:
     def remove_symbols(word):
         symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
