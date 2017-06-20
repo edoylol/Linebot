@@ -373,7 +373,7 @@ class Function:
         else :
             reply = Lines.join("other")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
-        print(tag_notifier_on)
+        print("set",tag_notifier_on)
 
     def tag_notifier(event):
         global tag_notifier_on
@@ -381,7 +381,7 @@ class Function:
         if tag_notifier_on :
             if any(word in text for word in Lines.jessin()) :
                 try :
-                    print(event.source.user_id)
+                    print(event.source)
                 except LineBotApiError as e:
                     print(e.status_code)
                     print(e.error.message)
