@@ -88,15 +88,17 @@ def get_receiver_addr(event):
         address = event.source.user_id
     return address
 
-
-@handler.add(MessageEvent, message=TextMessage)
-def message_text(event):
+def event_setup(event):
     global token, original_text, text, jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
+
+@handler.add(MessageEvent, message=TextMessage)
+def message_text(event):
+    event_setup(event)
 
     if any(word in text for word in Lines.megumi()):
 
@@ -117,7 +119,9 @@ def message_text(event):
 
 @handler.add(JoinEvent)
 def handle_join(event):
+    event_setup(event)
     try :
+
         Function.join()
     except LineBotApiError as e:
         print(e.status_code)
