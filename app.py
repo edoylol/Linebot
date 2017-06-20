@@ -215,7 +215,7 @@ class Function :
             GMT_found_index = 0
             for word in split_text:
                 GMT_found_index += 1
-                if word == "GMT":
+                if word.upper() == "GMT":
                     try:
                         for i in range(0, 5):
                             try:
