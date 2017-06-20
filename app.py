@@ -269,9 +269,9 @@ class Function :
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
             try :
-                sender = line_bot_api.get_profile(event.source.group_id).display_name
+                sender = line_bot_api.get_profile(event.source.user_id).display_name
             except :
-                sender = line_bot_api.get_profile(address).display_name
+                sender = "Anonymous"
             report = Lines.report_note() % (original_text,sender)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             reply = Lines.report_bug("success")
