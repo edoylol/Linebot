@@ -29,7 +29,7 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent, SourceUser, SourceGroup, SourceRoom,
 )
 
 app = Flask(__name__)
@@ -98,7 +98,7 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"])   : Function.leave()
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave()
         elif all(word in text for word in ["report","bug"])         : Function.report_bug()
         else                                                        : Function.false()
 
@@ -291,10 +291,8 @@ class Function:
     def leave():
         try :
 
-            reply = Lines.leave()
-            line_bot_api.push_message(address, TextSendMessage(text=reply))
-            print (event.source.group_id)
-            line_bot_api.leave_group((event.source.group_id))
+            line_bot_api.reply_message(event.reply_token, TextMessage(text='Leaving group'))
+            line_bot_api.leave_group(event.source.group_id)
 
         except :
             reply = "I can't leave..."
