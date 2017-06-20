@@ -29,7 +29,7 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage
 )
 
 app = Flask(__name__)
@@ -97,8 +97,8 @@ def message_text(event):
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
-        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave()
+        elif all(word in text for word in ["report","bug"])         : Function.report_bug()
         else                                                        : Function.false()
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -272,7 +272,7 @@ class Function:
 
 
 
-    def report_bug(event):
+    def report_bug():
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
             try :
@@ -287,8 +287,7 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def leave(event):
-        print(event)
+    def leave():
         try :
             reply = Lines.leave()
             line_bot_api.push_message(address, TextSendMessage(text=reply))
@@ -310,10 +309,11 @@ class Function:
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+'''
 @handler.add(LeaveEvent)
 def handle_leave():
     app.logger.info("Got leave event")
-
+'''
 
 class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
