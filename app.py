@@ -29,7 +29,7 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage
+    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent
 )
 
 app = Flask(__name__)
@@ -308,6 +308,10 @@ class Function:
     def false():
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+@handler.add(LeaveEvent)
+def handle_leave():
+    app.logger.info("Got leave event")
 
 
 class Lines:  # class to store respond lines
