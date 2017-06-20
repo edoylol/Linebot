@@ -294,22 +294,32 @@ class Function:
 
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
-            reply = Lines.leave(True)
-            report = Lines.leave_note() % ('Group',group_id)
+
+            reply = Lines.leave("leave")
+            line_bot_api.push_message(group_id, TextSendMessage(text=reply))
+            reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+            report = Lines.leave_note() % ('Group', group_id)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
             line_bot_api.leave_group(group_id)
 
         elif isinstance(event.source, SourceRoom):
             room_id = event.source.room_id
-            reply = Lines.leave(True)
-            report = Lines.leave_note() % ('Chatroom',room_id)
+
+            reply = Lines.leave("leave")
+            line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+            reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+            report = Lines.leave_note() % ('Chatroom', room_id)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
             line_bot_api.leave_room(room_id)
 
         else:
-            reply = Lines.leave(False)
+            reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -422,8 +432,8 @@ class Lines:  # class to store respond lines
                  'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
         return random.choice(lines)
 
-    def leave(cond = True):
-        if cond :
+    def leave(cond = "leave"):
+        if cond == "leave" :
             lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
                      '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
                      'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
@@ -433,8 +443,14 @@ class Lines:  # class to store respond lines
                      'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
                      'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
                      ]
-            extra_line = "\n\nSee you later my friend..\n\n                                -megumi-"
-            return random.choice(lines)+extra_line
+        elif cond == "regards" :
+            lines = ["See you later my friend.., bye~ \n\n         ~ Megumi ~",
+                     'Wish you guys very best in everything.., bye~ \n\n         ~ Megumi ~',
+                     'I hope this is not the end of us :> , bye~ \n\n         ~ Megumi ~',
+                     'Try adding me sometimes okay ? :> I will wait for it.. bye for now !\n\n         ~ Megumi ~',
+                     'Hope can see you again in the future ^^ .. , bye ~\n\n         ~ Megumi ~'
+                     ]
+            return random.choice(lines)
         else :
             lines = ["I can't leave... it's not a group or room .-. ",
                      'I think you mistaken this for group (?) xD',
