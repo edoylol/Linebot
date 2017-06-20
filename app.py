@@ -379,6 +379,7 @@ class Function:
         if tag_notifier_on :
             if any(word in text for word in Lines.jessin()) :
                 try :
+                    print(event.source.user_id)
                     sender = line_bot_api.get_profile(event.source.user_id).display_name
                 except :
                     sender = "someone"
