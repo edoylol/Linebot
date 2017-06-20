@@ -91,14 +91,15 @@ def message_text(event):
         if "say " in text : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
-        elif any(word in text for word in ["what ","show "]) :
-            if any(word in text for word in ["date","time"])           : Function.time_date()
+        elif any(word in text for word in ["what ","show "])        :
+            if any(word in text for word in ["date","time"])            : Function.time_date()
             else                                                        : Function.false()
         elif "command3 " in text                                    : Function.notyetcreated()
         elif "command4 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif all(word in text for word in ["report","bug"])          : Function.report_bug()
+        elif any(word in text for word in ["please leave, megumi"])   : Function.leave()
+        elif all(word in text for word in ["report","bug"])         : Function.report_bug()
         else                                                        : Function.false()
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -287,6 +288,21 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def leave():
+        try :
+            reply = Lines.leave()
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            line_bot_api.leave_room(event.source.room_id)
+        except :
+            try :
+                reply = Lines.leave()
+                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                line_bot_api.leave_room(event.source.group_id)
+            except :
+                reply = "I can't leave yet..."
+                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+
     def notyetcreated():
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -349,6 +365,16 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
 
+    def notyetcreated():
+        lines = ["Gomen,, this function is not ready..",
+                 "Gomen,, please try again later :)",
+                 "Gomen,, I can't do that yet :\">",
+                 "Gomen,, this function is under maintenance :< ",
+                 "Gomen,, please try ask me others",
+                 "Gomen,, I'm still learning this..",
+                 "Gomen,, He hasn't taught me about this yet",
+                 "Gomen,, I don't understand this yet.., but I wish I could help :)"]
+        return random.choice(lines)
 
     def report_bug(cond):
         if cond == "success":
@@ -370,17 +396,6 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-    def notyetcreated():
-        lines = ["Gomen,, this function is not ready..",
-                 "Gomen,, please try again later :)",
-                 "Gomen,, I can't do that yet :\">",
-                 "Gomen,, this function is under maintenance :< ",
-                 "Gomen,, please try ask me others",
-                 "Gomen,, I'm still learning this..",
-                 "Gomen,, He hasn't taught me about this yet",
-                 "Gomen,, I don't understand this yet.., but I wish I could help :)"]
-        return random.choice(lines)
-
     def report_note():
         lines = ['Master, here is the report... : \n\n"%s" \n\nSubmitted by : %s',
                  'Master, I think there are some problems... : \n\n"%s" \n\nSubmitted by : %s',
@@ -390,6 +405,17 @@ class Lines:  # class to store respond lines
                  'Master, please fix this :3 \n\n"%s" \n\nSubmitted by : %s',
                  'Master, try to fix this owkay ?? :3 \n\n"%s" \n\nSubmitted by : %s',
                  'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
+        return random.choice(lines)
+
+    def leave():
+        lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
+                 '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
+                 'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
+                 '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
+                 'Even if we walk on different paths, one must always live on as you are able! You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! Let bloom the flowers of light within your hearts.',
+                 'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
+                 'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
+                 'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.']
         return random.choice(lines)
 
     def false():
