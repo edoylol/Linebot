@@ -103,7 +103,7 @@ def message_text(event):
 """===================================  List of Usable Function & Class ============================================"""
 
 class Function :
-"""====================== Main Function List ==========================="""
+    """====================== Main Function List ==========================="""
     def rand_int():
 
         def random_number(min=1,max=5):
@@ -247,7 +247,7 @@ class Function :
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 class Lines : # class to store respond lines
-"""=================== Main Function Lines Storage ======================="""
+    """=================== Main Function Lines Storage ======================="""
 
     def rand_int():
         lines = ["I think I will pick %s",
@@ -315,7 +315,7 @@ class Lines : # class to store respond lines
                  " what ?? ._. "]
         return random.choice(lines)
 
-"""=================== some extra Lines Storage ======================="""
+    """=================== some extra Lines Storage ======================="""
 
     def megumi():
         return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
