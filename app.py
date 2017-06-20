@@ -269,9 +269,9 @@ class Function :
         jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
         try:
             try :
-                sender = line_bot_api.get_profile(address).display_name
+                sender = line_bot_api.get_profile(event.source.group_id).display_name
             except :
-                sender = "Annonymous"
+                sender = line_bot_api.get_profile(address).display_name
             report = Lines.report_note() % (original_text,sender)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             reply = Lines.report_bug("success")
@@ -368,14 +368,14 @@ class Lines : # class to store respond lines
                  "Gomen,, I don't understand this yet.., but I wish I could help :)"]
         return random.choice(lines)
     def report_note():
-        lines = ["Master, here is the report... : \n\n%s \n\nSubmitted by : %s",
-                 "Master, I think there are some problems... : \n\n%s \n\nSubmitted by : %s",
-                 "Master, I've got you a report :3 \n\n%s \n\nSubmitted by : %s",
-                 "Master, please take a look at this... : \n\n%s \n\nSubmitted by : %s",
-                 "Master, how should I solve this ? \n\n%s \n\nSubmitted by : %s",
-                 "Master, please fix this :3 \n\n%s \n\nSubmitted by : %s",
-                 "Master, try to fix this owkay ?? :3 \n\n%s \n\nSubmitted by : %s",
-                 "Master, seems something is not working properly.. : \n\n%s \n\nSubmitted by : %s"]
+        lines = ['Master, here is the report... : \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, I think there are some problems... : \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, I\'ve got you a report :3 \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, please take a look at this... : \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, how should I solve this ? \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, please fix this :3 \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, try to fix this owkay ?? :3 \n\n"%s" \n\nSubmitted by : %s',
+                 'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
         return random.choice(lines)
     def false():
         lines = ["Gomen,, what was that ?",
