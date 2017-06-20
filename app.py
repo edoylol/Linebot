@@ -29,7 +29,10 @@ from linebot.exceptions import (
     InvalidSignatureError, LineBotApiError,
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage, StickerSendMessage, LeaveEvent,
+    MessageEvent, TextMessage, TextSendMessage,
+    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
+    ImageMessage, VideoMessage, AudioMessage,
+    LeaveEvent, JoinEvent, UnfollowEvent, FollowEvent,
     SourceGroup, SourceRoom, SourceUser
 )
 
@@ -110,6 +113,11 @@ def message_text(event):
         elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
         elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
         else                                                        : Function.false()
+
+
+@handler.add(JoinEvent)
+def handle_join():
+    Function.join()
 
 
 """===================================  List of Usable Function & Class ============================================"""
@@ -298,6 +306,13 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def join():
+
+        reply = Lines.join()
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        report = Lines.join_note()
+        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
     def leave(event):
 
         if isinstance(event.source, SourceGroup):
@@ -438,6 +453,26 @@ class Lines:  # class to store respond lines
                  'Master, please fix this :3 \n\n"%s" \n\nSubmitted by : %s',
                  'Master, try to fix this owkay ?? :3 \n\n"%s" \n\nSubmitted by : %s',
                  'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
+        return random.choice(lines)
+
+    def join():
+        lines = [" Nyaann~ Thanks for adding me ^^ \n hope we can be friends!",
+                 " Thanks for inviting Megumi :3 ",
+                 " Yoroshiku onegaishimasu~ ^^ ",
+                 " Megumi desu ! \n yoroshiku nee ~ ^^",
+                 " Megumi desu, you can call me kato or meg aswell.. \n hope we can be friends~ :> ",
+                 " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
+                 " Konichiwa... Megumi desu ! ehehehe",
+                 " Supp xD .. Megumi desu :3 ,, \nyoroshiku nee~  #teehee"]
+        return random.choice(lines)
+
+    def join_note():
+        lines = ["Master, Megumi joined a group ~ :> " ,
+                 "Master, I'm leaving for a while ,kay? ^^ ",
+                 "Master, I got invitation to join a group..",
+                 "Master, I'm going to a group ,kay? :3 ",
+                 "Master, Wish me luck ,, Megumi joined a group #teehee ^^ ",
+                 ]
         return random.choice(lines)
 
     def leave(cond = "leave"):
