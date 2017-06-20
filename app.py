@@ -291,9 +291,10 @@ class Function:
     def leave():
         try :
 
-            #reply = Lines.leave()
-            #line_bot_api.reply_message(token, TextSendMessage(text=reply))
-            line_bot_api.leave_group(event.source.group_id)
+            reply = Lines.leave()
+            line_bot_api.push_message(address, TextSendMessage(text=reply))
+            print (event.source.group_id)
+            line_bot_api.leave_group((event.source.group_id))
 
         except :
             reply = "I can't leave..."
