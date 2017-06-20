@@ -296,7 +296,7 @@ class Function:
         except :
             try :
                 reply = Lines.leave()
-                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                #line_bot_api.reply_message(token, TextSendMessage(text=reply))
                 line_bot_api.leave_room(event.source.group_id)
             except :
                 reply = "I can't leave yet..."
