@@ -295,8 +295,8 @@ class Function:
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
 
-            reply = Lines.leave("leave")
-            line_bot_api.push_message(group_id, TextSendMessage(text=reply))
+            #reply = Lines.leave("leave")
+            #line_bot_api.push_message(group_id, TextSendMessage(text=reply))
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
@@ -308,8 +308,8 @@ class Function:
         elif isinstance(event.source, SourceRoom):
             room_id = event.source.room_id
 
-            reply = Lines.leave("leave")
-            line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+            #reply = Lines.leave("leave")
+            #line_bot_api.push_message(room_id, TextSendMessage(text=reply))
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
@@ -321,8 +321,6 @@ class Function:
         else:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
     def notyetcreated():
