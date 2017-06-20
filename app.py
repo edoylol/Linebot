@@ -290,18 +290,19 @@ class Function:
 
     def leave():
         try :
-            line_bot_api.leave_room(event.source.room_id)
+
             reply = Lines.leave()
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
+            line_bot_api.leave_room(event.source.room_id)
         except :
             try :
-                line_bot_api.leave_group(event.source.group_id)
+
                 reply = Lines.leave()
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                line_bot_api.leave_group(event.source.group_id)
 
             except :
-                reply = "I can't leave yet..."
+                reply = "I can't leave..."
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
