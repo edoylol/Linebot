@@ -25,16 +25,26 @@ class Lines:  # class to store respond lines
                  "I don't understand, but \"%s\""]
         return random.choice(lines)
 
-    def choose_one(self):
-        lines = ["I think I will choose %s",
-                 "How about %s ?",
-                 "%s I guess (?)",
-                 "Maybe %s (?)",
-                 "%s (?)",
-                 "I think %s (?)",
-                 "%s then..",
-                 "I prefer %s I think.."]
-        return random.choice(lines)
+    def choose_one(self,cond):
+        if cond == "success" :
+            lines = ["I think I will choose %s",
+                     "How about %s ?",
+                     "%s I guess (?)",
+                     "Maybe %s (?)",
+                     "%s (?)",
+                     "I think %s (?)",
+                     "%s then..",
+                     "I prefer %s I think.."]
+            return random.choice(lines)
+
+        if cond == "fail" :
+            lines = ["Try to add '#' before the item, like #this or #that",
+                     "I'm sorry, but please add '#' before the item",
+                     "Gomen,, I didn't catch that...",
+                     "Gomen,, what do you want me to choose ? ",
+                     "Gomen,, I can only choose from item with '#' .. ",
+                     ]
+            return random.choice(lines)
 
     def time(self,hh,mm,AmPm):
         lines = ["It's %s:%s %s" % (hh,mm,AmPm), #It's 12:24 Am

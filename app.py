@@ -242,9 +242,9 @@ class Function:
                     pass
         try :
             result = random.choice(found_options)
-            reply = Lines.choose_one() % str(result)
+            reply = Lines.choose_one("success") % str(result)
         except :
-            reply = "Try to add '#' before the item, like #this or #that"
+            reply = Lines.choose_one("fail")
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
