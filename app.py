@@ -176,7 +176,7 @@ def handle_content_message(event):
 
     try :
         message_content = line_bot_api.get_message_content(event.message.id)
-        print(message_content)
+        print("MESSAGE CONTENT IS : ",message_content)
 
         #with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
          #   print("tf",tf)
