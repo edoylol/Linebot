@@ -19,6 +19,7 @@ import sys
 import random
 import time
 import math
+import threading
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -74,11 +75,11 @@ def set_tag_notifier(cond="pass"):
 
     elif cond == "pass":
         pass
-        print("func passed")
+        print("func passed",threading.current_thread().name)
     elif cond == "first":
         tag_notifier_on = True
-        print("first initialize")
-    print("current status : ", tag_notifier_on)
+        print("first initialize",threading.current_thread().name)
+    print("current status : ", tag_notifier_on,threading.current_thread().name)
 
 set_tag_notifier("first")
 
