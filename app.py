@@ -75,11 +75,11 @@ def set_tag_notifier(cond="pass"):
 
     elif cond == "pass":
         pass
-        print("func passed",threading.current_thread().name)
+        print("func passed",threading.current_thread())
     elif cond == "first":
         tag_notifier_on = True
         print("first initialize",threading.current_thread().name)
-    print("current status : ", tag_notifier_on,threading.current_thread().name)
+    print("current status : ", tag_notifier_on,threading.current_thread())
 
 set_tag_notifier("first")
 
