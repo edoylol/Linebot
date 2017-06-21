@@ -486,7 +486,7 @@ class Function:
             user_id = event.source.user_id
             user = userlist[user_id]
         except :
-            user = "Someone"
+            user = "someone"
 
         reply = Lines.added("added") % (user)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -498,7 +498,7 @@ class Function:
             user_id = event.source.user_id
             user = userlist[user_id]
         except :
-            user = "Someone"
+            user = "someone"
 
         print("SOURCE",event.source)
         report = Lines.removed("report") % (user)
