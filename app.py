@@ -175,7 +175,7 @@ def handle_content_message(event):
 
     try :
         message_content = line_bot_api.get_message_content(event.message.id)
-        with tempfile.NamedTemporaryFile(dir="c:\code\linebot", prefix=ext + '-', delete=False) as tf:
+        with tempfile.NamedTemporaryFile(dir="c:/code/linebot", prefix=ext + '-', delete=False) as tf:
             print("tf",tf)
             for chunk in message_content.iter_content():
                 tf.write(chunk)
