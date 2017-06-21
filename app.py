@@ -142,7 +142,7 @@ def handle_join(event):
 class Function:
     """====================== Main Function List ==========================="""
 
-    def rand_int(self):
+    def rand_int():
 
         def random_number(min=1, max=5):
             # just in case
@@ -174,7 +174,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def echo(self):
+    def echo():
         try :
             start_index = text.find("say ")+4
             reply = Lines.echo() % str(original_text[start_index:])
@@ -183,7 +183,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def choose_one(self):
+    def choose_one():
         split_text = text.replace(",", " , ").split(" ")
         found_options = []
         cursor = 0
@@ -230,7 +230,7 @@ class Function:
             reply = " Oops, something wrong... I don't see anything to pick.."
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def choose_one_simple(self):
+    def choose_one_simple():
         split_text = text.split(" ")
         found_options = []
         for word in split_text:
@@ -248,7 +248,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def time_date(self):
+    def time_date():
         def find_GMT():
             split_text = text.split(" ")
             GMT_found_index = 0
@@ -307,7 +307,7 @@ class Function:
 
     """====================== Sub Function List ============================="""
 
-    def report_bug(self,event):
+    def report_bug(event):
 
         try:
             try :
@@ -322,14 +322,14 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def join(self):
+    def join():
 
         reply = Lines.join()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
         report = Lines.join_note()
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-    def leave(self,event):
+    def leave(event):
 
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
@@ -363,7 +363,7 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier(self,cond="pass"):
+    def set_tag_notifier(cond="pass"):
         global tag_notifier_on , tag_notifier_conf
         if cond == "set":
             if any(word in text for word in ["on ", "enable "]):
@@ -392,7 +392,7 @@ class Function:
 
         print("current status : ", tag_notifier_on)
 
-    def tag_notifier(self,event):
+    def tag_notifier(event):
         if any(word in text for word in Lines.jessin()):
             try :
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
@@ -401,11 +401,11 @@ class Function:
             report = Lines.tag_notifier() % (sender,original_text)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-    def notyetcreated(self):
+    def notyetcreated():
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def false(self):
+    def false():
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
