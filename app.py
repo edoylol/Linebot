@@ -19,7 +19,6 @@ import sys
 import random
 import time
 import math
-import threading
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -75,11 +74,11 @@ def set_tag_notifier(cond="pass"):
 
     elif cond == "pass":
         pass
-        print("func passed",threading.current_thread())
+        print("func passed")
     elif cond == "first":
         tag_notifier_on = True
-        print("first initialize",threading.current_thread().name)
-    print("current status : ", tag_notifier_on,threading.current_thread())
+        print("first initialize")
+    print("current status : ", tag_notifier_on)
 
 set_tag_notifier("first")
 
@@ -118,6 +117,30 @@ def get_receiver_addr(event):
 def message_text(event):
     global token, original_text, text, jessin_userid, tag_notifier_on
 
+    def set_tag_notifier(cond="pass"):
+        global tag_notifier_on
+        if cond == "set":
+            if any(word in text for word in ["on ", "enable "]):
+                tag_notifier_on = True
+                reply = Lines.set_tag_notifier("on")
+
+            elif any(word in text for word in ["off ", "disable "]):
+                tag_notifier_on = False
+                reply = Lines.set_tag_notifier("off")
+            else:
+                reply = Lines.set_tag_notifier("fail")
+                pass
+
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+        elif cond == "pass":
+            pass
+            print("func passed")
+        elif cond == "first":
+            tag_notifier_on = True
+            print("first initialize")
+        print("current status : ", tag_notifier_on)
+
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
@@ -149,7 +172,6 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    set_tag_notifier()
     print("current cond : ", tag_notifier_on)
     if tag_notifier_on == True :
         if any(word in text for word in Lines.jessin()):
