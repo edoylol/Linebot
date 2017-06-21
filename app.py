@@ -55,7 +55,7 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
-#tag_notifier_on = True
+tag_notifier_on = True
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -91,7 +91,7 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token, original_text, text, jessin_userid, tag_notifier_on
+    global token, original_text, text, jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
@@ -121,7 +121,7 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    if tag_notifier_on: Function.tag_notifier(event)
+    if tag_notifier_on : Function.tag_notifier(event)
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -366,9 +366,11 @@ class Function:
             tag_notifier_on = True
             reply = Lines.set_tag_notifier("on")
 
+
         elif any(word in text for word in ["off ","disable "]) :
             tag_notifier_on = False
             reply = Lines.set_tag_notifier("off")
+
 
         else :
             reply = Lines.join("other")
