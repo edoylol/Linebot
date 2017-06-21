@@ -120,7 +120,7 @@ def message_text(event):
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-    
+
 
 
     if any(word in text for word in Lines.megumi()):
