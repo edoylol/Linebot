@@ -113,14 +113,12 @@ def get_receiver_addr(event):
 def message_text(event):
     global token, original_text, text, jessin_userid
 
-
-
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-    set_tag_notifier()
+
 
 
     if any(word in text for word in Lines.megumi()):
@@ -405,9 +403,6 @@ class Function:
     def false():
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-
-
 
 
 class Lines:  # class to store respond lines
