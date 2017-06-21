@@ -156,6 +156,7 @@ def handle_content_message(event):
 
     try:
         message_id = event.message.id
+        print("MESSAGE ID :",message_id)
         message_content = line_bot_api.get_message_content(message_id)
     except LineBotApiError as e:
         print("ERROR PART 1")
