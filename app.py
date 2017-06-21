@@ -475,8 +475,13 @@ class Function:
         try:
             user = line_bot_api.get_profile(user_id).display_name
 
-        except:
+
+        except LineBotApiError as e:
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
             user = "someone"
+            
 
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
