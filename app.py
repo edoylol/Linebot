@@ -97,6 +97,8 @@ def message_text(event):
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
+    Function.set_tag_notifier()
+
 
     if any(word in text for word in Lines.megumi()):
 
@@ -110,7 +112,7 @@ def message_text(event):
 
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])      : Function.set_tag_notifier()
+                                             "notif", "mention"])      : Function.set_tag_notifier("set")
             else                                                        : Function.false()
 
         elif "command4 " in text                                    : Function.notyetcreated()
@@ -360,22 +362,26 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier():
+    def set_tag_notifier(cond="pass"):
         global tag_notifier_on
-        if any(word in text for word in ["on ","enable "]) :
-            tag_notifier_on = True
-            reply = Lines.set_tag_notifier("on")
+        if cond == "set" :
+            if any(word in text for word in ["on ","enable "]) :
+                tag_notifier_on = True
+                reply = Lines.set_tag_notifier("on")
 
 
-        elif any(word in text for word in ["off ","disable "]) :
-            tag_notifier_on = False
-            reply = Lines.set_tag_notifier("off")
+            elif any(word in text for word in ["off ","disable "]) :
+                tag_notifier_on = False
+                reply = Lines.set_tag_notifier("off")
+            else:
+                reply = Lines.set_tag_notifier("fail")
 
+        elif cond == "pass" :
+            pass
 
-        else :
-            reply = Lines.join("other")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
         print("current status : ",tag_notifier_on)
+        return tag_notifier_on
 
     def tag_notifier(event):
         global tag_notifier_on
