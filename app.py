@@ -120,7 +120,7 @@ def message_text(event):
     get_receiver_addr(event)
 
 
-
+    print("current cond : ",tag_notifier_on)
     if any(word in text for word in Lines.megumi()):
 
         if "say " in text : Function.echo()
