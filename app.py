@@ -380,6 +380,7 @@ class Function:
 
     def report_bug(event):
         try :
+            print(event.source)
             user_id = event.source.user_id
             print("REPORT BUG USERID",user_id)
             print("user id is in userlist?",user_id in userlist)
