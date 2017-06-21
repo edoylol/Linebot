@@ -378,7 +378,11 @@ class Function:
     """====================== Sub Function List ============================="""
 
     def report_bug(event):
-
+        try :
+            user_id = event.source.user_id
+            user = userlist[user_id]
+        except :
+            user = "Anonymous"
         try:
             report = Lines.report_bug("report") % (original_text,user)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
