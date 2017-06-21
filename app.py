@@ -94,9 +94,13 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token, original_text, text, jessin_userid, tag_notifier_on
+    global token, original_text, text, jessin_userid, user, tag_notifier_on
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    try:
+        user = line_bot_api.get_profile(event.source.user_id).display_name
+    except:
+        user = "Anonymous"
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
@@ -167,6 +171,7 @@ def handle_content_message(event):
 def handle_join(event):
     global token,jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+
     token = event.reply_token
     get_receiver_addr(event)
 
@@ -174,16 +179,24 @@ def handle_join(event):
 
 @handler.add(FollowEvent)
 def handle_follow(event):
-    global token, jessin_userid
+    global token, jessin_userid, user
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    try:
+        user = line_bot_api.get_profile(event.source.user_id).display_name
+    except:
+        user = "someone"
     token = event.reply_token
 
     Function.added(event)
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-    global jessin_userid
+    global jessin_userid, user
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    try:
+        user = line_bot_api.get_profile(event.source.user_id).display_name
+    except:
+        user = "someone"
 
     Function.removed(event)
 
@@ -361,11 +374,7 @@ class Function:
     def report_bug(event):
 
         try:
-            try :
-                sender = line_bot_api.get_profile(event.source.user_id).display_name
-            except :
-                sender = "Anonymous"
-            report = Lines.report_bug("report") % (original_text,sender)
+            report = Lines.report_bug("report") % (original_text,user)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             reply = Lines.report_bug("success")
 
@@ -461,11 +470,7 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def added(event):
-        print(event.source)
-        try:
-            user = line_bot_api.get_profile(event.source.user_id).display_name
-        except:
-            user = "someone"
+
         reply = Lines.added("added") % (user)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
         report = Lines.added("report") % (user)
@@ -473,18 +478,6 @@ class Function:
 
     def removed(event):
         print("SOURCE",event.source)
-        user_id = event.source.user_id
-        try:
-            user = line_bot_api.get_profile(user_id).display_name
-
-
-        except LineBotApiError as e:
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-            user = "someone"
-
-
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
