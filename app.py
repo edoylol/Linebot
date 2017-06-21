@@ -16,7 +16,7 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import errno #test
+import errno
 import random
 import time
 import math
@@ -175,7 +175,8 @@ def handle_content_message(event):
 
     try :
         message_content = line_bot_api.get_message_content(event.message.id)
-        with tempfile.NamedTemporaryFile(dir="c:/code/linebot", prefix=ext + '-', delete=False) as tf:
+        print(message_content)
+        with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
             print("tf",tf)
             for chunk in message_content.iter_content():
                 tf.write(chunk)
