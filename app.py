@@ -55,7 +55,7 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
-tag_notifier_on = True
+
 def set_tag_notifier(cond="pass"):
     global tag_notifier_on
     if cond == "set":
@@ -74,9 +74,11 @@ def set_tag_notifier(cond="pass"):
 
     elif cond == "pass":
         pass
-
+    elif cond == "first":
+        tag_notifier_on = True
     print("current status : ", tag_notifier_on)
 
+set_tag_notifier("first")
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -118,7 +120,7 @@ def message_text(event):
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-
+    
 
 
     if any(word in text for word in Lines.megumi()):
@@ -144,6 +146,7 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
+    set_tag_notifier()
     print("current cond : ", tag_notifier_on)
     if tag_notifier_on == True :
         if any(word in text for word in Lines.jessin()):
