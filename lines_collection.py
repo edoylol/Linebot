@@ -216,11 +216,11 @@ class Lines:  # class to store respond lines
 
     def added(self,cond):
         if cond == "added" :
-            lines = [" Nyaann~ Thanks for adding me %s ^^ \n hope we can be friend !",
+            lines = [" Nyaann~ Thanks for adding me %s ^^ \nhope we can be friend !",
                      " Thanks for adding Megumi :3 \nHope we can be friend, %s ^^",
                      " Konichiwa %s,.. Megumi desu~ \nYoroshiku onegaishimasu \(^.^)/ ",
-                     " Megumi desu ! \n yoroshiku nee %s ~ ^^",
-                     " Megumi desu, you can call me kato or meg aswell.. \n hope we can be friends %s ~ :> ",
+                     " Megumi desu ! \nyoroshiku nee %s ~ ^^",
+                     " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends %s ~ :> ",
                      " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee %s ~ ",
                      " Konichiwa %s... Megumi desu ! ehehehe",
                      " Megumi desu :3 ,, \nyoroshiku nee %s-chan ~  #teehee"
