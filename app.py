@@ -19,6 +19,7 @@ import sys
 import random
 import time
 import math
+import tempfile
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -51,6 +52,7 @@ channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
 Lines = Lines()
 
@@ -128,20 +130,70 @@ def message_text(event):
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
-    global token,jessin_userid
+    global token
     token = event.reply_token
     get_receiver_addr(event)
 
     try :
         package_id = event.message.package_id
         sticker_id = event.message.sticker_id
-        line_bot_api.reply_message(token,StickerSendMessage(package_id,sticker_id))
+        line_bot_api.reply_message(token,TextSendMessage(package_id,sticker_id))
 
     except LineBotApiError as e:
         print(event.message)
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
+
+@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+def handle_content_message(event):
+    global token
+    token = event.reply_token
+    get_receiver_addr(event)
+
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+    elif isinstance(event.message, VideoMessage):
+        ext = 'mp4'
+    elif isinstance(event.message, AudioMessage):
+        ext = 'm4a'
+    else:
+        return
+
+    try :
+        message_content = line_bot_api.get_message_content(event.message.id)
+        with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+            for chunk in message_content.iter_content():
+                tf.write(chunk)
+            tempfile_path = tf.name
+    except LineBotApiError as e:
+        print("error part 1")
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
+
+    try :
+        dist_path = tempfile_path + '.' + ext
+        dist_name = os.path.basename(dist_path)
+        os.rename(tempfile_path, dist_path)
+    except LineBotApiError as e:
+        print("error part 2")
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
+
+    try :
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text='Save content.'),
+                TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+            ])
+    except LineBotApiError as e:
+        print("error part 3")
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
+
 
 @handler.add(JoinEvent)
 def handle_join(event):
