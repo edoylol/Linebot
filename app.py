@@ -232,21 +232,21 @@ class Function:
 
     def choose_one_simple():
         split_text = text.split(" ")
+        print(split_text)
         found_options = []
         for word in split_text:
             if '#' in word:
+                print(word)
                 try:
                     word = OtherUtil.remove_symbols(word)
+                    print(word)
                     found_options.append(word)
                 except:
                     pass
         try :
             result = random.choice(found_options)
             reply = Lines.choose_one() % str(result)
-        except LineBotApiError as e:
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        except :
             reply = "Try to add '#' before the item, like #this or #that"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
