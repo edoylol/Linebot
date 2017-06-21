@@ -16,6 +16,7 @@ from __future__ import unicode_literals
 
 import os
 import sys
+import errno
 import random
 import time
 import math
@@ -52,12 +53,8 @@ channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
-
-Lines = Lines()
-
-tag_notifier_on = True
-
 def make_static_tmp_dir():
     try:
         os.makedirs(static_tmp_path)
@@ -66,6 +63,11 @@ def make_static_tmp_dir():
             pass
         else:
             raise
+
+Lines = Lines()
+tag_notifier_on = True
+
+
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
