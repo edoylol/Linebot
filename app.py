@@ -193,6 +193,7 @@ def handle_join(event):
 def handle_follow(event):
     global token, jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    print(event)
     update_user_list(event)
     token = event.reply_token
 
@@ -380,7 +381,7 @@ class Function:
 
     def report_bug(event):
         try :
-            print(event.source)
+            print(event)
             user_id = event.source.user_id
             print("REPORT BUG USERID",user_id)
             print("user id is in userlist?",user_id in userlist)
