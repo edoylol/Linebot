@@ -383,7 +383,7 @@ class Function:
             user_id = event.source.user_id
             print("REPORT BUG USERID",user_id)
             print("user id is in userlist?",user_id in userlist)
-            user = userlist[user_id]
+            #user = userlist[user_id]
         except :
             user = "Anonymous"
         try:
