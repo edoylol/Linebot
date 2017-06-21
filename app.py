@@ -126,6 +126,12 @@ def message_text(event):
     if tag_notifier_on :
         Function.tag_notifier(event)
 
+@handler.add(MessageEvent, message=StickerMessage)
+def handle_sticker_message(event):
+    package_id = event.message.package_id,
+    sticker_id = event.message.sticker_id
+    line_bot_api.reply_message(token,StickerSendMessage(package_id,sticker_id))
+
 @handler.add(JoinEvent)
 def handle_join(event):
     global token,jessin_userid
