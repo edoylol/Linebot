@@ -55,7 +55,7 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
-tag_notifier_on = True
+#tag_notifier_on = True
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -121,7 +121,7 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    Function.tag_notifier(event)
+    if tag_notifier_on: Function.tag_notifier(event)
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -361,7 +361,7 @@ class Function:
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def set_tag_notifier():
-        global  tag_notifier_on
+        global tag_notifier_on
         if any(word in text for word in ["on ","enable "]) :
             tag_notifier_on = True
             reply = Lines.set_tag_notifier("on")
@@ -373,19 +373,18 @@ class Function:
         else :
             reply = Lines.join("other")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
-        print("set",tag_notifier_on)
+        print("current status : ",tag_notifier_on)
 
     def tag_notifier(event):
         global tag_notifier_on
         print("tag notif function : ",tag_notifier_on)
-        if tag_notifier_on :
-            if any(word in text for word in Lines.jessin()) :
-                try :
-                    sender = line_bot_api.get_profile(event.source.user_id).display_name
-                except :
-                    sender = "someone"
-                report = Lines.tag_notifier() % (sender,original_text)
-                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        if any(word in text for word in Lines.jessin()) :
+            try :
+                sender = line_bot_api.get_profile(event.source.user_id).display_name
+            except :
+                sender = "someone"
+            report = Lines.tag_notifier() % (sender,original_text)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def notyetcreated():
         reply = Lines.notyetcreated()
