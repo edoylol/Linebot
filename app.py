@@ -91,29 +91,7 @@ def get_receiver_addr(event):
     else :
         address = event.source.user_id
     return address
-def set_tag_notifier(cond="pass"):
-    global tag_notifier_on
-    if cond == "set":
-        if any(word in text for word in ["on ", "enable "]):
-            tag_notifier_on = True
-            reply = Lines.set_tag_notifier("on")
 
-        elif any(word in text for word in ["off ", "disable "]):
-            tag_notifier_on = False
-            reply = Lines.set_tag_notifier("off")
-        else:
-            reply = Lines.set_tag_notifier("fail")
-            pass
-
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-    elif cond == "pass":
-        pass
-        print("func passed")
-    elif cond == "first":
-        tag_notifier_on = True
-        print("first initialize")
-    print("current status : ", tag_notifier_on)
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -124,11 +102,6 @@ def message_text(event):
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-    if tag_notifier_on :
-        mention = True
-    elif not tag_notifier_on :
-        mention = False
-
 
 
     if any(word in text for word in Lines.megumi()):
@@ -154,8 +127,8 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    print("current cond : ", mention)
-    if mention :
+    print("current cond : ", tag_notifier_on)
+    if tag_notifier_on :
         if any(word in text for word in Lines.jessin()):
             Function.tag_notifier(event)
 
@@ -396,8 +369,27 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def set_tag_notifier(cond="pass"):
+        global tag_notifier_on
+        if cond == "set":
+            if any(word in text for word in ["on ", "enable "]):
+                tag_notifier_on = True
+                reply = Lines.set_tag_notifier("on")
 
+            elif any(word in text for word in ["off ", "disable "]):
+                tag_notifier_on = False
+                reply = Lines.set_tag_notifier("off")
+            else:
+                reply = Lines.set_tag_notifier("fail")
+                pass
 
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+        elif cond == "pass":
+            pass
+            print("func passed")
+
+        print("current status : ", tag_notifier_on)
 
     def tag_notifier(event):
         try :
