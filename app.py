@@ -135,9 +135,10 @@ def handle_sticker_message(event):
     get_receiver_addr(event)
 
     try :
-        package_id = event.message.package_id
-        sticker_id = event.message.sticker_id
-        line_bot_api.reply_message(token,TextSendMessage(package_id,sticker_id))
+        package_id = str(event.message.package_id)
+        sticker_id = str(event.message.sticker_id)
+        reply = ("package =",package_id,"\nsticker id =",sticker_id)
+        line_bot_api.reply_message(token,TextSendMessage(reply))
 
     except LineBotApiError as e:
         print(event.message)
