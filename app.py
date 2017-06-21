@@ -130,7 +130,9 @@ def message_text(event):
         Function.tag_notifier(event)
 
 #@handler.add(MessageEvent, message=StickerMessage)
-"""  ' what does people do when being sent a sticker ??? '
+# what does people do when being sent a sticker ???
+
+"""  
 def handle_sticker_message(event):
     global token
     token = event.reply_token
@@ -149,41 +151,14 @@ def handle_sticker_message(event):
         print(e.error.details)
 """
 
-@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+#@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+# what does people do when being sent a image, video, or audio ??? #
+
+"""
 def handle_content_message(event):
     global token
     token = event.reply_token
     get_receiver_addr(event)
-
-    try:
-        message_id = event.message.id
-        print("HTTP REQUEST :","https://api.line.me/v2/bot/message/"+message_id+"/content")
-        message_content = line_bot_api.get_message_content(message_id)
-    except LineBotApiError as e:
-        print("ERROR PART 1")
-        print(e.status_code)
-        print(e.error.message)
-        print(e.error.details)
-
-    try:
-        file_name = "testpic" + ".jpg"  # make full name with extension
-        try:
-            urllib.request.urlretrieve("https://api.line.me/v2/bot/message/" + message_id + "/content", file_name)
-            print("download success")
-        except Exception:
-            print("download fail")
-    except:
-        print("download fail")
-"""        
-    try:
-        with open("TEST.jpg", 'wb') as fd:
-            for chunk in message_content.iter_content():
-                fd.write(chunk)
-    except LineBotApiError as e:
-        print("ERROR PART 2")
-        print(e.status_code)
-        print(e.error.message)
-        print(e.error.details)
 """
 
 
@@ -197,6 +172,21 @@ def handle_join(event):
 
     Function.join()
 
+@handler.add(FollowEvent)
+def handle_follow(event):
+    global token, jessin_userid
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    token = event.reply_token
+
+    Function.added(event)
+
+@handler.add(UnfollowEvent)
+def handle_unfollow(event):
+    global token, jessin_userid
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    token = event.reply_token
+
+    Function.removed(event)
 
 
 """"===================================== Usable Function List ==================================================="""
@@ -376,7 +366,7 @@ class Function:
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
             except :
                 sender = "Anonymous"
-            report = Lines.report_note() % (original_text,sender)
+            report = Lines.report_bug("report") % (original_text,sender)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             reply = Lines.report_bug("success")
 
@@ -386,9 +376,9 @@ class Function:
 
     def join():
 
-        reply = Lines.join()
+        reply = Lines.join("join")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
-        report = Lines.join_note()
+        report = Lines.join("report")
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def leave(event):
@@ -402,7 +392,7 @@ class Function:
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-            report = Lines.leave_note() % ('Group', group_id)
+            report = Lines.leave("report") % ('Group', group_id)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
             line_bot_api.leave_group(group_id)
@@ -416,7 +406,7 @@ class Function:
             reply = Lines.leave("regards")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-            report = Lines.leave_note() % ('Chatroom', room_id)
+            report = Lines.leave("report") % ('Chatroom', room_id)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
             line_bot_api.leave_room(room_id)
@@ -471,6 +461,33 @@ class Function:
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def added(event):
+        try:
+            user = line_bot_api.get_profile(event.source.user_id).display_name
+        except:
+            user = "someone"
+        reply = Lines.added("added") % (user)
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        report = Lines.added("report") % (user)
+        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    def removed(event):
+        try:
+            user = line_bot_api.get_profile(event.source.user_id).display_name
+        except:
+            user = "someone"
+        reply = Lines.removed("removed")
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        reply = Lines.removed("regards") % (user)
+        line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+        report = Lines.removed("report") % (user)
+        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    def template():
+        reply = Lines.added("cond")
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        report = Lines.added("report")
+        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 class OtherUtil:
     def remove_symbols(word):
