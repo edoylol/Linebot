@@ -471,6 +471,7 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def removed(event):
+        print("SOURCE",event.source)
         user_id = event.source.user_id
         try:
             user = line_bot_api.get_profile(user_id).display_name
@@ -481,7 +482,7 @@ class Function:
             print(e.error.message)
             print(e.error.details)
             user = "someone"
-            
+
 
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
