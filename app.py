@@ -369,17 +369,17 @@ class Function:
                 tag_notifier_on = True
                 reply = Lines.set_tag_notifier("on")
 
-
             elif any(word in text for word in ["off ","disable "]) :
                 tag_notifier_on = False
                 reply = Lines.set_tag_notifier("off")
             else:
                 reply = Lines.set_tag_notifier("fail")
 
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
         elif cond == "pass" :
             pass
 
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
         print("current status : ",tag_notifier_on)
         return tag_notifier_on
 
