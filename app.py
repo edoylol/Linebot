@@ -128,9 +128,16 @@ def message_text(event):
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
-    package_id = event.message.package_id,
-    sticker_id = event.message.sticker_id
-    line_bot_api.reply_message(token,StickerSendMessage(package_id,sticker_id))
+    try :
+        package_id = event.message.package_id,
+        sticker_id = event.message.sticker_id
+        line_bot_api.reply_message(token,StickerSendMessage(package_id,sticker_id))
+
+    except LineBotApiError as e:
+        print(event.message)
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
 
 @handler.add(JoinEvent)
 def handle_join(event):
