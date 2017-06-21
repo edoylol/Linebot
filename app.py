@@ -128,7 +128,8 @@ def message_text(event):
     if tag_notifier_on :
         Function.tag_notifier(event)
 
-@handler.add(MessageEvent, message=StickerMessage)
+#@handler.add(MessageEvent, message=StickerMessage)
+"""  ' what does people do when being sent a sticker ??? '
 def handle_sticker_message(event):
     global token
     token = event.reply_token
@@ -145,8 +146,10 @@ def handle_sticker_message(event):
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
+"""
 
 @handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+
 def handle_content_message(event):
     global token
     token = event.reply_token
@@ -164,9 +167,11 @@ def handle_content_message(event):
     try :
         message_content = line_bot_api.get_message_content(event.message.id)
         with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+            print("tf",tf)
             for chunk in message_content.iter_content():
                 tf.write(chunk)
             tempfile_path = tf.name
+            print ("tempfile path", tempfile_path)
     except LineBotApiError as e:
         print("error part 1")
         print(e.status_code)
