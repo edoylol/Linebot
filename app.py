@@ -120,7 +120,7 @@ def message_text(event):
     get_receiver_addr(event)
 
 
-    print("current cond : ",tag_notifier_on)
+
     if any(word in text for word in Lines.megumi()):
 
         if "say " in text : Function.echo()
@@ -133,7 +133,7 @@ def message_text(event):
 
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])      : set_tag_notifier("set")
+                                             "notif", "mention"])       : set_tag_notifier("set")
             else                                                        : Function.false()
 
         elif "command4 " in text                                    : Function.notyetcreated()
@@ -144,7 +144,10 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    if tag_notifier_on : Function.tag_notifier(event)
+    print("current cond : ", tag_notifier_on)
+    if tag_notifier_on == True :
+        if any(word in text for word in Lines.jessin()):
+            Function.tag_notifier(event)
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -387,14 +390,12 @@ class Function:
 
 
     def tag_notifier(event):
-
-        if any(word in text for word in Lines.jessin()) :
-            try :
-                sender = line_bot_api.get_profile(event.source.user_id).display_name
-            except :
-                sender = "someone"
-            report = Lines.tag_notifier() % (sender,original_text)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        try :
+            sender = line_bot_api.get_profile(event.source.user_id).display_name
+        except :
+            sender = "someone"
+        report = Lines.tag_notifier() % (sender,original_text)
+        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def notyetcreated():
         reply = Lines.notyetcreated()
