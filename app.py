@@ -22,6 +22,7 @@ import time
 import math
 import tempfile
 import urllib.request
+import Database
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -91,6 +92,10 @@ def get_receiver_addr(event):
         address = event.source.user_id
     return address
 
+def update_user_list(event):
+    try :
+        user_id = event.source.user_id
+        user = line_bot_api.get_profile(event.source.user_id).display_name)
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -98,11 +103,8 @@ def message_text(event):
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     try:
-        user = line_bot_api.get_profile(event.source.user_id).display_name
+        user = line_bot_api.get_profile(event.source.user_id).display_name)
     except LineBotApiError as e:
-        print(e.status_code)
-        print(e.error.message)
-        print(e.error.details)
         user = "Anonymous"
     original_text = event.message.text
     text = original_text.lower()
@@ -199,9 +201,6 @@ def handle_unfollow(event):
     try:
         user = line_bot_api.get_profile(event.source.user_id).display_name
     except LineBotApiError as e:
-        print(e.status_code)
-        print(e.error.message)
-        print(e.error.details)
         user = "someone"
 
     Function.removed(event)
