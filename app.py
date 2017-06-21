@@ -83,6 +83,7 @@ def callback():  # get X-Line-Signature header value
     except InvalidSignatureError:
         abort(400)
     return 'OK'
+
 def get_receiver_addr(event):
     global address
     if isinstance(event.source, SourceGroup):
@@ -176,12 +177,14 @@ def handle_content_message(event):
     try :
         message_content = line_bot_api.get_message_content(event.message.id)
         print(message_content)
-        with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
-            print("tf",tf)
-            for chunk in message_content.iter_content():
-                tf.write(chunk)
-            tempfile_path = tf.name
-            print ("tempfile path", tempfile_path)
+
+        #with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+         #   print("tf",tf)
+         #   for chunk in message_content.iter_content():
+         #       tf.write(chunk)
+         #   tempfile_path = tf.name
+          #  print ("tempfile path", tempfile_path)
+
     except LineBotApiError as e:
         print("error part 1")
         print(e.status_code)
