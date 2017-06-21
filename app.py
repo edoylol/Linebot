@@ -370,15 +370,22 @@ class Function:
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def set_tag_notifier(cond="pass"):
-        global tag_notifier_on
+        global tag_notifier_on , tag_notifier_conf
         if cond == "set":
             if any(word in text for word in ["on ", "enable "]):
-                tag_notifier_on = True
-                reply = Lines.set_tag_notifier("on")
+                if tag_notifier_on is not True :
+                    tag_notifier_on = True
+                    reply = Lines.set_tag_notifier("on")
+                else:  # already True
+                    reply = "nothing changed"
 
             elif any(word in text for word in ["off ", "disable "]):
-                tag_notifier_on = False
-                reply = Lines.set_tag_notifier("off")
+                if tag_notifier_on is True :
+                    tag_notifier_on = False
+                    reply = Lines.set_tag_notifier("off")
+                else:  # already False
+                    reply = "nothing changed"
+
             else:
                 reply = Lines.set_tag_notifier("fail")
                 pass
