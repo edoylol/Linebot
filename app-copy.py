@@ -16,7 +16,7 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import errno #test
+import errno
 import random
 import time
 import math
