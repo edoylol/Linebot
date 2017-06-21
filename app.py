@@ -381,11 +381,8 @@ class Function:
 
     def report_bug(event):
         try :
-            print(event)
             user_id = event.source.user_id
-            print("REPORT BUG USERID",user_id)
-            print("user id is in userlist?",user_id in userlist)
-            #user = userlist[user_id]
+            user = userlist[user_id]
         except :
             user = "Anonymous"
         try:
@@ -485,6 +482,11 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def added(event):
+        try :
+            user_id = event.source.user_id
+            user = userlist[user_id]
+        except :
+            user = "Someone"
 
         reply = Lines.added("added") % (user)
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
@@ -492,6 +494,12 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def removed(event):
+        try :
+            user_id = event.source.user_id
+            user = userlist[user_id]
+        except :
+            user = "Someone"
+
         print("SOURCE",event.source)
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
