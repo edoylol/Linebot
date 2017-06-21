@@ -243,7 +243,10 @@ class Function:
         try :
             result = random.choice(found_options)
             reply = Lines.choose_one() % str(result)
-        except :
+        except LineBotApiError as e:
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
             reply = "Try to add '#' before the item, like #this or #that"
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
