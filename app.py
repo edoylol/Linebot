@@ -99,7 +99,10 @@ def message_text(event):
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     try:
         user = line_bot_api.get_profile(event.source.user_id).display_name
-    except:
+    except LineBotApiError as e:
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
         user = "Anonymous"
     original_text = event.message.text
     text = original_text.lower()
@@ -195,7 +198,10 @@ def handle_unfollow(event):
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     try:
         user = line_bot_api.get_profile(event.source.user_id).display_name
-    except:
+    except LineBotApiError as e:
+        print(e.status_code)
+        print(e.error.message)
+        print(e.error.details)
         user = "someone"
 
     Function.removed(event)
