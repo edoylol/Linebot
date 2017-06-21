@@ -104,10 +104,12 @@ def message_text(event):
     global token, original_text, text, jessin_userid, user, tag_notifier_on
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+
     try:
         user = line_bot_api.get_profile(event.source.user_id).display_name
-    except LineBotApiError as e:
+    except :
         user = "Anonymous"
+
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
@@ -202,7 +204,7 @@ def handle_unfollow(event):
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     try:
         user = line_bot_api.get_profile(event.source.user_id).display_name
-    except LineBotApiError as e:
+    except :
         user = "someone"
 
     Function.removed(event)
