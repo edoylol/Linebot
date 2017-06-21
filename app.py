@@ -232,14 +232,11 @@ class Function:
 
     def choose_one_simple():
         split_text = text.split(" ")
-        print(split_text)
         found_options = []
         for word in split_text:
             if '#' in word:
-                print(word)
                 try:
                     word = OtherUtil.remove_symbols(word)
-                    print(word)
                     found_options.append(word)
                 except:
                     pass
@@ -414,7 +411,7 @@ class Function:
 
 
 class OtherUtil:
-    def remove_symbols(self,word):
+    def remove_symbols(word):
         symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
