@@ -124,6 +124,10 @@ def message_text(event):
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
+    if tag_notifier_on :
+        mention = True
+    elif not tag_notifier_on :
+        mention = False
 
 
 
@@ -150,8 +154,8 @@ def message_text(event):
         else                                                        : Function.false()
 
     # special function
-    print("current cond : ", tag_notifier_on)
-    if tag_notifier_on :
+    print("current cond : ", mention)
+    if mention :
         if any(word in text for word in Lines.jessin()):
             Function.tag_notifier(event)
 
