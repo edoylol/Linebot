@@ -56,11 +56,9 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-try :
-    tag_notifier_on = True
-    print("init success")
-except :
-    print("init fail")
+tag_notifier_on = True
+
+
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -126,8 +124,7 @@ def message_text(event):
         elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
         else                                                        : Function.false()
 
-    # special function
-    print("current cond : ", tag_notifier_on)
+    # special tag / mention function
     if tag_notifier_on :
         if any(word in text for word in Lines.jessin()):
             Function.tag_notifier(event)
@@ -377,14 +374,14 @@ class Function:
                     tag_notifier_on = True
                     reply = Lines.set_tag_notifier("on")
                 else:  # already True
-                    reply = "nothing changed"
+                    reply = Lines.set_tag_notifier("same")
 
             elif any(word in text for word in ["off ", "disable "]):
                 if tag_notifier_on is True :
                     tag_notifier_on = False
                     reply = Lines.set_tag_notifier("off")
                 else:  # already False
-                    reply = "nothing changed"
+                    reply = Lines.set_tag_notifier("same")
 
             else:
                 reply = Lines.set_tag_notifier("fail")
@@ -580,11 +577,11 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     def tag_notifier():
-        lines = ['Master, I think %s is calling you.. \nHere\'s the detailed message : \n"%s"',
-                 '%s is calling you master.. \nHere\'s the detailed message : \n"%s"',
-                 'Master, I think your name is being called by %s..\nHere\'s the detailed message : \n"%s"',
-                 'Master,.. tag message from %s \nHere\'s the detailed message : \n"%s"',
-                 'Check this out .. \nMessage from %s : \n"%s"',
+        lines = ['Master, I think %s is calling you.. \n\n"%s"',
+                 '%s is calling you master.. \n\n"%s"',
+                 'Master, I think your name is being called by %s..\n\n"%s"',
+                 'Master,.. tag message from %s \n\n"%s"',
+                 'Check this out .. %s tagged you \n\n"%s"',
                  ]
         return random.choice(lines)
 
@@ -603,10 +600,16 @@ class Lines:  # class to store respond lines
                      "Done,, Tag notifier is off now..",
                      "Sure,, glad to see you again.."]
             return random.choice(lines)
+        elif cond == "same" :
+            lines = ["Hmm.. seems nothing changed...",
+                     "Hmm.. try to do it one more time.. ^^ \nsometimes it takes more than once",
+                     "I don't see any difference though...",
+                     "Please try again until it's changed ^^,,\nsometimes it takes more than once "]
+            return random.choice(lines)
         else :
             lines = ["Gomen, I don't catch that.. :/",
                      "Hmm.. try to do it one more time.. ^^",
-                     "Gomen, seems something is wrong...",
+                     "Gomen, seems notifier setting is failed...",
                      "I think you gave wrong instruction (?) xD"]
             return random.choice(lines)
 
