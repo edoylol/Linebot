@@ -190,7 +190,7 @@ def handle_content_message(event):
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
-
+"""
     try :
         dist_path = tempfile_path + '.' + ext
         dist_name = os.path.basename(dist_path)
@@ -212,7 +212,7 @@ def handle_content_message(event):
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
-
+"""
 
 @handler.add(JoinEvent)
 def handle_join(event):
