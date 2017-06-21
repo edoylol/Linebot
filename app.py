@@ -55,9 +55,11 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+print("STATIC TEMP PATH :",static_tmp_path)
 def make_static_tmp_dir():
     try:
         os.makedirs(static_tmp_path)
+        print("MAKE STATIC TEMP DIR : ",os.makedirs(static_tmp_path))
     except OSError as exc:
         if exc.errno == errno.EEXIST and os.path.isdir(static_tmp_path):
             pass
@@ -178,14 +180,13 @@ def handle_content_message(event):
         message_content = line_bot_api.get_message_content(event.message.id)
         print("MESSAGE CONTENT IS : ",message_content)
 
-        #with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
+        with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
          #   print("tf",tf)
-        for chunk in message_content.iter_content():
-            print(chunk)
-            #tf.write(chunk)
+            for chunk in message_content.iter_content():
+                tf.write(chunk)
 
          #   tempfile_path = tf.name
-          #  print ("tempfile path", tempfile_path)
+        #  print ("tempfile path", tempfile_path)
 
     except LineBotApiError as e:
         print("error part 1")
