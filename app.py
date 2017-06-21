@@ -74,8 +74,10 @@ def set_tag_notifier(cond="pass"):
 
     elif cond == "pass":
         pass
+        print("func passed")
     elif cond == "first":
         tag_notifier_on = True
+        print("first initialize")
     print("current status : ", tag_notifier_on)
 
 set_tag_notifier("first")
