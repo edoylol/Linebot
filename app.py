@@ -180,8 +180,10 @@ def handle_content_message(event):
 
         #with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
          #   print("tf",tf)
-         #   for chunk in message_content.iter_content():
-         #       tf.write(chunk)
+        for chunk in message_content.iter_content():
+            print(chunk)
+            #tf.write(chunk)
+
          #   tempfile_path = tf.name
           #  print ("tempfile path", tempfile_path)
 
