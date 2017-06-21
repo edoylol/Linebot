@@ -58,7 +58,14 @@ Lines = Lines()
 
 tag_notifier_on = True
 
-
+def make_static_tmp_dir():
+    try:
+        os.makedirs(static_tmp_path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(static_tmp_path):
+            pass
+        else:
+            raise
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -504,5 +511,6 @@ if __name__ == "__main__":
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
+    make_static_tmp_dir()
     app.run(debug=options.debug, port=options.port)
 
