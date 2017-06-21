@@ -95,7 +95,9 @@ def get_receiver_addr(event):
 def update_user_list(event):
     try :
         user_id = event.source.user_id
-        user = line_bot_api.get_profile(event.source.user_id).display_name)
+        user = line_bot_api.get_profile(event.source.user_id).display_name
+    except :
+        pass
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -103,7 +105,7 @@ def message_text(event):
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     try:
-        user = line_bot_api.get_profile(event.source.user_id).display_name)
+        user = line_bot_api.get_profile(event.source.user_id).display_name
     except LineBotApiError as e:
         user = "Anonymous"
     original_text = event.message.text
