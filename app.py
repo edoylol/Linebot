@@ -182,9 +182,8 @@ def handle_follow(event):
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-    global token, jessin_userid
+    global jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-    token = event.reply_token
 
     Function.removed(event)
 
