@@ -128,6 +128,12 @@ def message_text(event):
 
 @handler.add(MessageEvent, message=StickerMessage)
 def handle_sticker_message(event):
+    global token,jessin_userid
+
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    token = event.reply_token
+    get_receiver_addr(event)
+    
     try :
         package_id = event.message.package_id,
         sticker_id = event.message.sticker_id
