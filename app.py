@@ -471,11 +471,13 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def removed(event):
+        user_id = event.source.user_id
         try:
             user = line_bot_api.get_profile(event.source.user_id).display_name
-            user_id = event.source.user_id
+
         except:
             user = "someone"
+
         reply = Lines.removed("removed")
         line_bot_api.push_message(user_id, TextSendMessage(text=reply))
         reply = Lines.removed("regards") % (user)
