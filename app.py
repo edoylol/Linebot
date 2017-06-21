@@ -21,6 +21,7 @@ import random
 import time
 import math
 import tempfile
+import urllib.request
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -156,13 +157,24 @@ def handle_content_message(event):
 
     try:
         message_id = event.message.id
-        print("HTTP REQUEST :","https://api.line.me/v2/bot/message/",message_id,"/content")
+        print("HTTP REQUEST :","https://api.line.me/v2/bot/message/"+message_id+"/content")
         message_content = line_bot_api.get_message_content(message_id)
     except LineBotApiError as e:
         print("ERROR PART 1")
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
+
+    try:
+        file_name = "testpic" + ".jpg"  # make full name with extension
+        try:
+            urllib.request.urlretrieve("https://api.line.me/v2/bot/message/" + message_id + "/content", file_name)
+            print("download success")
+        except Exception:
+            print("download fail")
+    except:
+        print("download fail")
+"""        
     try:
         with open("TEST.jpg", 'wb') as fd:
             for chunk in message_content.iter_content():
@@ -172,6 +184,9 @@ def handle_content_message(event):
         print(e.status_code)
         print(e.error.message)
         print(e.error.details)
+"""
+
+
 
 @handler.add(JoinEvent)
 def handle_join(event):
