@@ -57,6 +57,7 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
+userlist = Database.userlist
 tag_notifier_on = True
 
 
@@ -93,11 +94,16 @@ def get_receiver_addr(event):
     return address
 
 def update_user_list(event):
-    try :
-        user_id = event.source.user_id
-        user = line_bot_api.get_profile(event.source.user_id).display_name
-    except :
-        pass
+    global userlist
+
+    if isinstance(event.source, SourceUser):
+        try :
+            user_id = event.source.user_id
+            user = line_bot_api.get_profile(event.source.user_id).display_name
+            userlist.update({user_id:user})
+            print(userlist)
+        except :
+            pass
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -105,15 +111,11 @@ def message_text(event):
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
-    try:
-        user = line_bot_api.get_profile(event.source.user_id).display_name
-    except :
-        user = "Anonymous"
-
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
+    update_user_list(event)
 
 
     if any(word in text for word in Lines.megumi()):
@@ -188,24 +190,19 @@ def handle_join(event):
 
 @handler.add(FollowEvent)
 def handle_follow(event):
-    global token, jessin_userid, user
+    global token, jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-    try:
-        user = line_bot_api.get_profile(event.source.user_id).display_name
-    except:
-        user = "someone"
+    update_user_list(event)
     token = event.reply_token
+
 
     Function.added(event)
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
-    global jessin_userid, user
+    global jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-    try:
-        user = line_bot_api.get_profile(event.source.user_id).display_name
-    except :
-        user = "someone"
+    update_user_list(event)
 
     Function.removed(event)
 
