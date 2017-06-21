@@ -156,7 +156,7 @@ def handle_content_message(event):
 
     try:
         message_id = event.message.id
-        print("MESSAGE ID :",message_id)
+        print("HTTP REQUEST :","https://api.line.me/v2/bot/message/",message_id,"/content")
         message_content = line_bot_api.get_message_content(message_id)
     except LineBotApiError as e:
         print("ERROR PART 1")
@@ -164,7 +164,7 @@ def handle_content_message(event):
         print(e.error.message)
         print(e.error.details)
     try:
-        with open(file_path, 'wb') as fd:
+        with open("TEST.jpg", 'wb') as fd:
             for chunk in message_content.iter_content():
                 fd.write(chunk)
     except LineBotApiError as e:
