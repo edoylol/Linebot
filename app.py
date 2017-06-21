@@ -102,8 +102,9 @@ def update_user_list(event):
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
             print(userlist)
+            print("update success")
         except :
-            pass
+            print("update fail")
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -380,6 +381,8 @@ class Function:
     def report_bug(event):
         try :
             user_id = event.source.user_id
+            print("REPORT BUG USERID",user_id)
+            print("user id is in userlist?",user_id in userlist)
             user = userlist[user_id]
         except :
             user = "Anonymous"
