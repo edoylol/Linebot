@@ -116,7 +116,7 @@ def message_text(event):
 
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])       : set_tag_notifier("set")
+                                             "notif", "mention"])       : Function.set_tag_notifier("set")
             else                                                        : Function.false()
 
         elif "command4 " in text                                    : Function.notyetcreated()
