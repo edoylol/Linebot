@@ -111,7 +111,7 @@ def get_receiver_addr(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    global token, original_text, text, jessin_userid
+    global token, original_text, text, jessin_userid, tag_notifier_on
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
