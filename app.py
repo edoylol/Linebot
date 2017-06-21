@@ -55,32 +55,11 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
-
-def set_tag_notifier(cond="pass"):
-    global tag_notifier_on
-    if cond == "set":
-        if any(word in text for word in ["on ", "enable "]):
-            tag_notifier_on = True
-            reply = Lines.set_tag_notifier("on")
-
-        elif any(word in text for word in ["off ", "disable "]):
-            tag_notifier_on = False
-            reply = Lines.set_tag_notifier("off")
-        else:
-            reply = Lines.set_tag_notifier("fail")
-            pass
-
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-    elif cond == "pass":
-        pass
-        print("func passed")
-    elif cond == "first":
-        tag_notifier_on = True
-        print("first initialize")
-    print("current status : ", tag_notifier_on)
-
-set_tag_notifier("first")
+try :
+    tag_notifier_on = True
+    print("init success")
+except :
+    print("init fail")
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
