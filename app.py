@@ -461,6 +461,7 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def added(event):
+        print(event.source)
         try:
             user = line_bot_api.get_profile(event.source.user_id).display_name
         except:
