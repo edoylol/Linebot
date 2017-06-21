@@ -384,8 +384,7 @@ class Function:
         return tag_notifier_on
 
     def tag_notifier(event):
-        global tag_notifier_on
-        print("tag notif function : ",tag_notifier_on)
+
         if any(word in text for word in Lines.jessin()) :
             try :
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
