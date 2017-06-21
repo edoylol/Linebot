@@ -28,7 +28,7 @@ Lines = Lines()
 class Function:
     """====================== Main Function List ==========================="""
 
-    def rand_int():
+    def rand_int(self):
 
         def random_number(min=1, max=5):
             # just in case
@@ -60,7 +60,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def echo():
+    def echo(self):
         try :
             start_index = text.find("say ")+4
             reply = Lines.echo() % str(original_text[start_index:])
@@ -69,7 +69,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def choose_one():
+    def choose_one(self):
         split_text = text.replace(",", " , ").split(" ")
         found_options = []
         cursor = 0
@@ -116,7 +116,7 @@ class Function:
             reply = " Oops, something wrong... I don't see anything to pick.."
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def choose_one_simple():
+    def choose_one_simple(self):
         split_text = text.split(" ")
         found_options = []
         for word in split_text:
@@ -134,7 +134,7 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def time_date():
+    def time_date(self):
         def find_GMT():
             split_text = text.split(" ")
             GMT_found_index = 0
@@ -193,7 +193,7 @@ class Function:
 
 
 
-    def report_bug(event):
+    def report_bug(self,event):
 
         try:
             try :
@@ -208,14 +208,14 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def join():
+    def join(self):
 
         reply = Lines.join()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
         report = Lines.join_note()
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-    def leave(event):
+    def leave(self,event):
 
         if isinstance(event.source, SourceGroup):
             group_id = event.source.group_id
@@ -249,7 +249,7 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier(cond="pass"):
+    def set_tag_notifier(self,cond="pass"):
         global tag_notifier_on , tag_notifier_conf
         if cond == "set":
             if any(word in text for word in ["on ", "enable "]):
@@ -278,7 +278,7 @@ class Function:
 
         print("current status : ", tag_notifier_on)
 
-    def tag_notifier(event):
+    def tag_notifier(self,event):
         if any(word in text for word in Lines.jessin()):
             try :
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
@@ -287,18 +287,18 @@ class Function:
             report = Lines.tag_notifier() % (sender,original_text)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-    def notyetcreated():
+    def notyetcreated(self):
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def false():
+    def false(self):
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
 
 
 class OtherUtil:
-    def remove_symbols(word):
+    def remove_symbols(self,word):
         symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
