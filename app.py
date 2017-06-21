@@ -92,12 +92,13 @@ def get_receiver_addr(event):
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     global token, original_text, text, jessin_userid
+
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
-    Function.set_tag_notifier()
+    tag_notifier_on = Function.set_tag_notifier(init=tag_notifier_on)
 
 
     if any(word in text for word in Lines.megumi()):
@@ -362,8 +363,8 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier(cond="pass"):
-        global tag_notifier_on
+    def set_tag_notifier(cond="pass",init=tag_notifier_on):
+
         if cond == "set" :
             if any(word in text for word in ["on ","enable "]) :
                 tag_notifier_on = True
@@ -378,7 +379,7 @@ class Function:
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
         elif cond == "pass" :
-            pass
+            tag_notifier_on = init
 
         print("current status : ",tag_notifier_on)
         return tag_notifier_on
