@@ -55,6 +55,7 @@ if channel_access_token is None:
     sys.exit(1)
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
+
 try :
     tag_notifier_on = True
     print("init success")
@@ -90,35 +91,33 @@ def get_receiver_addr(event):
     else :
         address = event.source.user_id
     return address
+def set_tag_notifier(cond="pass"):
+    global tag_notifier_on
+    if cond == "set":
+        if any(word in text for word in ["on ", "enable "]):
+            tag_notifier_on = True
+            reply = Lines.set_tag_notifier("on")
 
+        elif any(word in text for word in ["off ", "disable "]):
+            tag_notifier_on = False
+            reply = Lines.set_tag_notifier("off")
+        else:
+            reply = Lines.set_tag_notifier("fail")
+            pass
+
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+    elif cond == "pass":
+        pass
+        print("func passed")
+    elif cond == "first":
+        tag_notifier_on = True
+        print("first initialize")
+    print("current status : ", tag_notifier_on)
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     global token, original_text, text, jessin_userid, tag_notifier_on
-
-    def set_tag_notifier(cond="pass"):
-        global tag_notifier_on
-        if cond == "set":
-            if any(word in text for word in ["on ", "enable "]):
-                tag_notifier_on = True
-                reply = Lines.set_tag_notifier("on")
-
-            elif any(word in text for word in ["off ", "disable "]):
-                tag_notifier_on = False
-                reply = Lines.set_tag_notifier("off")
-            else:
-                reply = Lines.set_tag_notifier("fail")
-                pass
-
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-        elif cond == "pass":
-            pass
-            print("func passed")
-        elif cond == "first":
-            tag_notifier_on = True
-            print("first initialize")
-        print("current status : ", tag_notifier_on)
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
@@ -152,7 +151,7 @@ def message_text(event):
 
     # special function
     print("current cond : ", tag_notifier_on)
-    if tag_notifier_on == True :
+    if tag_notifier_on :
         if any(word in text for word in Lines.jessin()):
             Function.tag_notifier(event)
 
