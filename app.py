@@ -56,6 +56,27 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 tag_notifier_on = True
+def set_tag_notifier(cond="pass"):
+    global tag_notifier_on
+    if cond == "set":
+        if any(word in text for word in ["on ", "enable "]):
+            tag_notifier_on = True
+            reply = Lines.set_tag_notifier("on")
+
+        elif any(word in text for word in ["off ", "disable "]):
+            tag_notifier_on = False
+            reply = Lines.set_tag_notifier("off")
+        else:
+            reply = Lines.set_tag_notifier("fail")
+            pass
+
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+    elif cond == "pass":
+        pass
+
+    print("current status : ", tag_notifier_on)
+
 
 @app.route("/callback", methods=['POST'])
 def callback():  # get X-Line-Signature header value
@@ -71,7 +92,6 @@ def callback():  # get X-Line-Signature header value
     except InvalidSignatureError:
         abort(400)
     return 'OK'
-
 def get_receiver_addr(event):
     global address
     if isinstance(event.source, SourceGroup):
@@ -88,30 +108,12 @@ def get_receiver_addr(event):
         address = event.source.user_id
     return address
 
-def set_tag_notifier(cond="pass"):
-    global tag_notifier_on
-    if cond == "set" :
-        if any(word in text for word in ["on ","enable "]) :
-            tag_notifier_on = True
-            reply = Lines.set_tag_notifier("on")
-
-        elif any(word in text for word in ["off ","disable "]) :
-            tag_notifier_on = False
-            reply = Lines.set_tag_notifier("off")
-        else:
-            reply = Lines.set_tag_notifier("fail")
-            pass
-
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-    elif cond == "pass" :
-        pass
-
-    print("current status : ",tag_notifier_on)
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     global token, original_text, text, jessin_userid
+
+
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     original_text = event.message.text
@@ -133,7 +135,7 @@ def message_text(event):
 
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])      : Function.set_tag_notifier("set")
+                                             "notif", "mention"])      : set_tag_notifier("set")
             else                                                        : Function.false()
 
         elif "command4 " in text                                    : Function.notyetcreated()
