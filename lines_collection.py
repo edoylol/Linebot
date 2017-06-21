@@ -109,11 +109,11 @@ class Lines:  # class to store respond lines
     def join(self,cond):
 
         if cond == "join" :
-            lines = [" Nyaann~ Thanks for adding me ^^ \n hope we can be friend!",
+            lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend!",
                      " Thanks for inviting Megumi :3 ",
                      " Yoroshiku onegaishimasu~ ^^ ",
-                     " Megumi desu ! \n yoroshiku nee ~ ^^",
-                     " Megumi desu, you can call me kato or meg aswell.. \n hope we can be friends~ :> ",
+                     " Megumi desu ! \nyoroshiku nee ~ ^^",
+                     " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends~ :> ",
                      " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
                      " Konichiwa... Megumi desu ! ehehehe",
                      " Supp xD .. Megumi desu :3 ,, \nyoroshiku nee~  #teehee"]
