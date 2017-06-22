@@ -138,7 +138,7 @@ def message_text(event):
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
             else                                                        : Function.false()
 
-        elif "TEST" in text                                         : Function.TEST(event)
+        elif "test" in text                                         : Function.TEST(event)
 
 
         elif "command5 " in text                                    : Function.notyetcreated()
