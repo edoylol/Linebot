@@ -112,6 +112,11 @@ def update_user_list(event):
                 if userlist_update_count >= 2 : #stay 2 until heroku upgraded / find a way
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+
+
+
+
         except :
             pass
 
@@ -562,15 +567,15 @@ class Function:
         return granted
 
     def TEST(event):
+
         confirm_template = ConfirmTemplate(text='Do it?', actions=[
             MessageTemplateAction(label='Yes', text='Yes!'),
             MessageTemplateAction(label='No', text='No!'),
         ])
 
-
         template_message = TemplateSendMessage(alt_text='ahaha alt text', template=confirm_template)
 
-        line_bot_api.reply_message(token, template_message)
+        line_bot_api.push_message(jessin_userid, template_message)
 
     def template():
         reply = Lines.added("cond")
