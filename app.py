@@ -535,22 +535,24 @@ class Function:
         try:
             user_id = event.source.user_id
             user = userlist[user_id]
-        except:
-            user = "someone"
 
-        try :
             if (user_id == jessin_userid):
                 granted = True
-            else :
+            else:
                 reply = Lines.dev_mode_authority_check("reject")
+                line_bot_api.reply_message(token, TextSendMessage(text=reply))
                 report = Lines.dev_mode_authority_check("notify report") % (user)
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
                 granted = False
-        except :
+
+        except : #accessed in group / room / failed
+            user = "someone"
             reply = Lines.dev_mode_authority_check("failed")
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            report = Lines.dev_mode_authority_check("notify report") % (user)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             granted = False
 
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
         return granted
 
     def template():
