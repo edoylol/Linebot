@@ -115,6 +115,8 @@ def update_user_list(event):
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     try :
                         confirm_template = ConfirmTemplate(text=report, actions=[
+                            MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist'),
+                            MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist'),
                             MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist')
                         ])
                     except LineBotApiError as e:
