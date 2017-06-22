@@ -512,9 +512,9 @@ class Function:
 
     def dev_print_userlist():
         try :
-            print("=================================== new user list ===================================\n")
+            print("=================================== new user list ===================================")
             print(userlist) % (userlist_update_count)
-            print("\n================================= end of  user list =================================")
+            print("================================= end of  user list =================================")
             reply = Lines.dev_mode("print userlist success")
         except :
             reply = Lines.dev_mode("print userlist failed")
