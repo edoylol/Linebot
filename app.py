@@ -102,23 +102,35 @@ def update_user_list(event):
     global userlist,userlist_update_count
 
     if isinstance(event.source, SourceUser):
-        userlist_init_count = len(userlist.keys())
+        userlist_init_count = len(userlist.keys()) # list count before update
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-            if len(userlist.keys()) is not userlist_init_count : #theres an update
+
+            if len(userlist.keys()) is not userlist_init_count : # theres an update
                 userlist_update_count = userlist_update_count + 1
-                if userlist_update_count >= 1 : #stay 2 until heroku upgraded / find a way
+                if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
+
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
+                    try :
+                        confirm_template = ConfirmTemplate(text=report, actions=[
+                            MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist')
+                        ])
+                    except LineBotApiError as e:
+                        print(e.status_code)
+                        print(e.error.message)
+                        print(e.error.details)
+                        print("setting template fail")
 
-                    confirm_template = ConfirmTemplate(text=report, actions=[
-                        MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist')
-                    ])
-
-                    template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
-                    line_bot_api.push_message(jessin_userid, template_message)
-
+                    try :
+                        template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+                        line_bot_api.push_message(jessin_userid, template_message)
+                    except LineBotApiError as e:
+                        print(e.status_code)
+                        print(e.error.message)
+                        print(e.error.details)
+                        print("pushing mssge error")
         except :
             pass
 
