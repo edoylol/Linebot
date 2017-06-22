@@ -138,21 +138,23 @@ def message_text(event):
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
             else                                                        : Function.false()
 
+        elif "TEST" in text                                         : Function.TEST()
+
+
+        elif "command5 " in text                                    : Function.notyetcreated()
+        elif "command5 " in text                                    : Function.notyetcreated()
+
+
+        elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
+        elif all(word in text for word in ["dev","mode"])           :
+            if Function.dev_authority_check(event)                      :
+                if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
+                else                                                        : Function.false()
         elif any(word in text for word in ["turn ","able"])         :
             if any(word in text for word in ["tag notifier",
                                              "notif", "mention"])       : Function.set_tag_notifier("set")
             else                                                        : Function.false()
-
-        elif "command4 " in text                                    : Function.notyetcreated()
-        elif "command5 " in text                                    : Function.notyetcreated()
-
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
-        elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
-        elif all(word in text for word in ["dev","mode"])           :
-            if Function.dev_authority_check(event)                          :
-                if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
-                else                                                        : Function.false()
-
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -191,7 +193,11 @@ def handle_content_message(event):
     get_receiver_addr(event)
 """
 
-
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    if event.postback.data == 'ping':
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text='pong'))
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -554,6 +560,15 @@ class Function:
             granted = False
 
         return granted
+
+    def TEST(event):
+        confirm_template = ConfirmTemplate(text='Do it?', actions=[
+            MessageTemplateAction(label='Yes', text='Yes!'),
+            MessageTemplateAction(label='No', text='No!'),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Confirm alt text', template=confirm_template)
+        line_bot_api.reply_message(event.reply_token, template_message)
 
     def template():
         reply = Lines.added("cond")
