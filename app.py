@@ -58,6 +58,7 @@ handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
 userlist = Database.userlist
+
 tag_notifier_on = True
 
 
@@ -94,17 +95,22 @@ def get_receiver_addr(event):
     return address
 
 def update_user_list(event):
-    global userlist
+    global userlist,userlist_update_count
 
     if isinstance(event.source, SourceUser):
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-            print(userlist)
-            print("update success")
+            userlist_update_count = len(userlist.keys()) - len(Database.userlist.keys())
+            #check wether this is true already
+            print(userlist_update_count)
+            if userlist_update_count >= 1 :
+                report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
         except :
-            print("update fail")
+            pass
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
@@ -138,7 +144,10 @@ def message_text(event):
         elif "command5 " in text                                    : Function.notyetcreated()
 
         elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
-        elif all(word in text for word in ["report","bug"])         : Function.report_bug(event)
+        elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
+        elif all(word in text for word in ["dev","mode"])           :
+            if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
+            else                                                        : Function.false()
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -193,10 +202,8 @@ def handle_join(event):
 def handle_follow(event):
     global token, jessin_userid
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-    print(event)
     update_user_list(event)
     token = event.reply_token
-
 
     Function.added(event)
 
@@ -503,6 +510,16 @@ class Function:
         print("SOURCE",event.source)
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    def dev_print_userlist():
+        try :
+            print("=================================== new user list ===================================\n")
+            print(userlist)
+            print("\n================================= end of  user list =================================")
+            reply = Lines.dev_mode("print userlist success")
+        except :
+            reply = Lines.dev_mode("print userlist failed")
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def template():
         reply = Lines.added("cond")
