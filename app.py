@@ -117,9 +117,10 @@ def update_user_list(event):
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     ans_yes = Labels.confirmation("yes")
                     ans_no = Labels.confirmation("no")
+                    command = "\nMegumi dev mode print userlist"
                     confirm_template = ConfirmTemplate(text=report, actions=[
-                        MessageTemplateAction(label=ans_yes, text=(ans_yes+"\nMegumi dev mode print userlist")),
-                        MessageTemplateAction(label=ans_no, text=Labels.confirmation("no"))])
+                        MessageTemplateAction(label=ans_yes, text=(ans_yes+command)),
+                        MessageTemplateAction(label=ans_no, text=ans_no)])
                     template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
                     line_bot_api.push_message(jessin_userid, template_message)
         except :
