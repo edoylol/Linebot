@@ -58,6 +58,7 @@ handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
 userlist = Database.userlist
+userlist_init_count = len(Database.userlist.keys())
 
 tag_notifier_on = True
 
@@ -102,8 +103,9 @@ def update_user_list(event):
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-            userlist_update_count = len(userlist.keys()) - len(Database.userlist.keys())
+            userlist_update_count = len(userlist.keys()) - userlist_init_count
             #check wether this is true already
+            print(userlist)
             print(userlist_update_count)
             if userlist_update_count >= 1 :
                 report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
