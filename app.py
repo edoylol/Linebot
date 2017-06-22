@@ -100,11 +100,14 @@ def update_user_list(event):
 
     if isinstance(event.source, SourceUser):
         userlist_init_count = len(userlist.keys())
+        print(userlist)
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
+            print(userlist)
             if len(userlist.keys()) is not userlist_init_count : #theres an update
+                print("update occur")
                 userlist_update_count = userlist_update_count + 1
                 if userlist_update_count >= 1 : #change to 5
                     report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
