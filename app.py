@@ -113,16 +113,28 @@ def update_user_list(event):
                 userlist_update_count = userlist_update_count + 1
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
 
-                    """ Attempt to send confirmation about printing userlist"""
+                    report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
+                    ans_yes = Labels.confirmation("yes")
+                    command = "\nMegumi dev mode print userlist"
+                    buttons_template = ButtonsTemplate(text=report, actions=[
+                        PostbackTemplateAction(label=ans_yes, data=(ans_yes + command))
+                        ])
+                    template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
+                    line_bot_api.push_message(jessin_userid, template_message)
+
+
+                    """
+                     Attempt to send confirmation about printing userlist
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     ans_yes = Labels.confirmation("yes")
                     ans_no = Labels.confirmation("no")
                     command = "\nMegumi dev mode print userlist"
                     confirm_template = ConfirmTemplate(text=report, actions=[
-                        PostbackTemplateAction(label=ans_yes, data=(ans_yes+command)),
+                        MessageTemplateAction(label=ans_yes, text=(ans_yes+command)),
                         MessageTemplateAction(label=ans_no, text=ans_no)])
                     template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
                     line_bot_api.push_message(jessin_userid, template_message)
+                    """
         except :
             pass
 
