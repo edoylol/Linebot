@@ -395,7 +395,7 @@ class Lines:  # class to store respond lines
                 'nov' : 'November',
                 'dec' : 'December'}
 
-class Labels:
+class Labels: # more like my response template
     def confirmation(self,cond):
         if cond == "yes" :
             lines = ["Sure,,",
@@ -416,6 +416,17 @@ class Labels:
                      ]
         return random.choice(lines)
 
+    def print_userlist(self):
+        lines = ["Sure,,print it out",
+                 "Go ahead..",
+                 "Go ahead Megumi..",
+                 "Yes please Megumi..",
+                 "Ok Megumi..",
+                 "Yeah, do it Megumi..",
+                 "Do it Megumi..",
+                 "Sure Kato..",
+                 ]
+        return random.choice(lines)
 
     def template(self):
         lines = ["",
