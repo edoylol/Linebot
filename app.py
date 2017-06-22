@@ -119,7 +119,7 @@ def update_user_list(event):
                     ans_no = Labels.confirmation("no")
                     command = "\nMegumi dev mode print userlist"
                     confirm_template = ConfirmTemplate(text=report, actions=[
-                        MessageTemplateAction(label=ans_yes, text=(ans_yes+command)),
+                        PostbackTemplateAction(label=ans_yes, data=(ans_yes+command)),
                         MessageTemplateAction(label=ans_no, text=ans_no)])
                     template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
                     line_bot_api.push_message(jessin_userid, template_message)
@@ -206,9 +206,23 @@ def handle_content_message(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
+    global token, original_text, text, jessin_userid, user, tag_notifier_on
+
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+
+    original_text = event.postback.data
+    text = original_text.lower()
+    token = event.reply_token
+    get_receiver_addr(event)
+    update_user_list(event)
+
     if event.postback.data == 'ping':
-        line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text='pong'))
+        line_bot_api.reply_message(token, TextSendMessage(text='pong'))
+    elif all(word in text for word in ["dev", "mode"])                      :
+        if Function.dev_authority_check(event)                                  :
+            if all(word in text for word in ["print", "userlist"])                  : Function.dev_print_userlist()
+            else                                                                    : Function.false()
+
 
 @handler.add(JoinEvent)
 def handle_join(event):
