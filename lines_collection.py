@@ -266,24 +266,31 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def dev_mode(self,cond):
+    def dev_mode_userlist(self,cond):
         if cond == "print userlist success" :
-            lines = ["print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries",
-                     "print userlist success, %d new entries"
+            lines = ["Print success, %d new entries recorded.\nDon't forget to print until 0 updates ^^ ~ ",
+                     "Roger master,, %d new entries has been recorded.",
+                     "Done..., don't forget to copy these %d new entries",
+                     "Ryokai ^^.,,, just don't forget to copy these %d new entries later, kay ? ",
+                     "Sure master.., there are %d new entries recorded FYI..."
                      ]
 
-        elif cond == "print userlist failed 1 " :
-            lines = ["print userlist failed 2 ",
-                     "print userlist failed 3 ",
-                     "print userlist failed 4 ",
-                     "print userlist failed 5"
+        elif cond == "print userlist failed" :
+            lines = ["Gomenne master, seems Megumi can't access the userlist... ",
+                     "Gomen master, there's some errors Megumi can't handle when printing the userlist",
+                     "Gomenne master, I don't know why but Megumi can't do that...",
+                     "Gomen master, the userlist seems can't be printed out in the logs.. I wonder why...",
+                     "Hmm... seems Megumi can't do that now.. how about try again ?"
                      ]
+
+        elif cond == "userlist not updated yet":
+            lines = ["Gomenne master, I think the userlist hasn't changed yet... ",
+                     "Gomen master, Megumi just printed the same userlist before...",
+                     "Gomenne master, I don't think you have to print it again...",
+                     "Gomen master, the userlist seems same as before...",
+                     "Hmm... are you sure want to print the same list ? \nHow about try again later ?"
+                     ]
+
         elif cond == "notify update userlist" :
             lines = ["Master, I think you should update the userlist now..\nThere're %d updates already,,",
                      "Master, how about updating the userlist now? \nThere're %d updates already,,",
@@ -291,6 +298,37 @@ class Lines:  # class to store respond lines
                      "Nee mastah, should I update the userlist now? \nI think there are %d new entries..",
                      "Let's update the userlist master..or else these %d new entries gonna lost .-. "
                      ]
+
+        return random.choice(lines)
+
+    def dev_mode_authority_check(self,cond):
+        if cond == "failed" :
+            lines = ["Megumi can't enter Dev Mode now, try again later..",
+                     "Megumi can't verify your id, so I can't grant you access..",
+                     "Seems Megumi can't grant you access now..",
+                     "Try calling dev mode once again.. seems some error occurred...",
+                     "Megumi can't verify your id, please try again later..",
+                     ]
+
+        elif cond == "reject" :
+            lines = ["Gomenne,,Megumi can't grant you access for that..",
+                     "Do not try to access dev mode.. you are not allowed to !",
+                     "Gomen,, you are not allowed to do that..",
+                     "Gomen, your request has been rejected.",
+                     "Megumi does not allow you to enter dev mode !",
+                     "Gomenne,,Megumi can't do that for you..",
+                     "Gomenne,,Megumi is told not to give you access..",
+                     "Gomen,,Megumi does not recognize you as developer..."
+                     ]
+
+        elif cond == "notify report" :
+            lines = ["Master, %s is trying to enter dev mode...",
+                     "Be careful master, %s is trying to enter dev mode... ",
+                     "Be careful master, %s has tried to enter dev mode just now.",
+                     "Master, just now %s tried to enter dev mode.",
+                     "Nee mastah, %s tried to enter dev mode. ",
+                     ]
+
         return random.choice(lines)
 
     def template(self):

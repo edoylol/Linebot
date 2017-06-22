@@ -34,10 +34,13 @@ from linebot.exceptions import (
 )
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
+    SourceUser, SourceGroup, SourceRoom,
+    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+    ButtonsTemplate, URITemplateAction, PostbackTemplateAction,
+    CarouselTemplate, CarouselColumn, PostbackEvent,
     StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
     ImageMessage, VideoMessage, AudioMessage,
-    LeaveEvent, JoinEvent, UnfollowEvent, FollowEvent,
-    SourceGroup, SourceRoom, SourceUser
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 
 from lines_collection import Lines
@@ -106,8 +109,8 @@ def update_user_list(event):
             userlist.update({user_id:user})
             if len(userlist.keys()) is not userlist_init_count : #theres an update
                 userlist_update_count = userlist_update_count + 1
-                if userlist_update_count >= 1 : #change to 5
-                    report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
+                if userlist_update_count >= 2 : #stay 2 until heroku upgraded / find a way
+                    report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
         except :
             pass
@@ -146,8 +149,10 @@ def message_text(event):
         elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
         elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
         elif all(word in text for word in ["dev","mode"])           :
-            if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
-            else                                                        : Function.false()
+            if Function.dev_authority_check(event)                          :
+                if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
+                else                                                        : Function.false()
+
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -513,16 +518,40 @@ class Function:
 
     def dev_print_userlist():
         global userlist_update_count
-        try :
-            print("=================================== new user list ===================================\n")
-            print(userlist)
-            print("\n================================= end of  user list =================================")
-            reply = Lines.dev_mode("print userlist success") % (userlist_update_count)
-            userlist_update_count = 0
-            print(userlist_update_count)
-        except :
-            reply = Lines.dev_mode("print userlist failed")
+        if userlist_update_count != 0 :
+            try :
+                print("=================================== new user list ===================================\n")
+                print(userlist)
+                print("\n================================= end of  user list =================================")
+                reply = Lines.dev_mode_userlist("print userlist success") % (userlist_update_count)
+                userlist_update_count = 0
+            except :
+                reply = Lines.dev_mode_userlist("print userlist failed")
+        elif userlist_update_count == 0 :
+            reply = Lines.dev_mode_userlist("userlist not updated yet")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+    def dev_authority_check(event):
+        try:
+            user_id = event.source.user_id
+            user = userlist[user_id]
+        except:
+            user = "someone"
+
+        try :
+            if (user_id == jessin_userid):
+                granted = True
+            else :
+                reply = Lines.dev_mode_authority_check("reject")
+                report = Lines.dev_mode_authority_check("notify report") % (user)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+                granted = False
+        except :
+            reply = Lines.dev_mode_authority_check("failed")
+            granted = False
+
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        return granted
 
     def template():
         reply = Lines.added("cond")
