@@ -278,11 +278,11 @@ class Lines:  # class to store respond lines
                      "print userlist success, %d new entries"
                      ]
 
-        elif cond == "print userlist failed" :
-            lines = ["print userlist failed",
-                     "print userlist failed",
-                     "print userlist failed",
-                     "print userlist failed"
+        elif cond == "print userlist failed 1 " :
+            lines = ["print userlist failed 2 ",
+                     "print userlist failed 3 ",
+                     "print userlist failed 4 ",
+                     "print userlist failed 5"
                      ]
         elif cond == "notify update userlist" :
             lines = ["Master, I think you should update the userlist now..\nThere're %d updates already,,",
