@@ -58,7 +58,7 @@ handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
 userlist = Database.userlist
-userlist_update_count = 0
+userlist_init_count = len(Database.userlist.keys())
 
 tag_notifier_on = True
 
@@ -99,16 +99,15 @@ def update_user_list(event):
     global userlist,userlist_update_count
 
     if isinstance(event.source, SourceUser):
-        userlist_init_count = len(userlist.keys())
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-            if len(userlist.keys()) is not userlist_init_count : #theres an update
-                userlist_update_count = userlist_update_count + 1
-                if userlist_update_count >= 1 : #change to 5
-                    report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
-                    line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            userlist_update_count = len(userlist.keys()) - userlist_init_count
+            if userlist_update_count >= 1 :
+                report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
         except :
             pass
 
@@ -512,14 +511,11 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def dev_print_userlist():
-        global userlist_update_count
         try :
             print("=================================== new user list ===================================\n")
             print(userlist)
             print("\n================================= end of  user list =================================")
             reply = Lines.dev_mode("print userlist success") % (userlist_update_count)
-            userlist_update_count = 0
-            print(userlist_update_count)
         except :
             reply = Lines.dev_mode("print userlist failed")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
