@@ -400,11 +400,10 @@ class Labels:
         if cond == "yes" :
             lines = ["Sure,,",
                      "Go ahead..",
-                     "Please do it..",
                      "Ok..",
                      "Yeah, do it..",
                      "Do it..",
-                     "Sure Megumi..",
+                     "Sure Kato..",
                      ]
 
         elif cond == "no" :
@@ -412,7 +411,7 @@ class Labels:
                      "Not now..",
                      "Don't do it..",
                      "Better not",
-                     "I don't think so..",
+                     "No..",
                      "Later..",
                      ]
         return random.choice(lines)
