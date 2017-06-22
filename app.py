@@ -60,6 +60,7 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
+Labels = Labels()
 userlist = Database.userlist
 userlist_update_count = 0
 
@@ -113,25 +114,13 @@ def update_user_list(event):
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
 
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
-                    try :
-                        confirm_template = ConfirmTemplate(text=report, actions=[
-                            MessageTemplateAction(label='Sure..', text='Megumi dev mode print userlist'),
-                            MessageTemplateAction(label='Maybe not now..', text='not now'),
-                        ])
-                    except LineBotApiError as e:
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
-                        print("setting template fail")
+                    confirm_template = ConfirmTemplate(text=report, actions=[
+                        MessageTemplateAction(label=Labels.confirmation("yes"), text=(Labels.confirmation("yes")+"\nMegumi dev mode print userlist")),
+                        MessageTemplateAction(label=Labels.confirmation("no"), text=Labels.confirmation("no")),
+                    ])
 
-                    try :
-                        template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
-                        line_bot_api.push_message(jessin_userid, template_message)
-                    except LineBotApiError as e:
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
-                        print("pushing mssge error")
+                    template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+                    line_bot_api.push_message(jessin_userid, template_message)
         except :
             pass
 

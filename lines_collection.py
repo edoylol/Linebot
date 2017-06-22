@@ -395,3 +395,58 @@ class Lines:  # class to store respond lines
                 'nov' : 'November',
                 'dec' : 'December'}
 
+class Labels:
+    def confirmation(self,cond):
+        if cond == "yes" :
+            lines = ["Sure,,",
+                     "Go ahead..",
+                     "Please do it..",
+                     "Ok..",
+                     "Yeah, do it..",
+                     "Do it..",
+                     "Sure Megumi..",
+                     ]
+
+        elif cond == "no" :
+            lines = ["Nope..",
+                     "Not now..",
+                     "Don't do it..",
+                     "Better not",
+                     "I don't think so..",
+                     "Later..",
+                     ]
+        return random.choice(lines)
+
+
+    def template(self):
+        lines = ["",
+                 "",
+                 "",
+                 "",
+                 "",
+                 "",
+                 "",
+                 ""]
+        return random.choice(lines)
+
+    def template_cond(self,cond):
+        if cond == "a" :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     ""]
+
+        else :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     ""]
+        return random.choice(lines)
