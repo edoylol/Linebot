@@ -43,7 +43,7 @@ from linebot.models import (
     UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 
-from lines_collection import Lines
+from lines_collection import Lines,Labels
 
 
 app = Flask(__name__)
@@ -113,12 +113,11 @@ def update_user_list(event):
                 userlist_update_count = userlist_update_count + 1
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
 
+                    """ Attempt to send confirmation about printing userlist"""
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     confirm_template = ConfirmTemplate(text=report, actions=[
                         MessageTemplateAction(label=Labels.confirmation("yes"), text=(Labels.confirmation("yes")+"\nMegumi dev mode print userlist")),
-                        MessageTemplateAction(label=Labels.confirmation("no"), text=Labels.confirmation("no")),
-                    ])
-
+                        MessageTemplateAction(label=Labels.confirmation("no"), text=Labels.confirmation("no"))])
                     template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
                     line_bot_api.push_message(jessin_userid, template_message)
         except :
