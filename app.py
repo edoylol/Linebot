@@ -109,7 +109,7 @@ def update_user_list(event):
             userlist.update({user_id:user})
             if len(userlist.keys()) is not userlist_init_count : #theres an update
                 userlist_update_count = userlist_update_count + 1
-                if userlist_update_count >= 2 : #stay 2 until heroku upgraded / find a way
+                if userlist_update_count >= 1 : #stay 2 until heroku upgraded / find a way
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
 
                     confirm_template = ConfirmTemplate(text=report, actions=[
