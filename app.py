@@ -115,7 +115,7 @@ def update_user_list(event):
 
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
                     command = "Megumi dev mode print userlist"
-                    buttons_template = ButtonsTemplate(text=report, actions=[
+                    buttons_template = ButtonsTemplate(title="Update userlist",text=report, actions=[
                         PostbackTemplateAction(label=Labels.print_userlist(), data=command)
                         ])
                     template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
@@ -214,8 +214,9 @@ def handle_postback(event):
     get_receiver_addr(event)
     update_user_list(event)
 
-    if event.postback.data == 'ping':
+    if event.postback.data == 'ping': #dummy
         line_bot_api.reply_message(token, TextSendMessage(text='pong'))
+
     elif all(word in text for word in ["dev", "mode"])                      :
         if Function.dev_authority_check(event)                                  :
             if all(word in text for word in ["print", "userlist"])                  : Function.dev_print_userlist()
