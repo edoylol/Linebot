@@ -104,9 +104,6 @@ def update_user_list(event):
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
             userlist_update_count = len(userlist.keys()) - userlist_init_count
-            #check wether this is true already
-            print(userlist)
-            print(userlist_update_count)
             if userlist_update_count >= 1 :
                 report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
@@ -516,7 +513,7 @@ class Function:
     def dev_print_userlist():
         try :
             print("=================================== new user list ===================================\n")
-            print(userlist)
+            print(userlist) % (userlist_update_count)
             print("\n================================= end of  user list =================================")
             reply = Lines.dev_mode("print userlist success")
         except :
