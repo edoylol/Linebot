@@ -562,25 +562,15 @@ class Function:
         return granted
 
     def TEST(event):
-        try :
-            confirm_template = ConfirmTemplate(text='Do it?', actions=[
-                MessageTemplateAction(label='Yes', text='Yes!'),
-                MessageTemplateAction(label='No', text='No!'),
-            ])
-        except LineBotApiError as e:
-            print("error part 1")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        confirm_template = ConfirmTemplate(text='Do it?', actions=[
+            MessageTemplateAction(label='Yes', text='Yes!'),
+            MessageTemplateAction(label='No', text='No!'),
+        ])
 
-        try :
-            template_message = TemplateSendMessage(alt_text='Confirm alt text', template=confirm_template)
-        except LineBotApiError as e:
-            print("error part 2")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-        line_bot_api.reply_message(event.reply_token, template_message)
+
+        template_message = TemplateSendMessage(alt_text='ahaha alt text', template=confirm_template)
+
+        line_bot_api.reply_message(token, template_message)
 
     def template():
         reply = Lines.added("cond")
