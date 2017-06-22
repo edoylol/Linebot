@@ -569,7 +569,7 @@ class Function:
         return granted
 
     def TEST(event):
-
+        return
 
 
     def template():
