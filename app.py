@@ -435,7 +435,7 @@ class Function:
             no_desc = False
         except :
             no_desc = True
-            desc = "    "
+            desc = " (つ≧▽≦)つ "
 
         try : # find where to send
             split_text = text.split(" ")
@@ -458,9 +458,11 @@ class Function:
             if no_desc :
                 report = Lines.invite_report("desc missing")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
+                print("NO DESC")
             elif no_invite_list :
                 report = Lines.invite_report("participant list missing")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
+                print("NO INVITE LIST")
 
         header_pic = Picture.header("background")
         title = 'Invitation'
