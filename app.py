@@ -699,7 +699,7 @@ class Function:
 
 class OtherUtil:
     def remove_symbols(word):
-        symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
+        symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
         if len(word) > 0:
