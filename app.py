@@ -106,11 +106,12 @@ def update_user_list(event):
 
     if isinstance(event.source, SourceUser):
         userlist_init_count = len(userlist.keys()) # list count before update
+        print(userlist_init_count)
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-
+            print(userlist)
             if len(userlist.keys()) is not userlist_init_count : # theres an update
                 userlist_update_count = userlist_update_count + 1
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
