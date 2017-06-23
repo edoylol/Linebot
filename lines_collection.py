@@ -96,6 +96,20 @@ class Lines:  # class to store respond lines
                      "Thanks %s,, Megumi will tell (him/her) ASAP ^^",
                      "Kay %s, I will let (him/her) know.."
                     ]
+        elif cond == "desc missing" :
+            lines = ["I think the description is missing...",
+                     "Megumi will still send the invitation, even though there is no description..",
+                     "Try to add description next time ,kay ? ^^ ",
+                     "If you want to add description next time, just surround description with (*)",
+                     "It's ok not having description, but it would be better to have it."
+                     ]
+        elif cond == "participant list missing \n(sent to dev list)" :
+            lines = ["I think the participant list is missing...",
+                     "Megumi will still send to dev list, since there is no participant list..",
+                     "Try to add participant list next time ,kay ? ^^ \n(sent to dev list) ",
+                     "If you want to add participant list next time, just use 'to participant_list'",
+                     "If there is no participant list, it will be sent to dev list."
+                     ]
         elif cond == "yes" : #  % responder
             lines = ["About the invitation, %s said that (he/she) will come..",
                      "About the invitation, %s said 'OK'",

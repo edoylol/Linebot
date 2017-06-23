@@ -433,6 +433,7 @@ class Function:
             desc_end = found_index[1]
             desc = text[desc_start:desc_end]
         except :
+            no_desc = True
             desc = None
 
         try : # find where to send
@@ -447,7 +448,16 @@ class Function:
             list_name = filtered_text[invite_list_index]
             invite_list = Database.list_dictionary[list_name]
         except :
+            no_invite_list = True
             invite_list = Database.list_dictionary["dev"]
+
+        """ report if some args missing """
+        if no_desc or no_invite_list:
+            if no_desc :
+                report = Lines.invite_report("desc missing")
+            elif no_invite_list :
+                report = Lines.invite_report("participant list missing")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         header_pic = Picture.header("background")
         title = 'Invitation'
@@ -457,6 +467,8 @@ class Function:
         else:
             invitation_sender_id = event.source.user_id
             invitation_sender = userlist[invitation_sender_id]
+
+
 
         """ generate the invitation """
 
@@ -478,6 +490,7 @@ class Function:
             if invitation_sender != "someone" :
                 report = Lines.invite("success") % invitation_sent
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
+
 
         except :
             if invitation_sender != "someone" :
