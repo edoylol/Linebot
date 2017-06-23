@@ -432,7 +432,11 @@ class Function:
         try :
             invitation_sender_id = event.source.user_id
             invitation_sender = userlist[invitation_sender_id]
-        except :
+        except LineBotApiError as e:
+            print("invitation sender id failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
             invitation_sender = "someone"
 
         try : #generate the invitation
@@ -453,7 +457,7 @@ class Function:
 
         try : #sending the invitation
             for participan in invite_list :
-                #line_bot_api.push_message(participan, Lines.invite("header") % invitation_sender )
+                line_bot_api.push_message(participan, Lines.invite("header") % invitation_sender )
                 line_bot_api.push_message(participan, template_message)
             if invitation_sender is not "someone" :
                 line_bot_api.push_message(invitation_sender_id,Lines.invite("success"))
