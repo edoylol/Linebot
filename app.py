@@ -614,7 +614,7 @@ class Function:
 
         try :
             template_message = TemplateSendMessage(
-                alt_text="Let's have some fun !", template=buttons_template)
+                alt_text="Let's have fun !", template=buttons_template)
             line_bot_api.reply_message(token, template_message)
         except LineBotApiError as e:
             print("creating template fail")
