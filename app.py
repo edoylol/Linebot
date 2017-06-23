@@ -459,7 +459,7 @@ class Function:
                 report = Lines.invite_report("desc missing")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 print("NO DESC")
-            elif no_invite_list :
+            if no_invite_list :
                 report = Lines.invite_report("participant list missing")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 print("NO INVITE LIST")
