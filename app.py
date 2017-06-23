@@ -596,19 +596,31 @@ class Function:
 
     def TEST(event):
         header_pic = "https://www.google.co.id/logos/doodles/2017/oskar-fischingers-117th-birthday-5635181101711360.2-s.png"
-        buttons_template = ButtonsTemplate(
-            title='Invitation',
-            text="Let's have some fun !",
-            thumbnail_image_url=header_pic,
-            actions=[
-                PostbackTemplateAction(label='count me in..', data='confirmation invitation : yes'),
-                PostbackTemplateAction(label='no thanks..', data='confirmation invitation : no'),
-                PostbackTemplateAction(label='let me decide later..', data='confirmation invitation : pending'),
-            ])
-        template_message = TemplateSendMessage(
-            alt_text="Let's have some fun !", template=buttons_template)
-        line_bot_api.reply_message(token, template_message)
+        try :
+            buttons_template = ButtonsTemplate(
+                title='Invitation',
+                text="Let's have some fun !",
+                thumbnail_image_url=header_pic,
+                actions=[
+                    PostbackTemplateAction(label='count me in..', data='confirmation invitation : yes'),
+                    PostbackTemplateAction(label='no thanks..', data='confirmation invitation : no'),
+                    PostbackTemplateAction(label='let me decide later..', data='confirmation invitation : pending')
+                ])
+        except LineBotApiError as e:
+            print("creating button fail")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
 
+        try :
+            template_message = TemplateSendMessage(
+                alt_text="Let's have some fun !", template=buttons_template)
+            line_bot_api.reply_message(token, template_message)
+        except LineBotApiError as e:
+            print("creating template fail")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
 
 
 
