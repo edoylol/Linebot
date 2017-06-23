@@ -435,7 +435,7 @@ class Function:
             no_desc = False
         except :
             no_desc = True
-            desc = "whyyy"
+            desc = "    "
 
         try : # find where to send
             split_text = text.split(" ")
