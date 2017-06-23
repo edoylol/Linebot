@@ -432,6 +432,7 @@ class Function:
             desc_start = found_index[0] + 1
             desc_end = found_index[1]
             desc = text[desc_start:desc_end]
+            no_desc = False
         except :
             no_desc = True
             desc = None
@@ -447,6 +448,7 @@ class Function:
             invite_list_index = filtered_text.index("to") + 1
             list_name = filtered_text[invite_list_index]
             invite_list = Database.list_dictionary[list_name]
+            no_invite_list = False
         except :
             no_invite_list = True
             invite_list = Database.list_dictionary["dev"]
