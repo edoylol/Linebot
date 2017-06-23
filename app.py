@@ -117,19 +117,13 @@ def update_user_list(event):
 
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
-                    command = "Megumi dev mode print userlist"
+                    command = "megumi dev mode print userlist"
                     buttons_template = ButtonsTemplate(title="Update userlist", text=report, actions=[
                         PostbackTemplateAction(label=Labels.print_userlist(), data=command)
                     ])
+                    template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
+                    line_bot_api.push_message(jessin_userid, template_message)
 
-                    try :
-                        template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
-                        line_bot_api.push_message(jessin_userid, template_message)
-                    except LineBotApiError as e:
-                        print(" pushing erro")
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
         except :
             pass
 
@@ -228,7 +222,7 @@ def handle_postback(event):
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["Megumi dev mode print userlist"])           :
+    elif all(word in text for word in ["megumi dev mode print userlist"])           :
         if Function.dev_authority_check(event)                                          :
             if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
             else                                                                            : Function.false()
