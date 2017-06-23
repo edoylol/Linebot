@@ -485,10 +485,20 @@ class Function:
         except :
             responder = "someone"
 
-        try :
+        try : # respond received report
+            report = Lines.invite_report("respond recorded") % responder
+            line_bot_api.push_message(responder_id, TextSendMessage(text=report))
+
+        except LineBotApiError as e:
+            print("report respond recorded fail")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+
+        try : # send report to sender
             report = Lines.invite_report(cond) % responder
             if (invitation_sender != "someone") and (invitation_sender != None) :
-                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
+                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
             else :
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 

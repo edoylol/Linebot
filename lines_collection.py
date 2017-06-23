@@ -89,7 +89,14 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     def invite_report(self,cond):
-        if cond == "yes" : #  % responder
+        if cond == "respond recorded" :
+            lines = ["Thanks for your response %s, Megumi will pass it right now ~",
+                     "OK %s..Megumi will let (him/her) know...",
+                     "I see.. thanks for your response %s ..",
+                     "Thanks %s,, Megumi will tell (him/her) ASAP ^^",
+                     "Kay %s, I will let (him/her) know.."
+                    ]
+        elif cond == "yes" : #  % responder
             lines = ["About the invitation, %s said that (he/she) will come..",
                      "About the invitation, %s said 'OK'",
                      "About the invitation, %s confirmed 'OK'",
