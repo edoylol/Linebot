@@ -364,11 +364,11 @@ class Lines:  # class to store respond lines
                      ]
 
         elif cond == "notify update userlist" :
-            lines = ["Master, I think you should update the userlist now..\nThere're %d updates already,,",
-                     "Master, how about updating the userlist now? \nThere're %d updates already,,",
+            lines = ["Master, I think there're %d updates on userlist,,",
+                     "Master, userlist has %d updates, how about updating now ?",
                      "The userlist has %d updates, wanna update now ?",
-                     "Nee mastah, should I update the userlist now? \nI think there are %d new entries..",
-                     "Let's update the userlist master..or else these %d new entries gonna lost .-. "
+                     "%d entries on userlist, should I update now?",
+                     "Let's update the userlist master.. %d new entries"
                      ]
 
         return random.choice(lines)

@@ -116,17 +116,11 @@ def update_user_list(event):
                 userlist_update_count = userlist_update_count + 1
 
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
-                    try :
-                        report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
-                        command = "Megumi dev mode print userlist"
-                        buttons_template = ButtonsTemplate(title="Update userlist",text=report, actions=[
-                            PostbackTemplateAction(label=Labels.print_userlist(), data=command)
-                            ])
-                    except LineBotApiError as e:
-                        print("creating error")
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
+                    report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
+                    command = "Megumi dev mode print userlist"
+                    buttons_template = ButtonsTemplate(title="Update userlist", text=report, actions=[
+                        PostbackTemplateAction(label=Labels.print_userlist(), data=command)
+                    ])
 
                     try :
                         template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
