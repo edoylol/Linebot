@@ -114,6 +114,7 @@ def update_user_list(event):
             print(userlist)
             if len(userlist.keys()) != userlist_init_count : # theres an update
                 userlist_update_count = userlist_update_count + 1
+                print(userlist_update_count)
                 if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
 
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
