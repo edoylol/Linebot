@@ -68,7 +68,7 @@ class Lines:  # class to store respond lines
             lines = ["Konichiwa, %s invite you to : ",
                     ]
         elif cond == "success" :
-            lines = ["Invitation sent ^^",
+            lines = ["%s invitation sent ^^ ",
                      ]
 
         elif cond == "failed" :

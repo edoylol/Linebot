@@ -459,11 +459,13 @@ class Function:
 
         try : #sending the invitation
             report = Lines.invite("header") % invitation_sender
+            invitation_sent = 0
             for participan in invite_list :
                 line_bot_api.push_message(participan,TextSendMessage(text=report))
                 line_bot_api.push_message(participan, template_message)
+                invitation_sent += 1
             if invitation_sender != "someone" :
-                report = Lines.invite("success")
+                report = Lines.invite("success") % invitation_sent
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
 
         except LineBotApiError as e:
@@ -476,6 +478,7 @@ class Function:
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
 
     def invite_respond(event,cond):
+        global invitation_sender
         try :
             responder = event.source.user_id
         except :
