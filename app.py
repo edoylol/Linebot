@@ -480,7 +480,8 @@ class Function:
     def invite_respond(event,cond):
         global invitation_sender
         try :
-            responder = event.source.user_id
+            responder_id = event.source.user_id
+            responder = userlist[responder_id]
         except :
             responder = "someone"
 
