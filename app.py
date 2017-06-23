@@ -443,7 +443,7 @@ class Function:
             split_text = text.split(" ")
             filtered_text = []
             for word in split_text:
-                new_word = Storage.remove_symbols(word)
+                new_word = OtherUtil.remove_symbols(word)
                 if new_word != None:
                     filtered_text.append(new_word)
 
