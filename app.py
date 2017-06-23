@@ -445,8 +445,7 @@ class Function:
                 PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
                 PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
             ])
-            template_message = TemplateSendMessage(
-                alt_text=text, template=buttons_template)
+            template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
 
         except LineBotApiError as e:
             print(title,"button is not created")
@@ -456,11 +455,13 @@ class Function:
 
 
         try : #sending the invitation
+            report = Lines.invite("header") % invitation_sender)
             for participan in invite_list :
-                line_bot_api.push_message(participan, Lines.invite("header") % invitation_sender )
+                line_bot_api.push_message(participan,TextSendMessage(text=report))
                 line_bot_api.push_message(participan, template_message)
             if invitation_sender is not "someone" :
-                line_bot_api.push_message(invitation_sender_id,Lines.invite("success"))
+                report = Lines.invite("success")
+                line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
 
         except LineBotApiError as e:
             print("sending invitation failed")
@@ -468,7 +469,8 @@ class Function:
             print(e.error.message)
             print(e.error.details)
             if invitation_sender is not "someone" :
-                line_bot_api.push_message(invitation_sender, Lines.invite("failed"))
+                report = Lines.invite("failed")
+                line_bot_api.push_message(invitation_sender,TextSendMessage(text=report) )
 
     def invite_respond(event,cond):
         try :
@@ -477,10 +479,11 @@ class Function:
             responder = "someone"
 
         try :
+            report = Lines.invite_report(cond) % responder
             if invitation_sender is not "someone" :
-                line_bot_api.push_message(invitation_sender_id, Lines.invite_report(cond) % responder)
+                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
             else :
-                line_bot_api.push_message(jessin_userid, Lines.invite_report(cond) % responder)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
         except LineBotApiError as e:
             print("sending invitation report failed")
