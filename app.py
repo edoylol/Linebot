@@ -487,7 +487,7 @@ class Function:
 
         try :
             report = Lines.invite_report(cond) % responder
-            if invitation_sender != "someone" :
+            if (invitation_sender != "someone") and (invitation_sender != None) :
                 line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
             else :
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
