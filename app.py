@@ -430,8 +430,11 @@ class Function:
         text = "Let's have some fun !"
         invite_list = userlist
         try :
-            invitation_sender_id = event.source.user_id
-            invitation_sender = userlist[invitation_sender_id]
+            if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
+                invitation_sender = "someone"
+            else :
+                invitation_sender_id = event.source.user_id
+                invitation_sender = userlist[invitation_sender_id]
         except LineBotApiError as e:
             print("invitation sender id failed")
             print(e.status_code)
