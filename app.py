@@ -429,8 +429,8 @@ class Function:
         """ invitation data """
         try : # find desc needed
             found_index = [i for i, x in enumerate(text) if x == '*']
-            desc_start = text[found_index[0] + 1]
-            desc_end = text[found_index[1]]
+            desc_start = found_index[0] + 1
+            desc_end = found_index[1]
             desc = text[desc_start:desc_end]
         except LineBotApiError as e:
             print("DESC FIND ERROR")
