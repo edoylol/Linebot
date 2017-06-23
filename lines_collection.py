@@ -103,7 +103,7 @@ class Lines:  # class to store respond lines
                      "If you want to add description next time, just surround description with (*)",
                      "It's ok not having description, but it would be better to have it."
                      ]
-        elif cond == "participant list missing \n(sent to dev list)" :
+        elif cond == "participant list missing" :
             lines = ["I think the participant list is missing...",
                      "Megumi will still send to dev list, since there is no participant list..",
                      "Try to add participant list next time ,kay ? ^^ \n(sent to dev list) ",
