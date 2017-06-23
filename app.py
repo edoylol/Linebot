@@ -65,7 +65,6 @@ Picture = Picture()
 userlist = Database.userlist
 
 userlist_update_count = 0
-
 tag_notifier_on = True
 
 
