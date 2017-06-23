@@ -433,7 +433,7 @@ class Function:
             desc_end = found_index[1]
             desc = text[desc_start:desc_end]
         except :
-            desc = None
+            pass
 
         try : # find where to send
             split_text = text.split(" ")
