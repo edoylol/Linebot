@@ -207,17 +207,21 @@ def handle_postback(event):
     global token, original_text, text, jessin_userid, user, tag_notifier_on
 
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-
     original_text = event.postback.data
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
     update_user_list(event)
 
-    if event.postback.data == 'ping': #dummy
+    if original_text == 'ping': #dummy
         line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
-    elif all(word in text for word in ["dev", "mode"])                      :
+    elif all(word in text for word in ["confirmation invitation"]) :
+        if all(word in text for word in ['confirmation invitation : yes']) : Function.invitation(event,"yes")
+        elif all(word in text for word in ['confirmation invitation : no']):    Function.invitation(event,"no")
+        elif all(word in text for word in ['confirmation invitation : pending']):   Function.invitation(event,"pending")
+
+    elif all(word in text for word in ["Megumi dev mode print userlist"])   :
         if Function.dev_authority_check(event)                                  :
             if all(word in text for word in ["print", "userlist"])                  : Function.dev_print_userlist()
             else                                                                    : Function.false()
@@ -419,6 +423,11 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def invitation(event,cond):
+        print("EVENT",event)
+        print("COND", cond)
+        return
+
     """====================== Sub Function List ============================="""
 
     def report_bug(event):
@@ -586,7 +595,21 @@ class Function:
         return granted
 
     def TEST(event):
-        return
+        header_pic = "https://www.google.co.id/logos/doodles/2017/oskar-fischingers-117th-birthday-5635181101711360.2-s.png"
+        buttons_template = ButtonsTemplate(
+            title='Invitation',
+            text="Let's have some fun !",
+            thumbnail_image_url=header_pic,
+            actions=[
+                PostbackTemplateAction(label='count me in..', data='confirmation invitation : yes'),
+                PostbackTemplateAction(label='no thanks..', data='confirmation invitation : no'),
+                PostbackTemplateAction(label='let me decide later..', data='confirmation invitation : pending'),
+            ])
+        template_message = TemplateSendMessage(
+            alt_text="Let's have some fun !", template=buttons_template)
+        line_bot_api.reply_message(token, template_message)
+
+
 
 
     def template():
