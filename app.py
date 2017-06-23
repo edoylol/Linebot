@@ -63,6 +63,7 @@ Lines = Lines()
 Labels = Labels()
 Picture = Picture()
 userlist = Database.userlist
+
 userlist_update_count = 0
 
 tag_notifier_on = True
@@ -424,40 +425,50 @@ class Function:
 
     def send_invite(event):
         global invitation_sender, invitation_sender_id
-        # invitation data
+
+        """ invitation data """
+        try : # find desc needed
+            found_index = [i for i, x in enumerate(text) if x == '*']
+            desc_start = text[found_index[0] + 1]
+            desc_end = text[found_index[1]]
+            desc = text[desc_start:desc_end]
+        except :
+            desc = None
+
+        try : # find where to send
+            split_text = text.split(" ")
+            filtered_text = []
+            for word in split_text:
+                new_word = Storage.remove_symbols(word)
+                if new_word != None:
+                    filtered_text.append(new_word)
+
+            invite_list_index = filtered_text.index("to") + 1
+            list_name = filtered_text[invite_list_index]
+            invite_list = Database.list_dictionary[list_name]
+        except :
+            invite_list = Database.list_dictionary["empty"]
+
         header_pic = Picture.header("background")
         title = 'Invitation'
-        text = "Let's have some fun !"
-        invite_list = userlist
-        try :
-            if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
-                invitation_sender = "someone"
-            else :
-                invitation_sender_id = event.source.user_id
-                invitation_sender = userlist[invitation_sender_id]
-        except LineBotApiError as e:
-            print("invitation sender id failed")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+
+        if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
             invitation_sender = "someone"
+        else:
+            invitation_sender_id = event.source.user_id
+            invitation_sender = userlist[invitation_sender_id]
 
-        try : #generate the invitation
-            buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
-                PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
-                PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
-                PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
-            ])
-            template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+        """ generate the invitation """
 
-        except LineBotApiError as e:
-            print(title,"button is not created")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        buttons_template = ButtonsTemplate(title=title, text=desc, thumbnail_image_url=header_pic, actions=[
+            PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+            PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+            PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
+        ])
+        template_message = TemplateSendMessage(alt_text=desc, template=buttons_template)
 
-
-        try : #sending the invitation
+        """ sending the invitation """
+        try :
             report = Lines.invite("header") % invitation_sender
             invitation_sent = 0
             for participan in invite_list :
@@ -468,11 +479,7 @@ class Function:
                 report = Lines.invite("success") % invitation_sent
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
 
-        except LineBotApiError as e:
-            print("sending invitation failed")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        except :
             if invitation_sender != "someone" :
                 report = Lines.invite("failed")
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
@@ -485,28 +492,16 @@ class Function:
         except :
             responder = "someone"
 
-        try : # respond received report
-            report = Lines.invite_report("respond recorded") % responder
-            line_bot_api.push_message(responder_id, TextSendMessage(text=report))
+        # send respond report
+        report = Lines.invite_report("respond recorded") % responder
+        line_bot_api.push_message(responder_id, TextSendMessage(text=report))
 
-        except LineBotApiError as e:
-            print("report respond recorded fail")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-
-        try : # send report to sender
-            report = Lines.invite_report(cond) % responder
-            if (invitation_sender != "someone") and (invitation_sender != None) :
-                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
-            else :
-                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
-        except LineBotApiError as e:
-            print("sending invitation report failed")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        # send report to sender
+        report = Lines.invite_report(cond) % responder
+        if (invitation_sender != "someone") and (invitation_sender != None):
+            line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+        else:
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 
     """====================== Sub Function List ============================="""
