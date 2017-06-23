@@ -66,26 +66,50 @@ class Lines:  # class to store respond lines
     def invite(self,cond):
         if cond == "header" : #  % sender
             lines = ["Konichiwa, %s invite you to : ",
+                     "Nee,, %s invite you to : ",
+                     "Konichiwa,, you got invitation from %s : ",
+                     "Nee,,you got invitation from %s : ",
+                     "Sumimasen,, you got invitation from %s : "
                     ]
         elif cond == "success" :
-            lines = ["%s invitation sent ^^ ",
+            lines = ["Done,, %s invitations sent ^^ ",
+                     "Invitations sent, Megumi has delivered %s invitation",
+                     "Megumi has delivered your invitation to %s participant",
+                     "Done,, Megumi has sent your invitation to %s person",
+                     "Megumi report : %s invitations sent successfully"
                      ]
 
         elif cond == "failed" :
             lines = ["Gomenne, seems I can't send the invitation..",
+                     "Seems something wrong about the invitation, wanna check it once more time ?",
+                     "Megumi can't send your invitation right now.. sorry..",
+                     "Hmm.. I wonder why I can't send your invitation though...",
+                     "Gomen, please try to send the invitation again.."
                      ]
         return random.choice(lines)
 
     def invite_report(self,cond):
         if cond == "yes" : #  % responder
             lines = ["About the invitation, %s said that (he/she) will come..",
-                    ]
+                     "About the invitation, %s said 'OK'",
+                     "About the invitation, %s confirmed 'OK'",
+                     "About the invitation, %s said 'sure~'",
+                     "About the invitation, I think %s said 'OK'"
+                     ]
         elif cond == "no" :
             lines = ["About the invitation, %s said sorry that (he/she) can't go..",
+                     "About the invitation, %s rejected the offer",
+                     "About the invitation, %s declined the offer",
+                     "About the invitation, %s said 'maybe later'",
+                     "About the invitation, I think %s said that (he/she) can't fulfill the request"
                     ]
 
         elif cond == "pending" :
             lines = ["About the invitation, %s is still thinking whether going or not",
+                     "About the invitation, %s will contact you later..",
+                     "About the invitation, %s is unsure about that invitation outcome",
+                     "About the invitation, %s can't guarantee (his/her) approval",
+                     "About the invitation, %s said that (he/she) will think about it"
                     ]
         return random.choice(lines)
 

@@ -34,13 +34,16 @@ from linebot.exceptions import (
 )
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
+    SourceUser, SourceGroup, SourceRoom,
+    TemplateSendMessage, ConfirmTemplate, MessageTemplateAction,
+    ButtonsTemplate, URITemplateAction, PostbackTemplateAction,
+    CarouselTemplate, CarouselColumn, PostbackEvent,
     StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
     ImageMessage, VideoMessage, AudioMessage,
-    LeaveEvent, JoinEvent, UnfollowEvent, FollowEvent,
-    SourceGroup, SourceRoom, SourceUser
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 
-from lines_collection import Lines
+from lines_collection import Lines, Labels, Picture
 
 
 app = Flask(__name__)
@@ -57,8 +60,10 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
+Labels = Labels()
+Picture = Picture()
 userlist = Database.userlist
-userlist_init_count = len(Database.userlist.keys())
+userlist_update_count = 0
 
 tag_notifier_on = True
 
@@ -99,14 +104,23 @@ def update_user_list(event):
     global userlist,userlist_update_count
 
     if isinstance(event.source, SourceUser):
+        userlist_init_count = len(userlist.keys()) # list count before update
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
-            userlist_update_count = len(userlist.keys()) - userlist_init_count
-            if userlist_update_count >= 1 :
-                report = Lines.dev_mode("notify update userlist") % (userlist_update_count)
-                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+            if len(userlist.keys()) is not userlist_init_count : # theres an update
+                userlist_update_count = userlist_update_count + 1
+                if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
+
+                    report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
+                    command = "Megumi dev mode print userlist"
+                    buttons_template = ButtonsTemplate(title="Update userlist",text=report, actions=[
+                        PostbackTemplateAction(label=Labels.print_userlist(), data=command)
+                        ])
+                    template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
+                    line_bot_api.push_message(jessin_userid, template_message)
 
         except :
             pass
@@ -134,19 +148,21 @@ def message_text(event):
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
             else                                                        : Function.false()
 
-        elif any(word in text for word in ["turn ","able"])         :
-            if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])       : Function.set_tag_notifier("set")
-            else                                                        : Function.false()
+        elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
 
-        elif "command4 " in text                                    : Function.notyetcreated()
+        elif "test" in text                                         : Function.TEST(event)
         elif "command5 " in text                                    : Function.notyetcreated()
 
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
+
         elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
+        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
         elif all(word in text for word in ["dev","mode"])           :
-            if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
-            else                                                        : Function.false()
+            if Function.dev_authority_check(event)                      :
+                if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
+                elif any(word in text for word in ["turn ","able"])         :
+                    if any(word in text for word in ["tag notifier",
+                                                     "notif", "mention"])       : Function.dev_mode_set_tag_notifier("set")
+                    else                                                        : Function.false()
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -185,6 +201,29 @@ def handle_content_message(event):
     get_receiver_addr(event)
 """
 
+@handler.add(PostbackEvent)
+def handle_postback(event):
+    global token, original_text, text, jessin_userid, user, tag_notifier_on
+
+    jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+    original_text = event.postback.data
+    text = original_text.lower()
+    token = event.reply_token
+    get_receiver_addr(event)
+    update_user_list(event)
+
+    if original_text == 'ping': #dummy
+        line_bot_api.reply_message(token, TextSendMessage(text='pong'))
+
+    elif all(word in text for word in ["confirmation invitation"])                  :
+        if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event,"yes")
+        elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
+        elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
+
+    elif all(word in text for word in ["Megumi dev mode print userlist"])           :
+        if Function.dev_authority_check(event)                                          :
+            if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
+            else                                                                            : Function.false()
 
 
 @handler.add(JoinEvent)
@@ -383,6 +422,83 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    def send_invite(event):
+        global invitation_sender, invitation_sender_id
+        # invitation data
+        header_pic = Picture.header("background")
+        title = 'Invitation'
+        text = "Let's have some fun !"
+        invite_list = userlist
+        try :
+            if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
+                invitation_sender = "someone"
+            else :
+                invitation_sender_id = event.source.user_id
+                invitation_sender = userlist[invitation_sender_id]
+        except LineBotApiError as e:
+            print("invitation sender id failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+            invitation_sender = "someone"
+
+        try : #generate the invitation
+            buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
+                PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+                PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+                PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
+            ])
+            template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+
+        except LineBotApiError as e:
+            print(title,"button is not created")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+
+
+        try : #sending the invitation
+            report = Lines.invite("header") % invitation_sender
+            invitation_sent = 0
+            for participan in invite_list :
+                line_bot_api.push_message(participan,TextSendMessage(text=report))
+                line_bot_api.push_message(participan, template_message)
+                invitation_sent += 1
+            if invitation_sender != "someone" :
+                report = Lines.invite("success") % invitation_sent
+                line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
+
+        except LineBotApiError as e:
+            print("sending invitation failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+            if invitation_sender != "someone" :
+                report = Lines.invite("failed")
+                line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
+
+    def invite_respond(event,cond):
+        global invitation_sender
+        try :
+            responder_id = event.source.user_id
+            responder = userlist[responder_id]
+        except :
+            responder = "someone"
+
+        try :
+            report = Lines.invite_report(cond) % responder
+            if invitation_sender != "someone" :
+                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
+            else :
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+        except LineBotApiError as e:
+            print("sending invitation report failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+
+
     """====================== Sub Function List ============================="""
 
     def report_bug(event):
@@ -441,35 +557,6 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier(cond="pass"):
-        global tag_notifier_on , tag_notifier_conf
-        if cond == "set":
-            if any(word in text for word in ["on ", "enable "]):
-                if tag_notifier_on is not True :
-                    tag_notifier_on = True
-                    reply = Lines.set_tag_notifier("on")
-                else:  # already True
-                    reply = Lines.set_tag_notifier("same")
-
-            elif any(word in text for word in ["off ", "disable "]):
-                if tag_notifier_on is True :
-                    tag_notifier_on = False
-                    reply = Lines.set_tag_notifier("off")
-                else:  # already False
-                    reply = Lines.set_tag_notifier("same")
-
-            else:
-                reply = Lines.set_tag_notifier("fail")
-                pass
-
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-        elif cond == "pass":
-            pass
-            print("func passed")
-
-        print("current status : ", tag_notifier_on)
-
     def tag_notifier(event):
         if any(word in text for word in Lines.jessin()):
             try :
@@ -510,15 +597,78 @@ class Function:
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    def dev_mode_set_tag_notifier(cond="pass"):
+        global tag_notifier_on
+        if cond == "set":
+            if any(word in text for word in ["on ", "enable "]):
+                if tag_notifier_on is not True :
+                    tag_notifier_on = True
+                    reply = Lines.dev_mode_set_tag_notifier("on")
+                else:  # already True
+                    reply = Lines.dev_mode_set_tag_notifier("same")
+
+            elif any(word in text for word in ["off ", "disable "]):
+                if tag_notifier_on is True :
+                    tag_notifier_on = False
+                    reply = Lines.dev_mode_set_tag_notifier("off")
+                else:  # already False
+                    reply = Lines.dev_mode_set_tag_notifier("same")
+
+            else:
+                reply = Lines.dev_mode_set_tag_notifier("fail")
+                pass
+
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+        elif cond == "pass":
+            pass
+            print("func passed")
+
+        print("current status : ", tag_notifier_on)
+
     def dev_print_userlist():
-        try :
-            print("=================================== new user list ===================================\n")
-            print(userlist)
-            print("\n================================= end of  user list =================================")
-            reply = Lines.dev_mode("print userlist success") % (userlist_update_count)
-        except :
-            reply = Lines.dev_mode("print userlist failed")
+        global userlist_update_count
+        if userlist_update_count != 0 :
+            try :
+                print("=================================== new user list ===================================\n")
+                print(userlist)
+                print("\n================================= end of  user list =================================")
+                reply = Lines.dev_mode_userlist("print userlist success") % (userlist_update_count)
+                userlist_update_count = 0
+            except :
+                reply = Lines.dev_mode_userlist("print userlist failed")
+        elif userlist_update_count == 0 :
+            reply = Lines.dev_mode_userlist("userlist not updated yet")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+    def dev_authority_check(event):
+        try:
+            user_id = event.source.user_id
+            user = userlist[user_id]
+
+            if (user_id == jessin_userid):
+                granted = True
+            else:
+                reply = Lines.dev_mode_authority_check("reject")
+                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                report = Lines.dev_mode_authority_check("notify report") % (user)
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+                granted = False
+
+        except : #accessed in group / room / failed
+            user = "someone"
+            reply = Lines.dev_mode_authority_check("failed")
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            report = Lines.dev_mode_authority_check("notify report") % (user)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            granted = False
+
+        return granted
+
+    def TEST(event):
+        return
+
+
 
     def template():
         reply = Lines.added("cond")
