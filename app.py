@@ -456,7 +456,7 @@ class Function:
                 line_bot_api.push_message(participan, Lines.invite("header") % invitation_sender )
                 line_bot_api.push_message(participan, template_message)
             if invitation_sender is not "someone" :
-                line_bot_api.push_message(sender_id,Lines.invite("success"))
+                line_bot_api.push_message(invitation_sender_id,Lines.invite("success"))
 
         except LineBotApiError as e:
             print("sending invitation failed")
