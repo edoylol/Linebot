@@ -455,7 +455,7 @@ class Function:
 
 
         try : #sending the invitation
-            report = Lines.invite("header") % invitation_sender)
+            report = Lines.invite("header") % invitation_sender
             for participan in invite_list :
                 line_bot_api.push_message(participan,TextSendMessage(text=report))
                 line_bot_api.push_message(participan, template_message)
