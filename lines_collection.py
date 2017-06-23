@@ -490,12 +490,12 @@ class Labels: # more like my response template
 
 class Picture :
     def header(self,cond):
-        if cond == "background":
-            pic = ["http://www.freebiesgallery.com/wp-content/uploads/2014/02/blurred-background-8.jpg",
-                   "http://www.powerpointhintergrund.com/uploads/blue-blurred-background-33.jpg",
-                   "https://cdn.shutterstock.com/shutterstock/videos/8945557/thumb/1.jpg?i10c=img.resize(height:160)",
-                   "http://www.pixeden.com/media/k2/galleries/214/001-blured-background-texture.jpg",
-                   "http://cdn.desktopwallpapers4.me/wallpapers/abstract/2560x1600/2/14575-gradient-2560x1600-abstract-wallpaper.jpg",
-                   "http://www.powerpointhintergrund.com/uploads/abstract-blurry-background-22.jpg"
+        if cond == "background" :
+            pic = ["http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
+                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
+                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
+                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
+                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
+                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg"
                    ]
         return random.choice(pic)
