@@ -43,7 +43,7 @@ from linebot.models import (
     UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent
 )
 
-from lines_collection import Lines,Labels
+from lines_collection import Lines, Labels, Picture
 
 
 app = Flask(__name__)
@@ -61,6 +61,7 @@ handler = WebhookHandler(channel_secret)
 
 Lines = Lines()
 Labels = Labels()
+Picture = Picture()
 userlist = Database.userlist
 userlist_update_count = 0
 
@@ -147,10 +148,9 @@ def message_text(event):
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
             else                                                        : Function.false()
 
+        elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
+
         elif "test" in text                                         : Function.TEST(event)
-
-
-        elif "command5 " in text                                    : Function.notyetcreated()
         elif "command5 " in text                                    : Function.notyetcreated()
 
 
@@ -159,11 +159,10 @@ def message_text(event):
         elif all(word in text for word in ["dev","mode"])           :
             if Function.dev_authority_check(event)                      :
                 if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
-                else                                                        : Function.false()
-        elif any(word in text for word in ["turn ","able"])         :
-            if any(word in text for word in ["tag notifier",
-                                             "notif", "mention"])       : Function.set_tag_notifier("set")
-            else                                                        : Function.false()
+                elif any(word in text for word in ["turn ","able"])         :
+                    if any(word in text for word in ["tag notifier",
+                                                     "notif", "mention"])       : Function.dev_mode_set_tag_notifier("set")
+                    else                                                        : Function.false()
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -216,15 +215,15 @@ def handle_postback(event):
     if original_text == 'ping': #dummy
         line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
-    elif all(word in text for word in ["confirmation invitation"]) :
-        if all(word in text for word in ['confirmation invitation : yes']) : Function.invitation(event,"yes")
-        elif all(word in text for word in ['confirmation invitation : no']):    Function.invitation(event,"no")
-        elif all(word in text for word in ['confirmation invitation : pending']):   Function.invitation(event,"pending")
+    elif all(word in text for word in ["confirmation invitation"])                  :
+        if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event,"yes")
+        elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
+        elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["Megumi dev mode print userlist"])   :
-        if Function.dev_authority_check(event)                                  :
-            if all(word in text for word in ["print", "userlist"])                  : Function.dev_print_userlist()
-            else                                                                    : Function.false()
+    elif all(word in text for word in ["Megumi dev mode print userlist"])           :
+        if Function.dev_authority_check(event)                                          :
+            if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
+            else                                                                            : Function.false()
 
 
 @handler.add(JoinEvent)
@@ -423,10 +422,68 @@ class Function:
 
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def invitation(event,cond):
-        print("EVENT",event)
-        print("COND", cond)
-        return
+    def send_invite(event):
+        global invitation_sender, invitation_sender_id
+        # invitation data
+        header_pic = Picture.header("background")
+        title = 'Invitation'
+        text = "Let's have some fun !"
+        invite_list = userlist
+        try :
+            invitation_sender_id = event.source.user_id
+            invitation_sender = userlist[invitation_sender_id]
+        except :
+            invitation_sender = "someone"
+
+        try : #generate the invitation
+            buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
+                PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+                PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+                PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
+            ])
+            template_message = TemplateSendMessage(
+                alt_text=text, template=buttons_template)
+
+        except LineBotApiError as e:
+            print(title,"button is not created")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+
+
+        try : #sending the invitation
+            for participan in invite_list :
+                line_bot_api.push_message(participan, Lines.invite("header") % invitation_sender )
+                line_bot_api.push_message(participan, template_message)
+            if invitation_sender is not "someone" :
+                line_bot_api.push_message(sender_id,Lines.invite("success"))
+
+        except LineBotApiError as e:
+            print("sending invitation failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+            if invitation_sender is not "someone" :
+                line_bot_api.push_message(invitation_sender, Lines.invite("failed"))
+
+    def invite_respond(event,cond):
+        try :
+            responder = event.source.user_id
+        except :
+            responder = "someone"
+
+        try :
+            if invitation_sender is not "someone" :
+                line_bot_api.push_message(invitation_sender_id, Lines.invite_report(cond) % responder)
+            else :
+                line_bot_api.push_message(jessin_userid, Lines.invite_report(cond) % responder)
+
+        except LineBotApiError as e:
+            print("sending invitation report failed")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
+
 
     """====================== Sub Function List ============================="""
 
@@ -486,35 +543,6 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    def set_tag_notifier(cond="pass"):
-        global tag_notifier_on , tag_notifier_conf
-        if cond == "set":
-            if any(word in text for word in ["on ", "enable "]):
-                if tag_notifier_on is not True :
-                    tag_notifier_on = True
-                    reply = Lines.set_tag_notifier("on")
-                else:  # already True
-                    reply = Lines.set_tag_notifier("same")
-
-            elif any(word in text for word in ["off ", "disable "]):
-                if tag_notifier_on is True :
-                    tag_notifier_on = False
-                    reply = Lines.set_tag_notifier("off")
-                else:  # already False
-                    reply = Lines.set_tag_notifier("same")
-
-            else:
-                reply = Lines.set_tag_notifier("fail")
-                pass
-
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-        elif cond == "pass":
-            pass
-            print("func passed")
-
-        print("current status : ", tag_notifier_on)
-
     def tag_notifier(event):
         if any(word in text for word in Lines.jessin()):
             try :
@@ -554,6 +582,35 @@ class Function:
         print("SOURCE",event.source)
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    def dev_mode_set_tag_notifier(cond="pass"):
+        global tag_notifier_on
+        if cond == "set":
+            if any(word in text for word in ["on ", "enable "]):
+                if tag_notifier_on is not True :
+                    tag_notifier_on = True
+                    reply = Lines.dev_mode_set_tag_notifier("on")
+                else:  # already True
+                    reply = Lines.dev_mode_set_tag_notifier("same")
+
+            elif any(word in text for word in ["off ", "disable "]):
+                if tag_notifier_on is True :
+                    tag_notifier_on = False
+                    reply = Lines.dev_mode_set_tag_notifier("off")
+                else:  # already False
+                    reply = Lines.dev_mode_set_tag_notifier("same")
+
+            else:
+                reply = Lines.dev_mode_set_tag_notifier("fail")
+                pass
+
+            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+
+        elif cond == "pass":
+            pass
+            print("func passed")
+
+        print("current status : ", tag_notifier_on)
 
     def dev_print_userlist():
         global userlist_update_count
@@ -595,32 +652,7 @@ class Function:
         return granted
 
     def TEST(event):
-        header_pic = "https://www.google.co.id/logos/doodles/2017/oskar-fischingers-117th-birthday-5635181101711360.2-s.png"
-        try :
-            buttons_template = ButtonsTemplate(
-                title='Invitation',
-                text="Let's have some fun !",
-                thumbnail_image_url=header_pic,
-                actions=[
-                    PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
-                    PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
-                    PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
-                ])
-        except LineBotApiError as e:
-            print("creating button fail")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-
-        try :
-            template_message = TemplateSendMessage(
-                alt_text="Let's have some fun !", template=buttons_template)
-            line_bot_api.reply_message(token, template_message)
-        except LineBotApiError as e:
-            print("creating template fail")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        return
 
 
 

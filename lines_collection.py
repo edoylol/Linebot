@@ -63,6 +63,31 @@ class Lines:  # class to store respond lines
                  "I think it's %s %s" % (MM, DD)]  # I think it's June 16
         return random.choice(lines)
 
+    def invite(self,cond):
+        if cond == "header" : #  % sender
+            lines = ["Konichiwa, %s invite you to : ",
+                    ]
+        elif cond == "success" :
+            lines = ["Invitation sent ^^",
+                     ]
+
+        elif cond == "failed" :
+            lines = ["Gomenne, seems I can't send the invitation..",
+                     ]
+        return random.choice(lines)
+
+    def invite_report(self,cond):
+        if cond == "yes" : #  % responder
+            lines = ["About the invitation, %s said that (he/she) will come..",
+                    ]
+        elif cond == "no" :
+            lines = ["About the invitation, %s said sorry that (he/she) can't go..",
+                    ]
+
+        elif cond == "pending" :
+            lines = ["About the invitation, %s is still thinking whether going or not",
+                    ]
+        return random.choice(lines)
 
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
@@ -186,33 +211,7 @@ class Lines:  # class to store respond lines
                  ]
         return random.choice(lines)
 
-    def set_tag_notifier(self,cond):
-        if cond == "on" :
-            lines = ["OK, I will tell you if someone tag you master ~",
-                     "Tag notifier is on active mode :> ",
-                     "Sure, I will notify you",
-                     "Roger..",
-                     "Done.., itterasai :3 ~"]
 
-        elif cond == "off" :
-            lines = ["Okaeri.. :3",
-                     "OK, welcome back ~",
-                     "Roger.. :3 ",
-                     "Done,, Tag notifier is off now..",
-                     "Sure,, glad to see you again.."]
-
-        elif cond == "same" :
-            lines = ["Hmm.. seems nothing changed...",
-                     "Hmm.. try to do it one more time.. ^^ \nsometimes it takes more than once",
-                     "I don't see any difference though...",
-                     "Please try again until it's changed ^^,,\nsometimes it takes more than once "]
-
-        else :
-            lines = ["Gomen, I don't catch that.. :/",
-                     "Hmm.. try to do it one more time.. ^^",
-                     "Gomen, seems notifier setting is failed...",
-                     "I think you gave wrong instruction (?) xD"]
-        return random.choice(lines)
 
     def added(self,cond):
         if cond == "added" :
@@ -264,6 +263,34 @@ class Lines:  # class to store respond lines
                      "Master, gomenne.. %s blocked me I guess...Megumi wasn't a very good girl"
                      ]
 
+        return random.choice(lines)
+
+    def dev_mode_set_tag_notifier(self,cond):
+        if cond == "on" :
+            lines = ["OK, I will tell you if someone tag you master ~",
+                     "Tag notifier is on active mode :> ",
+                     "Sure, I will notify you",
+                     "Roger..",
+                     "Done.., itterasai :3 ~"]
+
+        elif cond == "off" :
+            lines = ["Okaeri.. :3",
+                     "OK, welcome back ~",
+                     "Roger.. :3 ",
+                     "Done,, Tag notifier is off now..",
+                     "Sure,, glad to see you again.."]
+
+        elif cond == "same" :
+            lines = ["Hmm.. seems nothing changed...",
+                     "Hmm.. try to do it one more time.. ^^ \nsometimes it takes more than once",
+                     "I don't see any difference though...",
+                     "Please try again until it's changed ^^,,\nsometimes it takes more than once "]
+
+        else :
+            lines = ["Gomen, I don't catch that.. :/",
+                     "Hmm.. try to do it one more time.. ^^",
+                     "Gomen, seems notifier setting is failed...",
+                     "I think you gave wrong instruction (?) xD"]
         return random.choice(lines)
 
     def dev_mode_userlist(self,cond):
@@ -460,3 +487,15 @@ class Labels: # more like my response template
                      "",
                      ""]
         return random.choice(lines)
+
+class Picture :
+    def header(self,cond):
+        if cond == "background":
+            pic = ["http://www.freebiesgallery.com/wp-content/uploads/2014/02/blurred-background-8.jpg",
+                   "http://www.powerpointhintergrund.com/uploads/blue-blurred-background-33.jpg",
+                   "https://cdn.shutterstock.com/shutterstock/videos/8945557/thumb/1.jpg?i10c=img.resize(height:160)",
+                   "http://www.pixeden.com/media/k2/galleries/214/001-blured-background-texture.jpg",
+                   "http://cdn.desktopwallpapers4.me/wallpapers/abstract/2560x1600/2/14575-gradient-2560x1600-abstract-wallpaper.jpg",
+                   "http://www.powerpointhintergrund.com/uploads/abstract-blurry-background-22.jpg"
+                   ]
+        return random.choice(pic)
