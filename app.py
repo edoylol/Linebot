@@ -470,7 +470,7 @@ class Function:
             print(e.error.details)
             if invitation_sender is not "someone" :
                 report = Lines.invite("failed")
-                line_bot_api.push_message(invitation_sender,TextSendMessage(text=report) )
+                line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
 
     def invite_respond(event,cond):
         try :
