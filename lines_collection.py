@@ -491,11 +491,6 @@ class Labels: # more like my response template
 class Picture :
     def header(self,cond):
         if cond == "background" :
-            pic = ["http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
-                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
-                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
-                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
-                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg",
-                   "http://hd.wallpaperswide.com/thumbs/colorful_blurry_background_v-t2.jpg"
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
                    ]
         return random.choice(pic)
