@@ -602,9 +602,9 @@ class Function:
                 text="Let's have some fun !",
                 thumbnail_image_url=header_pic,
                 actions=[
-                    PostbackTemplateAction(label='count me in..', data='confirmation invitation : yes'),
-                    PostbackTemplateAction(label='no thanks..', data='confirmation invitation : no'),
-                    PostbackTemplateAction(label='let me decide later..', data='confirmation invitation : pending')
+                    PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+                    PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+                    PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
                 ])
         except LineBotApiError as e:
             print("creating button fail")
@@ -614,7 +614,7 @@ class Function:
 
         try :
             template_message = TemplateSendMessage(
-                alt_text="Let's have fun !", template=buttons_template)
+                alt_text="Let's have some fun !", template=buttons_template)
             line_bot_api.reply_message(token, template_message)
         except LineBotApiError as e:
             print("creating template fail")
