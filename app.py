@@ -459,7 +459,7 @@ class Function:
             for participan in invite_list :
                 line_bot_api.push_message(participan,TextSendMessage(text=report))
                 line_bot_api.push_message(participan, template_message)
-            if invitation_sender is not "someone" :
+            if invitation_sender != "someone" :
                 report = Lines.invite("success")
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
 
@@ -468,7 +468,7 @@ class Function:
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
-            if invitation_sender is not "someone" :
+            if invitation_sender != "someone" :
                 report = Lines.invite("failed")
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
 
@@ -480,7 +480,7 @@ class Function:
 
         try :
             report = Lines.invite_report(cond) % responder
-            if invitation_sender is not "someone" :
+            if invitation_sender != "someone" :
                 line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
             else :
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))

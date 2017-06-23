@@ -492,5 +492,14 @@ class Picture :
     def header(self,cond):
         if cond == "background" :
             pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/037/small/Abstract_Blur_4K_Motion_Background_Loop.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/004/941/small/jellyfish-4k-living-background.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/030/small/silk-4k-wedding-background.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/045/small/Blurry_Vision_4K_Motion_Background_Loop.jpg",
+                   "https://il2.picdn.net/shutterstock/videos/15516307/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/038/small/Alive_4K_Motion_Background_Loop.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/042/small/Beautiful_Slide_4K_Motion_Background_Loop.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
                    ]
         return random.choice(pic)
