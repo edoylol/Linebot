@@ -432,11 +432,7 @@ class Function:
             desc_start = found_index[0] + 1
             desc_end = found_index[1]
             desc = text[desc_start:desc_end]
-        except LineBotApiError as e:
-            print("DESC FIND ERROR")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        except :
             desc = None
 
         try : # find where to send
@@ -450,11 +446,7 @@ class Function:
             invite_list_index = filtered_text.index("to") + 1
             list_name = filtered_text[invite_list_index]
             invite_list = Database.list_dictionary[list_name]
-        except LineBotApiError as e:
-            print("SET INVITE LIST ERROR")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        except :
             invite_list = Database.list_dictionary["empty"]
 
         header_pic = Picture.header("background")
