@@ -447,7 +447,7 @@ class Function:
             list_name = filtered_text[invite_list_index]
             invite_list = Database.list_dictionary[list_name]
         except :
-            invite_list = Database.list_dictionary["empty"]
+            invite_list = Database.list_dictionary["dev"]
 
         header_pic = Picture.header("background")
         title = 'Invitation'
