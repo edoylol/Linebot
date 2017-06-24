@@ -198,10 +198,25 @@ class Lines:  # class to store respond lines
         elif cond == "footer" :
 
             lines = [" ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
-                     " Hope yenjoy thou e show later ~",
+                     " Hope you enjoy the show later ~",
                      " (=^ ◡ ^=) end 	(=^ ◡ ^=)",
                      " (＾• ω •＾) enjoy the show ~ ",
                      "      ヾ(・ω・)メ(・ω・)ノ    ",
+                     ]
+        elif cond == "asking to show cinema list" :
+            lines = ["Wanna see the cinema list ?",
+                     "Nee,, wanna see the cinema list ?",
+                     "Let's take a look at the cinema list :> ",
+                     "How about seeing the cinema list ? ",
+                     "I have the cinema list, wanna see ?",
+                     ]
+        elif cond == "show cinema list" :
+
+            lines = ["Here you go..  \n",
+                     "These are the cinemas I could find ~\n",
+                     "Pick the cinemas from the list below kay ? :> \n",
+                     "Try to add some of this name into search next time ^^\n",
+                     "These are the cinema list you requested..\n",
                      ]
         return random.choice(lines)
 

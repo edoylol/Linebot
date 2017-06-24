@@ -148,9 +148,11 @@ def message_text(event):
 
         elif any(word in text for word in ["what ","show "])        :
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
-            elif any(word in text for word in ["movie","showing",
-                                               "movies","playing"
-                                               "film","schedule"])      : Function.show_cinema_movie_schedule()
+            elif all(word in text for word in ["movie ","movies",
+                                               "film","films"])         :
+                if any(word in text for word in ["showing",
+                                                 "playing","schedule"])     : Function.show_cinema_movie_schedule()
+                else                                                        : Function.false()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
@@ -224,6 +226,8 @@ def handle_postback(event):
         if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event,"yes")
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
+
+    elif all(word in text for word in ["request cinema list please"])               :   Function.show_cinema_list()
 
     elif all(word in text for word in ["megumi dev mode print userlist"])           :
         if Function.dev_authority_check(event)                                          :
@@ -595,6 +599,15 @@ class Function:
 
             return cinema_name
 
+        def request_cinema_list():
+            confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
+            buttons_template = ButtonsTemplate(text=confirmation, actions=[
+                    PostbackTemplateAction(label="Sure...", data='request cinema list please',text='Sure...')])
+            template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+
+
         keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato','list', 'me', 'meg', 'megumi', 'movie',
                    'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
 
@@ -605,8 +618,10 @@ class Function:
 
         if cinemas == []:
             reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
+            request_cinema_list()
         elif len(cinemas) > 2:
             reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
+            request_cinema_list()
 
         else:
             try:
@@ -630,6 +645,52 @@ class Function:
 
 
         line_bot_api.reply_message(token,TextSendMessage(text=reply))
+
+    def show_cinema_list():
+
+        def get_cinema_list():
+            cinemas = []
+            page_url = "http://www.21cineplex.com/theaters"
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+            links = mod_page.findAll('a')
+            for link in links:
+                cinema_link = link.get("href")
+                if all(word in cinema_link for word in ["http://www.21cineplex.com/theater/bioskop"]):
+                    cinemas.append(cinema_link)
+
+            cinemas = set(cinemas)
+            return cinemas
+
+        def get_cinema_name(cinema_link):
+
+            index_start = cinema_link.find("-") + 1
+            index_end = cinema_link.find(",")
+            cinema_name = cinema_link[index_start:index_end]
+            cinema_name = cinema_name.replace("-", " ")
+
+            """ Special case TSM """
+            if cinema_name == "tsm xxi" :
+                if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                    cinema_name = "tsm xxi (Bandung)"
+                elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                    cinema_name = "tsm xxi (Makassar)"
+
+            return cinema_name
+
+        cinema_list = []
+        cinemas = get_cinema_list()
+        cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
+        for cinema in cinemas:
+            cinema_list.append(get_cinema_name(cinema))
+        report = "\n".join(cinema_list)
+        line_bot_api.push_message(address, TextSendMessage(text=report))
+
+
+
 
     """====================== Sub Function List ============================="""
 
