@@ -634,6 +634,10 @@ class Function:
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
+                    print(reply)
+                    reply = str(reply)
+                    print(reply)
+
             except LineBotApiError as e:
                 print("failed to show movie data")
                 print(e.status_code)
