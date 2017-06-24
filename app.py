@@ -624,20 +624,21 @@ class Function:
 
         else:
             try:
-                print (cinemas)
+                reply = []
                 for cinema in cinemas:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
-                    reply = []
+
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                    reply.append(" ♦ ＼(＾∀＾)  "+cinema_name+"  (＾∀＾)ノ ♦ ")
+                    reply.append(" ♦♦   "+cinema_name+"   ♦♦ ")
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
 
-                reply ="\n".join(reply)
+                reply.append(" ♦ ＼(＾∀＾)  end of information  (＾∀＾)ノ ♦ ")
+                reply = "\n".join(reply)
 
 
 
@@ -647,6 +648,7 @@ class Function:
                 print(e.error.message)
                 print(e.error.details)
                 reply = Lines.show_cinema_movie_schedule("failed to show movie data")
+
 
         line_bot_api.reply_message(token,TextSendMessage(text=reply))
 
