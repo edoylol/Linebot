@@ -23,6 +23,7 @@ import math
 import tempfile
 import requests,urllib, urllib.request
 import Database
+import BeautifulSoup
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
