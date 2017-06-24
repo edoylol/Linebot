@@ -625,11 +625,10 @@ class Function:
         else:
             try:
                 reply = []
+                reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                 for cinema in cinemas:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
-
-                    reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                     reply.append(" ♦♦   "+cinema_name+"   ♦♦ ")
                     for data in moviedata:
                         reply.append(data[0])  # movie title
@@ -637,7 +636,7 @@ class Function:
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
 
-                reply.append(" ♦ ＼(＾∀＾)  end of information  (＾∀＾)ノ ♦ ")
+                reply.append(" ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ")
                 reply = "\n".join(reply)
 
 
