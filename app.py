@@ -148,7 +148,7 @@ def message_text(event):
 
         elif any(word in text for word in ["what ","show "])        :
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
-            elif all(word in text for word in ["movie ","movies",
+            elif any(word in text for word in ["movie ","movies",
                                                "film","films"])         :
                 if any(word in text for word in ["showing",
                                                  "playing","schedule"])     : Function.show_cinema_movie_schedule()
