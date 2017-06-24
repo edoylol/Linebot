@@ -624,6 +624,7 @@ class Function:
 
         else:
             try:
+                print (cinemas)
                 for cinema in cinemas:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
