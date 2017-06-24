@@ -618,10 +618,10 @@ class Function:
 
         if cinemas == []:
             reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
-            request_cinema_list()
+            ask_for_request : True
         elif len(cinemas) > 2:
             reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
-            request_cinema_list()
+            ask_for_request: True
 
         else:
             try:
@@ -645,6 +645,8 @@ class Function:
 
 
         line_bot_api.reply_message(token,TextSendMessage(text=reply))
+
+        if ask_for_request : request_cinema_list()
 
     def show_cinema_list():
 
