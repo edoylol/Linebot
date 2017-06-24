@@ -628,15 +628,15 @@ class Function:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
                     reply = []
-                    reply.append(("♦♢♦♢♦♢♦  ", cinema_name, "  ♦♢♦♢♦♢♦\n"))
+                    reply.append(("♦♢♦  ", cinema_name, "  ♦♢♦\n"))
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
-                    print(reply)
-                    reply = str(reply)
-                    print(reply)
+
+                    reply = """{}""".format("\n".join(reply))
+
 
             except LineBotApiError as e:
                 print("failed to show movie data")
