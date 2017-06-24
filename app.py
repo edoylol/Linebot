@@ -525,7 +525,8 @@ class Function:
     def show_cinema_movie_schedule():
         def get_cinema_list(search_keyword):
             if search_keyword == [] or search_keyword == [""]:
-                reply = Lines.show_cinema_movie_schedule("No keyword found")
+                report = Lines.show_cinema_movie_schedule("No keyword found")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
             else:
                 cinemas = []
                 page_url = "http://www.21cineplex.com/theaters"
@@ -535,7 +536,8 @@ class Function:
                     page_source_code_text = con.read()
                     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                 except:
-                    reply = Lines.show_cinema_movie_schedule("failed to open the the page")
+                    report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
 
                 try:
                     links = mod_page.findAll('a')
@@ -544,7 +546,11 @@ class Function:
                         if all(word in cinema_link for word in
                                (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
                             cinemas.append(cinema_link)
-                except:
+                except LineBotApiError as e:
+
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
                     print("find cinema failed")
 
                 if len(cinemas) > 1: cinemas = set(cinemas)
@@ -596,8 +602,6 @@ class Function:
 
         search_keyword = OtherUtil.filter_words(text)
         search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
-
-        print (search_keyword)
 
         cinemas = get_cinema_list(search_keyword)
 
