@@ -21,11 +21,12 @@ import random
 import time
 import math
 import tempfile
-import urllib.request
+import requests,urllib, urllib.request
 import Database
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
+from bs4 import BeautifulSoup
 from linebot import (
     LineBotApi, WebhookHandler
 )
