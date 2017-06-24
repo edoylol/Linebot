@@ -693,7 +693,7 @@ class Function:
         try :
             line_bot_api.push_message(address, TextSendMessage(text=report))
         except LineBotApiError as e:
-            print("")
+            print(report)
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
