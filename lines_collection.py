@@ -145,7 +145,7 @@ class Lines:  # class to store respond lines
                      ]
         elif cond == "cinema name" : # accept 1 % cinema name
 
-            lines = [" ♦♦   %s   ♦♦ \n",
+            lines = [" ♦♦  %s  ♦♦ \n",
                      "(・ω・) %s (・ω・)\n",
                      " ❤❤   %s   ❤❤ \n",
                      " ~~~   %s   ~~~ \n",
