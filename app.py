@@ -628,12 +628,12 @@ class Function:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
                     reply = []
-                    reply.append("♦♢♦  "+cinema_name+"  ♦♢♦")
+                    reply.append("＼(＾∀＾)  "+cinema_name+"  (＾∀＾)ノ")
+                    reply.append("\n")
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
-                        reply.append("\n")
 
                     reply ="\n".join(reply)
 
