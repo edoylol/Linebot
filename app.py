@@ -690,14 +690,13 @@ class Function:
         for cinema in cinemas:
             cinema_list.append(get_cinema_name(cinema))
         report = "\n".join(cinema_list)
-        try :
+        if len(report) > 1800 :
+            report1 = report[:1800]+"..."
+            report2 = "..."+report[1801:]
+            line_bot_api.push_message(address, TextSendMessage(text=report1))
+            line_bot_api.push_message(address, TextSendMessage(text=report2))
+        else :
             line_bot_api.push_message(address, TextSendMessage(text=report))
-        except LineBotApiError as e:
-            print(report)
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
-
 
 
     """====================== Sub Function List ============================="""
