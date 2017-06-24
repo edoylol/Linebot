@@ -635,7 +635,7 @@ class Function:
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
 
-                    reply = """{}""".format("\n".join(reply))
+                    print(reply)
 
 
             except LineBotApiError as e:
