@@ -616,12 +616,13 @@ class Function:
 
         cinemas = get_cinema_list(search_keyword)
 
+
         if cinemas == []:
             reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
-            ask_for_request : True
+            ask_for_request == True
         elif len(cinemas) > 2:
             reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
-            ask_for_request: True
+            ask_for_request == True
 
         else:
             try:
@@ -639,7 +640,7 @@ class Function:
 
                 reply.append(Lines.show_cinema_movie_schedule("footer"))
                 reply = "\n".join(reply)
-
+                ask_for_request == False
             except :
                 reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
