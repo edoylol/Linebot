@@ -574,7 +574,10 @@ class Function:
                 if title is not None:
                     movielist.append(title)
                     movie_description = movie.get("href")
-                    desclist.append(movie_description)
+                    if movie_description in desclist :
+                        desclist.append("  ")
+                    else :
+                        desclist.append(movie_description)
 
             showtimes = mod_schedule_table.findAll("td", {"align": "right"})
             for showtime in showtimes:
