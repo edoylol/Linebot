@@ -146,12 +146,10 @@ class Lines:  # class to store respond lines
         elif cond == "cinema name" : # accept 1 % cinema name
 
             lines = [" ♦♦   %s   ♦♦ \n",
-                     " (・ω・) %s (・ω・) \n",
-                     "( ◡‿◡ )❤  %s  ❤( ◡‿◡ )\n",
-                     " (＾• ω •＾) %s (＾• ω •＾) \n",
+                     "(・ω・) %s (・ω・)\n",
                      " ❤❤   %s   ❤❤ \n",
                      " ~~~   %s   ~~~ \n",
-                     " >>>>>   %s   <<<<< \n"
+                     " >>>   %s   <<< \n"
                      ]
         elif cond == "No cinema found" : # accept 1 % tag list
 
