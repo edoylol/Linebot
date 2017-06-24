@@ -634,6 +634,7 @@ class Function:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
+                        reply.append("\n")
 
                 reply ="\n".join(reply)
 
