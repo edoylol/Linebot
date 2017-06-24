@@ -629,14 +629,13 @@ class Function:
                     moviedata = get_movie_data(cinema)
                     reply = []
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                    reply.append("＼(＾∀＾)  "+cinema_name+"  (＾∀＾)ノ")
-                    reply.append("\n")
+                    reply.append(" ♦ ＼(＾∀＾)  "+cinema_name+"  (＾∀＾)ノ ♦ ")
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
 
-                    reply ="\n".join(reply)
+                reply ="\n".join(reply)
 
 
 
