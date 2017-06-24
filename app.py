@@ -689,7 +689,7 @@ class Function:
         cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
         for cinema in cinemas:
             cinema_list.append(get_cinema_name(cinema))
-        report = "\n".join(cinema_list)
+        report = "\n".join(sorted(cinema_list))
         if len(report) > 1800 :
             report1 = report[:1800]+"..."
             report2 = "..."+report[1801:]
