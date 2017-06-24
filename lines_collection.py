@@ -167,13 +167,13 @@ class Lines:  # class to store respond lines
                      "failed to open the the page",
                      "failed to open the the page"
                      ]
-        elif cond == "failed to show moviedata" :
+        elif cond == "failed to show movie data" :
 
-            lines = ["failed to show moviedata",
-                     "failed to show moviedata",
-                     "failed to show moviedata",
-                     "failed to show moviedata",
-                     "failed to show moviedata",
+            lines = ["failed to show movie data",
+                     "failed to show movie data",
+                     "failed to show movie data",
+                     "failed to show movie data",
+                     "failed to show movie data",
                      ]
         return random.choice(lines)
 

@@ -535,9 +535,14 @@ class Function:
                     con = urllib.request.urlopen(req)
                     page_source_code_text = con.read()
                     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                except:
-                    report = Lines.show_cinema_movie_schedule("failed to open the the page")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                except LineBotApiError as e:
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
+                    print("failed to open the page ")
+
+                    #report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                    #line_bot_api.push_message(address, TextSendMessage(text=report))
 
                 try:
                     links = mod_page.findAll('a')
@@ -577,8 +582,11 @@ class Function:
                         movielist.append(title)
                         movie_description = movie.get("href")
                         desclist.append(movie_description)
-                except:
-                    pass
+                except LineBotApiError as e:
+                    print(" fail to get movie title / desc")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
             showtimes = mod_schedule_table.findAll("td", {"align": "right"})
             for showtime in showtimes:
@@ -593,8 +601,11 @@ class Function:
                 index_end = cinema_link.find(",")
                 cinema_name = cinema_link[index_start:index_end]
                 cinema_name = cinema_name.replace("-", " ")
-            except:
+            except LineBotApiError as e:
                 print("can't get cinema name")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
             return cinema_name
 
         keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'me', 'meg', 'megumi', 'movie',
@@ -622,8 +633,12 @@ class Function:
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
-            except:
-                reply = Lines.show_cinema_movie_schedule("failed to show moviedata")
+            except LineBotApiError as e:
+                print("failed to show movie data")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
+                reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
         line_bot_api.reply_message(token,TextSendMessage(text=reply))
 
