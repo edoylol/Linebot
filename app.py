@@ -227,7 +227,7 @@ def handle_postback(event):
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["request cinema list please"])               :   Function.show_cinema_list()
+    elif all(word in text for word in ["request cinema list please"])               : Function.show_cinema_list()
 
     elif all(word in text for word in ["megumi dev mode print userlist"])           :
         if Function.dev_authority_check(event)                                          :
@@ -681,14 +681,20 @@ class Function:
 
             return cinema_name
 
+
         cinema_list = []
         cinemas = get_cinema_list()
         cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
         for cinema in cinemas:
             cinema_list.append(get_cinema_name(cinema))
         report = "\n".join(cinema_list)
-        line_bot_api.push_message(address, TextSendMessage(text=report))
-
+        try :
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+        except LineBotApiError as e:
+            print("")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
 
 
 
