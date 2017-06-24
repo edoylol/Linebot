@@ -594,7 +594,7 @@ class Function:
         keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'me', 'meg', 'megumi', 'movie',
                    'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
 
-        search_keyword = OtherUtil.filter_words(random.choice(text))
+        search_keyword = OtherUtil.filter_words(text)
         search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
         print (search_keyword)
