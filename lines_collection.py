@@ -135,7 +135,15 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     def show_cinema_movie_schedule(self,cond):
-        if cond == "No cinema found" : # accept 1 % tag list
+        if cond == "header" : # accept 1 % tag list
+
+            lines = ["Here's the information I found using %s as tag..\n",
+                     "Here's the information I found using %s as tag..\n",
+                     "Here's the information I found using %s as tag..\n",
+                     "Here's the information I found using %s as tag..\n",
+                     "Here's the information I found using %s as tag..\n"
+                     ]
+        elif cond == "No cinema found" : # accept 1 % tag list
 
             lines = ["No cinema found \n I tried to search using %s as tag",
                      "No cinema found \n I tried to search using %s as tag",
