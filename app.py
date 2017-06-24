@@ -598,13 +598,13 @@ class Function:
         search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
         print (search_keyword)
-        
+
         cinemas = get_cinema_list(search_keyword)
 
         if cinemas == []:
-            reply = Lines.show_cinema_movie_schedule("No cinema found") & search_keyword
+            reply = Lines.show_cinema_movie_schedule("No cinema found") % search_keyword
         elif len(cinemas) > 2:
-            reply = Lines.show_cinema_movie_schedule("Too much cinemas") & search_keyword
+            reply = Lines.show_cinema_movie_schedule("Too much cinemas") % search_keyword
 
         else:
             try:
