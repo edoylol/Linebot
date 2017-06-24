@@ -636,6 +636,7 @@ class Function:
                         reply.append("\n")
 
                     print(reply)
+                    reply = str(reply)
 
 
             except LineBotApiError as e:
