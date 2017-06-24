@@ -597,6 +597,8 @@ class Function:
         search_keyword = OtherUtil.filter_words(random.choice(text))
         search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
+        print (search_keyword)
+        
         cinemas = get_cinema_list(search_keyword)
 
         if cinemas == []:
