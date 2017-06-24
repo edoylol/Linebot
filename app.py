@@ -628,7 +628,7 @@ class Function:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
                     reply = []
-                    reply.append("♦♢♦♢♦♢♦  ", cinema_name, "  ♦♢♦♢♦♢♦\n")
+                    reply.append(("♦♢♦♢♦♢♦  ", cinema_name, "  ♦♢♦♢♦♢♦\n"))
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
