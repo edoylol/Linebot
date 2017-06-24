@@ -21,11 +21,12 @@ import random
 import time
 import math
 import tempfile
-import urllib.request
+import requests,urllib, urllib.request
 import Database
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
+from bs4 import BeautifulSoup
 from linebot import (
     LineBotApi, WebhookHandler
 )
@@ -63,8 +64,8 @@ Lines = Lines()
 Labels = Labels()
 Picture = Picture()
 userlist = Database.userlist
-userlist_update_count = 0
 
+userlist_update_count = 0
 tag_notifier_on = True
 
 
@@ -105,21 +106,22 @@ def update_user_list(event):
 
     if isinstance(event.source, SourceUser):
         userlist_init_count = len(userlist.keys()) # list count before update
+
         try :
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
             userlist.update({user_id:user})
 
-            if len(userlist.keys()) is not userlist_init_count : # theres an update
+            if len(userlist.keys()) != userlist_init_count : # theres an update
                 userlist_update_count = userlist_update_count + 1
-                if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
 
+                if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
                     report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
-                    command = "Megumi dev mode print userlist"
-                    buttons_template = ButtonsTemplate(title="Update userlist",text=report, actions=[
+                    command = "megumi dev mode print userlist"
+                    buttons_template = ButtonsTemplate(title="Update userlist", text=report, actions=[
                         PostbackTemplateAction(label=Labels.print_userlist(), data=command)
-                        ])
-                    template_message = TemplateSendMessage(alt_text=report, template=buttons_template )
+                    ])
+                    template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
                     line_bot_api.push_message(jessin_userid, template_message)
 
         except :
@@ -146,6 +148,11 @@ def message_text(event):
 
         elif any(word in text for word in ["what ","show "])        :
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
+            elif any(word in text for word in ["movie ","movies",
+                                               "film","films"])         :
+                if any(word in text for word in ["showing",
+                                                 "playing","schedule"])     : Function.show_cinema_movie_schedule()
+                else                                                        : Function.false()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
@@ -220,7 +227,9 @@ def handle_postback(event):
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["Megumi dev mode print userlist"])           :
+    elif all(word in text for word in ["request cinema list please"])               : Function.show_cinema_list()
+
+    elif all(word in text for word in ["megumi dev mode print userlist"])           :
         if Function.dev_authority_check(event)                                          :
             if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
             else                                                                            : Function.false()
@@ -424,40 +433,66 @@ class Function:
 
     def send_invite(event):
         global invitation_sender, invitation_sender_id
-        # invitation data
+
+        """ invitation data """
+
+        try : # find desc needed
+            found_index = [i for i, x in enumerate(text) if x == '*']
+            desc_start = found_index[0] + 1
+            desc_end = found_index[1]
+            desc = text[desc_start:desc_end]
+            no_desc = False
+        except :
+            no_desc = True
+            desc = " (つ≧▽≦)つ "
+
+        try : # find where to send
+            split_text = text.split(" ")
+            filtered_text = []
+            for word in split_text:
+                new_word = OtherUtil.remove_symbols(word)
+                if new_word != None:
+                    filtered_text.append(new_word)
+
+            invite_list_index = filtered_text.index("to") + 1
+            list_name = filtered_text[invite_list_index]
+            invite_list = Database.list_dictionary[list_name]
+            no_invite_list = False
+        except :
+            no_invite_list = True
+            invite_list = Database.list_dictionary["dev"]
+
+        """ report if some args missing """
+
+        if no_desc or no_invite_list:
+            if no_desc :
+                report = Lines.invite_report("desc missing")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+            if no_invite_list :
+                report = Lines.invite_report("participant list missing")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
         header_pic = Picture.header("background")
         title = 'Invitation'
-        text = "Let's have some fun !"
-        invite_list = userlist
-        try :
-            if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
-                invitation_sender = "someone"
-            else :
-                invitation_sender_id = event.source.user_id
-                invitation_sender = userlist[invitation_sender_id]
-        except LineBotApiError as e:
-            print("invitation sender id failed")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+
+        if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
             invitation_sender = "someone"
+        else:
+            invitation_sender_id = event.source.user_id
+            invitation_sender = userlist[invitation_sender_id]
 
-        try : #generate the invitation
-            buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
-                PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
-                PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
-                PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
-            ])
-            template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+        """ generate the invitation """
 
-        except LineBotApiError as e:
-            print(title,"button is not created")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        buttons_template = ButtonsTemplate(title=title, text=desc, thumbnail_image_url=header_pic, actions=[
+            PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+            PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+            PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
+        ])
+        template_message = TemplateSendMessage(alt_text=desc, template=buttons_template)
 
+        """ sending the invitation """
 
-        try : #sending the invitation
+        try :
             report = Lines.invite("header") % invitation_sender
             invitation_sent = 0
             for participan in invite_list :
@@ -468,11 +503,7 @@ class Function:
                 report = Lines.invite("success") % invitation_sent
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
 
-        except LineBotApiError as e:
-            print("sending invitation failed")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        except :
             if invitation_sender != "someone" :
                 report = Lines.invite("failed")
                 line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
@@ -485,18 +516,188 @@ class Function:
         except :
             responder = "someone"
 
-        try :
-            report = Lines.invite_report(cond) % responder
-            if invitation_sender != "someone" :
-                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report) )
-            else :
-                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        # send respond report
+        report = Lines.invite_report("respond recorded") % responder
+        line_bot_api.push_message(responder_id, TextSendMessage(text=report))
 
+        # send report to sender
+        report = Lines.invite_report(cond) % responder
+        if (invitation_sender != "someone") and (invitation_sender != None):
+            line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+        else:
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    def show_cinema_movie_schedule():
+        def get_cinema_list(search_keyword):
+            if search_keyword == [] or search_keyword == [""]:
+                report = Lines.show_cinema_movie_schedule("No keyword found")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+            else:
+                cinemas = []
+                page_url = "http://www.21cineplex.com/theaters"
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                except:
+                    report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                links = mod_page.findAll('a')
+                for link in links:
+                    cinema_link = link.get("href")
+                    if all(word in cinema_link for word in
+                           (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
+                        cinemas.append(cinema_link)
+
+                if len(cinemas) > 1:
+                    cinemas = set(cinemas)
+                return cinemas
+
+        def get_movie_data(cinema):
+
+            movielist = []
+            desclist = []
+            schedulelist = []
+
+            req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            schedule_table = str(mod_page.find("table", {"class": "table-theater-det"}))
+            mod_schedule_table = BeautifulSoup(schedule_table, "html.parser")
+
+            movies = mod_schedule_table.findAll('a')
+            for movie in movies:
+                title = movie.string
+                if title is not None:
+                    movielist.append(title)
+                    movie_description = movie.get("href")
+                    desclist.append(movie_description)
+
+            showtimes = mod_schedule_table.findAll("td", {"align": "right"})
+            for showtime in showtimes:
+                schedulelist.append(showtime.string)
+
+            moviedata = zip(movielist, desclist, schedulelist)
+            return moviedata
+
+        def get_cinema_name(cinema_link):
+
+            index_start = cinema_link.find("-") + 1
+            index_end = cinema_link.find(",")
+            cinema_name = cinema_link[index_start:index_end]
+            cinema_name = cinema_name.replace("-", " ")
+
+            """ Special case TSM """
+            if cinema_name == "tsm xxi" :
+                if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                    cinema_name = "tsm xxi (Bandung)"
+                elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                    cinema_name = "tsm xxi (Makassar)"
+
+            return cinema_name
+
+        def request_cinema_list():
+            confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
+            buttons_template = ButtonsTemplate(text=confirmation, actions=[
+                    PostbackTemplateAction(label="Sure...", data='request cinema list please',text='Sure...')])
+            template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+
+
+        keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato','list', 'me', 'meg', 'megumi', 'movie',
+                   'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
+
+        search_keyword = OtherUtil.filter_words(text)
+        search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
+
+        cinemas = get_cinema_list(search_keyword)
+
+
+        if cinemas == []:
+            reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
+            ask_for_request = True
+        elif len(cinemas) > 2:
+            reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
+            ask_for_request = True
+        else:
+            try:
+                reply = []
+                reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
+                for cinema in cinemas:
+                    cinema_name = get_cinema_name(cinema)
+                    moviedata = get_movie_data(cinema)
+                    reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
+                    for data in moviedata:
+                        reply.append(data[0])  # movie title
+                        reply.append(data[1])  # movie description
+                        reply.append(data[2])  # movie schedule
+                        reply.append("\n")
+
+                reply.append(Lines.show_cinema_movie_schedule("footer"))
+                reply = "\n".join(reply)
+                ask_for_request = False
+            except :
+                reply = Lines.show_cinema_movie_schedule("failed to show movie data")
+
+
+        line_bot_api.reply_message(token,TextSendMessage(text=reply))
+        if ask_for_request :
+            request_cinema_list()
+
+    def show_cinema_list():
+
+        def get_cinema_list():
+            cinemas = []
+            page_url = "http://www.21cineplex.com/theaters"
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+            links = mod_page.findAll('a')
+            for link in links:
+                cinema_link = link.get("href")
+                if all(word in cinema_link for word in ["http://www.21cineplex.com/theater/bioskop"]):
+                    cinemas.append(cinema_link)
+
+            cinemas = set(cinemas)
+            return cinemas
+
+        def get_cinema_name(cinema_link):
+
+            index_start = cinema_link.find("-") + 1
+            index_end = cinema_link.find(",")
+            cinema_name = cinema_link[index_start:index_end]
+            cinema_name = cinema_name.replace("-", " ")
+
+            """ Special case TSM """
+            if cinema_name == "tsm xxi" :
+                if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                    cinema_name = "tsm xxi (Bandung)"
+                elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                    cinema_name = "tsm xxi (Makassar)"
+
+            return cinema_name
+
+
+        cinema_list = []
+        cinemas = get_cinema_list()
+        cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
+        for cinema in cinemas:
+            cinema_list.append(get_cinema_name(cinema))
+        report = "\n".join(cinema_list)
+        try :
+            line_bot_api.push_message(address, TextSendMessage(text=report))
         except LineBotApiError as e:
-            print("sending invitation report failed")
+            print("")
             print(e.status_code)
             print(e.error.message)
             print(e.error.details)
+
 
 
     """====================== Sub Function List ============================="""
@@ -678,12 +879,27 @@ class Function:
 
 class OtherUtil:
     def remove_symbols(word):
-        symbols = "!@#$%^&*()_+=-`~[]{]\|;:'/?.>,<\""
+        symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
         if len(word) > 0:
             return word
 
+    def filter_words(text):
+        split_text = text.split(" ")
+        filtered_text = []
+        for word in split_text:
+            new_word = OtherUtil.remove_symbols(word)
+            if new_word != None:
+                filtered_text.append(new_word)
+        return filtered_text
+
+    def filter_keywords(text, keyword):
+        while any(word in text for word in keyword):
+            for word in text:
+                if word in keyword:
+                    text.remove(word)
+        return text
 
 """========================================== end of function list ================================================"""
 
