@@ -137,51 +137,71 @@ class Lines:  # class to store respond lines
     def show_cinema_movie_schedule(self,cond):
         if cond == "header" : # accept 1 % tag list
 
-            lines = ["Here's the information I found using %s as tag..\n",
-                     "Here's the information I found using %s as tag..\n",
-                     "Here's the information I found using %s as tag..\n",
-                     "Here's the information I found using %s as tag..\n",
-                     "Here's the information I found using %s as tag..\n"
+            lines = ["Here's the information Megumi found while using '%s' as tag..\n",
+                     "I tried using '%s' as tag, and found those...\n",
+                     "Here's the information you requested ^^\n(using '%s' as tag)\n",
+                     "Here you go~ \nMegumi used '%s' as search tag btw..\n",
+                     "Here's the schedule I found with '%s' as tag..\n"
+                     ]
+        elif cond == "cinema name" : # accept 1 % cinema name
+
+            lines = [" ♦♦   %s   ♦♦ ",
+                     " (・ω・) %s (・ω・) ",
+                     "( ◡‿◡ )❤  %s  ❤( ◡‿◡ )",
+                     " (＾• ω •＾) %s (＾• ω •＾) ",
+                     " ❤❤   %s   ❤❤ ",
+                     " ~~~   %s   ~~~ ",
+                     " >>>>>   %s   <<<<< "
                      ]
         elif cond == "No cinema found" : # accept 1 % tag list
 
-            lines = ["No cinema found \n I tried to search using %s as tag",
-                     "No cinema found \n I tried to search using %s as tag",
-                     "No cinema found \n I tried to search using %s as tag",
-                     "No cinema found \n I tried to search using %s as tag",
-                     "No cinema found \n I tried to search using %s as tag"
+            lines = ["No cinema is found :<  \nI tried to search using '%s' as tag",
+                     "Somehow Megumi can't find cinema with '%s' name..",
+                     "There's no cinema under '%s' name..",
+                     "I think you should try again using tag other than '%s'..",
+                     "I can't figure out which cinema with '%s' ",
+                     "Megumi can't find the cinema you requested (%s)..",
+                     "I don't see any cinema by searching using '%s' :< "
                      ]
         elif cond == "Too much cinemas" : # accept 1 % tag list
 
-            lines = ["Too much cinemas \n I tried to search using %s as tag",
-                     "Too much cinemas \n I tried to search using %s as tag",
-                     "Too much cinemas \n I tried to search using %s as tag",
-                     "Too much cinemas \n I tried to search using %s as tag",
-                     "Too much cinemas \n I tried to search using %s as tag"
+            lines = ["I found too many cinemas with '%s' as tag",
+                     "There're too many cinemas \n with '%s' as tag",
+                     "Try using more specific tags than '%s', there're too many cinemas..",
+                     "I can't figure out which cinema with '%s'\nThere're too many of them...",
+                     "Be specific please,, there're tons of cinemas with '%s'"
                      ]
         elif cond == "No keyword found" :
 
-            lines = ["No keyword found",
-                     "No keyword found",
-                     "No keyword found",
-                     "No keyword found",
-                     "No keyword found"
+            lines = ["Megumi can't find without keyword.. .-.",
+                     "Please specify which cinema :> ",
+                     "Did you include keyword already ? I don't see those..",
+                     "Which cinema do you want ?",
+                     "There're a lot of cinemas, which one ?"
                      ]
         elif cond == "failed to open the the page" :
 
-            lines = ["failed to open the the page",
-                     "failed to open the the page",
-                     "failed to open the the page",
-                     "failed to open the the page",
-                     "failed to open the the page"
+            lines = ["Megumi seems can't open the page..",
+                     "Something wrong happened when I tried to open the page..",
+                     "Gomen, Megumi can't give you the schedule right now..",
+                     "Gomen, Megumi failed to open the the page..",
+                     "Seems Megumi can't access the information right now.."
                      ]
         elif cond == "failed to show movie data" :
 
-            lines = ["failed to show movie data",
-                     "failed to show movie data",
-                     "failed to show movie data",
-                     "failed to show movie data",
-                     "failed to show movie data",
+            lines = ["Gomen, Megumi failed to gather movies data",
+                     "Seems I can't show the schedule..",
+                     "Gomenne, somehow I can't show the schedule..",
+                     "Gomenne, there's some problem when I want to show the schedule..",
+                     "I've gathered the schedule, but I can't send it to you right now ..",
+                     ]
+        elif cond == "footer" :
+
+            lines = [" ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
+                     " Hope yenjoy thou e show later ~",
+                     " (=^ ◡ ^=) end 	(=^ ◡ ^=)",
+                     " (＾• ω •＾) enjoy the show ~ ",
+                     "      ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
         return random.choice(lines)
 

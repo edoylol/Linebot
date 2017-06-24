@@ -536,30 +536,19 @@ class Function:
                     con = urllib.request.urlopen(req)
                     page_source_code_text = con.read()
                     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                except LineBotApiError as e:
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
-                    print("failed to open the page ")
+                except:
+                    report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
 
-                    #report = Lines.show_cinema_movie_schedule("failed to open the the page")
-                    #line_bot_api.push_message(address, TextSendMessage(text=report))
+                links = mod_page.findAll('a')
+                for link in links:
+                    cinema_link = link.get("href")
+                    if all(word in cinema_link for word in
+                           (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
+                        cinemas.append(cinema_link)
 
-                try:
-                    links = mod_page.findAll('a')
-                    for link in links:
-                        cinema_link = link.get("href")
-                        if all(word in cinema_link for word in
-                               (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
-                            cinemas.append(cinema_link)
-                except LineBotApiError as e:
-
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
-                    print("find cinema failed")
-
-                if len(cinemas) > 1: cinemas = set(cinemas)
+                if len(cinemas) > 1:
+                    cinemas = set(cinemas)
                 return cinemas
 
         def get_movie_data(cinema):
@@ -577,17 +566,11 @@ class Function:
 
             movies = mod_schedule_table.findAll('a')
             for movie in movies:
-                try:
-                    title = movie.string
-                    if title is not None:
-                        movielist.append(title)
-                        movie_description = movie.get("href")
-                        desclist.append(movie_description)
-                except LineBotApiError as e:
-                    print(" fail to get movie title / desc")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                title = movie.string
+                if title is not None:
+                    movielist.append(title)
+                    movie_description = movie.get("href")
+                    desclist.append(movie_description)
 
             showtimes = mod_schedule_table.findAll("td", {"align": "right"})
             for showtime in showtimes:
@@ -598,24 +581,18 @@ class Function:
 
         def get_cinema_name(cinema_link):
 
-            try:
-                index_start = cinema_link.find("-") + 1
-                index_end = cinema_link.find(",")
-                cinema_name = cinema_link[index_start:index_end]
-                cinema_name = cinema_name.replace("-", " ")
+            index_start = cinema_link.find("-") + 1
+            index_end = cinema_link.find(",")
+            cinema_name = cinema_link[index_start:index_end]
+            cinema_name = cinema_name.replace("-", " ")
 
-                """ Special case TSM """
-                if cinema_name == "tsm xxi" :
-                    if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
-                        cinema_name = "tsm xxi (Bandung)"
-                    elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
-                        cinema_name = "tsm xxi (Makassar)"
+            """ Special case TSM """
+            if cinema_name == "tsm xxi" :
+                if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                    cinema_name = "tsm xxi (Bandung)"
+                elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                    cinema_name = "tsm xxi (Makassar)"
 
-            except LineBotApiError as e:
-                print("can't get cinema name")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
             return cinema_name
 
         keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato','list', 'me', 'meg', 'megumi', 'movie',
@@ -638,23 +615,17 @@ class Function:
                 for cinema in cinemas:
                     cinema_name = get_cinema_name(cinema)
                     moviedata = get_movie_data(cinema)
-                    reply.append(" ♦♦   "+cinema_name+"   ♦♦ ")
+                    reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                     for data in moviedata:
                         reply.append(data[0])  # movie title
                         reply.append(data[1])  # movie description
                         reply.append(data[2])  # movie schedule
                         reply.append("\n")
 
-                reply.append(" ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ")
+                reply.append(Lines.show_cinema_movie_schedule("footer"))
                 reply = "\n".join(reply)
 
-
-
-            except LineBotApiError as e:
-                print("failed to show movie data")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            except :
                 reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
 
