@@ -597,11 +597,20 @@ class Function:
             return moviedata
 
         def get_cinema_name(cinema_link):
+
             try:
                 index_start = cinema_link.find("-") + 1
                 index_end = cinema_link.find(",")
                 cinema_name = cinema_link[index_start:index_end]
                 cinema_name = cinema_name.replace("-", " ")
+
+                """ Special case TSM """
+                if cinema_name == "tsm xxi" :
+                    if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                        cinema_name = "tsm xxi (Bandung)"
+                    elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                        cinema_name = "tsm xxi (Makassar)"
+
             except LineBotApiError as e:
                 print("can't get cinema name")
                 print(e.status_code)
@@ -609,7 +618,7 @@ class Function:
                 print(e.error.details)
             return cinema_name
 
-        keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'me', 'meg', 'megumi', 'movie',
+        keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato','list', 'me', 'meg', 'megumi', 'movie',
                    'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
 
         search_keyword = OtherUtil.filter_words(text)
