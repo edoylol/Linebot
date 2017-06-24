@@ -134,6 +134,49 @@ class Lines:  # class to store respond lines
                     ]
         return random.choice(lines)
 
+    def show_cinema_movie_schedule(self,cond):
+        if cond == "No cinema found" : # accept 1 % tag list
+
+            lines = ["No cinema found \n I tried to search using %s as tag",
+                     "No cinema found \n I tried to search using %s as tag",
+                     "No cinema found \n I tried to search using %s as tag",
+                     "No cinema found \n I tried to search using %s as tag",
+                     "No cinema found \n I tried to search using %s as tag"
+                     ]
+        elif cond == "Too much cinemas" : # accept 1 % tag list
+
+            lines = ["Too much cinemas \n I tried to search using %s as tag",
+                     "Too much cinemas \n I tried to search using %s as tag",
+                     "Too much cinemas \n I tried to search using %s as tag",
+                     "Too much cinemas \n I tried to search using %s as tag",
+                     "Too much cinemas \n I tried to search using %s as tag"
+                     ]
+        elif cond == "No keyword found" :
+
+            lines = ["No keyword found",
+                     "No keyword found",
+                     "No keyword found",
+                     "No keyword found",
+                     "No keyword found"
+                     ]
+        elif cond == "failed to open the the page" :
+
+            lines = ["failed to open the the page",
+                     "failed to open the the page",
+                     "failed to open the the page",
+                     "failed to open the the page",
+                     "failed to open the the page"
+                     ]
+        elif cond == "failed to show moviedata" :
+
+            lines = ["failed to show moviedata",
+                     "failed to show moviedata",
+                     "failed to show moviedata",
+                     "failed to show moviedata",
+                     "failed to show moviedata",
+                     ]
+        return random.choice(lines)
+
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",

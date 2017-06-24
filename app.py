@@ -147,6 +147,9 @@ def message_text(event):
 
         elif any(word in text for word in ["what ","show "])        :
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
+            elif any(word in text for word in ["movie","showing",
+                                               "movies","playing"
+                                               "film","schedule"])      : Function.show_cinema_movie_schedule()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
@@ -519,6 +522,104 @@ class Function:
         else:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    def show_cinema_movie_schedule():
+        def get_cinema_list(search_keyword):
+            if search_keyword == [] or search_keyword == [""]:
+                reply = Lines.show_cinema_movie_schedule("No keyword found")
+            else:
+                cinemas = []
+                page_url = "http://www.21cineplex.com/theaters"
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                except:
+                    reply = Lines.show_cinema_movie_schedule("failed to open the the page")
+
+                try:
+                    links = mod_page.findAll('a')
+                    for link in links:
+                        cinema_link = link.get("href")
+                        if all(word in cinema_link for word in
+                               (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
+                            cinemas.append(cinema_link)
+                except:
+                    print("find cinema failed")
+
+                if len(cinemas) > 1: cinemas = set(cinemas)
+                return cinemas
+
+        def get_movie_data(cinema):
+
+            movielist = []
+            desclist = []
+            schedulelist = []
+
+            req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            schedule_table = str(mod_page.find("table", {"class": "table-theater-det"}))
+            mod_schedule_table = BeautifulSoup(schedule_table, "html.parser")
+
+            movies = mod_schedule_table.findAll('a')
+            for movie in movies:
+                try:
+                    title = movie.string
+                    if title is not None:
+                        movielist.append(title)
+                        movie_description = movie.get("href")
+                        desclist.append(movie_description)
+                except:
+                    pass
+
+            showtimes = mod_schedule_table.findAll("td", {"align": "right"})
+            for showtime in showtimes:
+                schedulelist.append(showtime.string)
+
+            moviedata = zip(movielist, desclist, schedulelist)
+            return moviedata
+
+        def get_cinema_name(cinema_link):
+            try:
+                index_start = cinema_link.find("-") + 1
+                index_end = cinema_link.find(",")
+                cinema_name = cinema_link[index_start:index_end]
+                cinema_name = cinema_name.replace("-", " ")
+            except:
+                print("can't get cinema name")
+            return cinema_name
+
+        keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'me', 'meg', 'megumi', 'movie',
+                   'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
+
+        search_keyword = OtherUtil.filter_words(random.choice(text))
+        search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
+
+        cinemas = get_cinema_list(search_keyword)
+
+        if cinemas == []:
+            reply = Lines.show_cinema_movie_schedule("No cinema found") & search_keyword
+        elif len(cinemas) > 2:
+            reply = Lines.show_cinema_movie_schedule("Too much cinemas") & search_keyword
+
+        else:
+            try:
+                for cinema in cinemas:
+                    cinema_name = get_cinema_name(cinema)
+                    moviedata = get_movie_data(cinema)
+                    reply = []
+                    reply.append("♦♢♦♢♦♢♦  ", cinema_name, "  ♦♢♦♢♦♢♦\n")
+                    for data in moviedata:
+                        reply.append(data[0])  # movie title
+                        reply.append(data[1])  # movie description
+                        reply.append(data[2])  # movie schedule
+                        reply.append("\n")
+            except:
+                reply = Lines.show_cinema_movie_schedule("failed to show moviedata")
+
+        line_bot_api.reply_message(token,TextSendMessage(text=reply))
 
     """====================== Sub Function List ============================="""
 
@@ -705,6 +806,21 @@ class OtherUtil:
         if len(word) > 0:
             return word
 
+    def filter_words(text):
+        split_text = text.split(" ")
+        filtered_text = []
+        for word in split_text:
+            new_word = OtherUtil.remove_symbols(word)
+            if new_word != None:
+                filtered_text.append(new_word)
+        return filtered_text
+
+    def filter_keywords(text, keyword):
+        while any(word in text for word in keyword):
+            for word in text:
+                if word in keyword:
+                    text.remove(word)
+        return text
 
 """========================================== end of function list ================================================"""
 
