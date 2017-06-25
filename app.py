@@ -705,6 +705,7 @@ class Function:
                 try :
                     movies = movies_data.findAll("a")  # getting the movie name and desc
                     for movie in movies:
+                        print(movie)
                         movie_name = movie.string
                         movie_desc = "https://www.cgv.id" + movie.get("href")
                         movielist.append(movie_name)
@@ -719,6 +720,7 @@ class Function:
                     schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
                     last_movie = ""
                     for schedule in schedules:
+                        print(schedule)
                         movie_title = schedule.get("movietitle")
                         time = schedule.string
                         if movie_title != last_movie:
