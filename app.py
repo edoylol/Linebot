@@ -675,7 +675,6 @@ class Function:
 
                         links = mod_page.findAll('a', {"class": "cinema_fav"})
                         for link in links:
-                            print(link)
                             cinema_name = link.string
                             cinema_link = "https://www.cgv.id" + link.get("href")
                             if all(word in cinema_name.lower() for word in search_keyword):
@@ -756,6 +755,7 @@ class Function:
                         for cinema in cinemas:  # iterate the name only
                             cinema_name = cinema[0]  # cinema [0] is the cinema name
                             moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
+                            print(moviedata)
                             reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                             for data in moviedata:
                                 reply.append(data[0])  # movie title
