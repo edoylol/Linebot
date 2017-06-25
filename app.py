@@ -685,9 +685,9 @@ class Function:
 
             def get_movie_data(cinema):
 
-                movielist = []
-                desclist = []
-                schedulelist = []
+                movielist = ['a']
+                desclist = ['b']
+                schedulelist = ['c']
 
                 req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
                 con = urllib.request.urlopen(req)
