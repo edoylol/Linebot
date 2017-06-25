@@ -752,8 +752,9 @@ class Function:
                     try:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                        print(cinemas)
+
                         for cinema in cinemas:
+                            print("CINEMA :",cinema)
                             print("TEST 1",cinema[0])
                             print("TEST 2",cinema[1])
                             cinema_name = cinema[0]  # cinema [0] is the cinema name
