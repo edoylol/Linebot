@@ -761,7 +761,6 @@ class Function:
                         for cinema in found_cinema:
                             cinema_name = cinema[0]  # cinema [0] is the cinema name
                             moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
-                            print("=============  MOVIE DATA :", moviedata)
                             reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                             for data in moviedata:
                                 reply.append(data[0])  # movie title
