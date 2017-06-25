@@ -737,6 +737,7 @@ class Function:
                 search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
                 cinemas = get_cinema_list(search_keyword)  # return a list with [ cinema name , cinema url]
+                ask_for_request = False
 
                 found_cinema_name = []
                 found_cinema_link = []
