@@ -738,14 +738,18 @@ class Function:
 
                 cinemas = get_cinema_list(search_keyword)  # return a list with [ cinema name , cinema url]
 
-                found_cinema = []
+                found_cinema_name = []
+                found_cinema_link = []
                 for cinema in cinemas:
                     found_cinema.append(cinema[0])
+                    found_cinema_link.append(cinema[1])
 
-                if len(found_cinema) <= 0:
+                found_cinema = zip(found_cinema_name,found_cinema_link)
+
+                if len(found_cinema_name) <= 0:
                     reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
                     ask_for_request = True
-                elif len(found_cinema) > 2:
+                elif len(found_cinema_name) > 2:
                     reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
                     ask_for_request = True
                 else:
@@ -753,11 +757,9 @@ class Function:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                         try :
-                            print(cinemas)
-                            for item in cinemas:
-                                print("ITEM :",item)
-                                cinema_name = item[0]  # cinema [0] is the cinema name
-                                moviedata = get_movie_data(item[1])  # cinema [1] is the cinema link
+                            for cinema in found_cinema:
+                                cinema_name = cinema[0]  # cinema [0] is the cinema name
+                                moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
                                 print("=============  MOVIE DATA :",moviedata)
                                 reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                                 for data in moviedata:
