@@ -685,9 +685,9 @@ class Function:
 
             def get_movie_data(cinema):
 
-                movielist = ['a']
-                desclist = ['b']
-                schedulelist = ['c']
+                movielist = []
+                desclist = []
+                schedulelist = []
 
                 req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
                 con = urllib.request.urlopen(req)
@@ -768,22 +768,17 @@ class Function:
                 try:
                     reply = []
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                    for cinema in found_cinema:
+                    for cinema in cinemas:
                         cinema_name = cinema[0]  # cinema [0] is the cinema name
                         moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
                         reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
-                        try:
-                            for data in moviedata:
-                                print(data)
-                                reply.append(data[0])  # movie title
-                                reply.append(data[1])  # movie description
-                                reply.append(data[2])  # movie schedule
-                                reply.append("\n")
-                        except Exception as e:
-                            print(" JUST PRINT ALREADYYYY")
-                            print(e.status_code)
-                            print(e.error.message)
-                            print(e.error.details)
+                        for data in moviedata:
+                            print(data)
+                            reply.append(data[0])  # movie title
+                            reply.append(data[1])  # movie description
+                            reply.append(data[2])  # movie schedule
+                            reply.append("\n")
+
                     reply.append(Lines.show_cinema_movie_schedule("footer"))
                     reply = "\n".join(reply)
                     ask_for_request = False
