@@ -742,6 +742,7 @@ class Function:
                 for cinema in cinemas:
                     found_cinema.append(cinema[0])
 
+                print(found_cinema)
                 if len(found_cinema) <= 0:
                     reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
                     ask_for_request = True
@@ -771,7 +772,7 @@ class Function:
                         reply = "\n".join(reply)
                         ask_for_request = False
                     except LineBotApiError as e:
-                        print("")
+                        print(" I DONT FAKING GET THIS ")
                         print(e.status_code)
                         print(e.error.message)
                         print(e.error.details)
