@@ -753,28 +753,31 @@ class Function:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
 
-                        for cinema in cinemas:
-                            print("WAS HEREEEEEEEE")
-                            print("TEST 1",cinema[0])
-                            print("TEST 2",cinema[1])
-                            cinema_name = cinema[0]  # cinema [0] is the cinema name
-                            moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
-                            print("=============  MOVIE DATA :",moviedata)
-                            reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
-                            for data in moviedata:
-                                reply.append(data[0])  # movie title
-                                reply.append(data[1])  # movie description
-                                reply.append(data[2])  # movie schedule
-                                reply.append("\n")
+                        try :
+                            for cinema in cinemas:
+                                print("WAS HEREEEEEEEE")
+                                print("TEST 1",cinema[0])
+                                print("TEST 2",cinema[1])
+                                cinema_name = cinema[0]  # cinema [0] is the cinema name
+                                moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
+                                print("=============  MOVIE DATA :",moviedata)
+                                reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
+                                for data in moviedata:
+                                    reply.append(data[0])  # movie title
+                                    reply.append(data[1])  # movie description
+                                    reply.append(data[2])  # movie schedule
+                                    reply.append("\n")
+                        except LineBotApiError as e:
+                            print(" I DONT FAKING GET THIS ")
+                            print(e.status_code)
+                            print(e.error.message)
+                            print(e.error.details)
 
                         reply.append(Lines.show_cinema_movie_schedule("footer"))
                         reply = "\n".join(reply)
                         ask_for_request = False
-                    except LineBotApiError as e:
-                        print(" I DONT FAKING GET THIS ")
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
+
+                    except :
                         reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
