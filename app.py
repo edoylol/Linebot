@@ -529,8 +529,8 @@ class Function:
         else:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-    def show_cinema_movie_schedule(cond):
-        if cond == "xxi" :
+    def show_cinema_movie_schedule():
+        if "xxi" in text :
             def get_cinema_list(search_keyword):
                 if search_keyword == [] or search_keyword == [""]:
                     report = Lines.show_cinema_movie_schedule("No keyword found")
@@ -653,7 +653,7 @@ class Function:
             if ask_for_request :
                 request_cinema_list()
 
-        elif cond == "cgv" :
+        elif "cgv" in text :
             def get_cinema_list(search_keyword):
                 if search_keyword == [] or search_keyword == [""]:
                     report = Lines.show_cinema_movie_schedule("No keyword found")
@@ -770,9 +770,9 @@ class Function:
             if ask_for_request:
                 request_cinema_list()
 
-    def show_cinema_list():
+    def show_cinema_list(cond):
 
-        if "xxi" in text :
+        if cond == "xxi" :
             def get_cinema_list():
                 cinemas = []
                 page_url = "http://www.21cineplex.com/theaters"
@@ -821,7 +821,7 @@ class Function:
             else :
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-        elif "cgv" in text :
+        elif cond == "cgv" :
             cinema_list = []
             page_url = "https://www.cgv.id/en/schedule/cinema/"
 
