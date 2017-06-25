@@ -719,7 +719,10 @@ class Function:
                     # re formatting the schedulelist
                     schedulelist = " ".join(schedulelist)
                     schedulelist = schedulelist.split("#")
-                    schedulelist.remove("")
+                    try :
+                        schedulelist.remove("")
+                    except :
+                        pass
 
                 except LineBotApiError as e:
                     print("FAKING CODE")
