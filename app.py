@@ -752,15 +752,14 @@ class Function:
                     try:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                        print("TEST PRINT")
                         try :
                             print("WAS HEREEEEEEEE 1")
-                            for cinema in cinemas:
+                            for item in cinemas:
                                 print("WAS HEREEEEEEEE 2")
-                                print("TEST 1",cinema[0])
-                                print("TEST 2",cinema[1])
-                                cinema_name = cinema[0]  # cinema [0] is the cinema name
-                                moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
+                                print("TEST 1",item[0])
+                                print("TEST 2",item[1])
+                                cinema_name = item[0]  # cinema [0] is the cinema name
+                                moviedata = get_movie_data(item[1])  # cinema [1] is the cinema link
                                 print("=============  MOVIE DATA :",moviedata)
                                 reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                                 for data in moviedata:
