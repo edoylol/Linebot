@@ -688,26 +688,21 @@ class Function:
                 movielist = ['a']
                 desclist = ['b']
                 schedulelist = ['c']
-                try :
-                    req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                    schedule_table = str(mod_page.find("table", {"class": "table-theater-det"}))
-                    mod_schedule_table = BeautifulSoup(schedule_table, "html.parser")
-                    movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})), "html.parser")
-                except :
-                    print("ERROR PART 1")
 
-                try :
-                    movies = movies_data.findAll("a")  # getting the movie name and desc
-                    for movie in movies:
-                        movie_name = movie.string
-                        movie_desc = "https://www.cgv.id" + movie.get("href")
-                        movielist.append(movie_name)
-                        desclist.append(movie_desc)
-                except :
-                    print("ERROR PART 2")
+                req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+                con = urllib.request.urlopen(req)
+                page_source_code_text = con.read()
+                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                schedule_table = str(mod_page.find("table", {"class": "table-theater-det"}))
+                mod_schedule_table = BeautifulSoup(schedule_table, "html.parser")
+                movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
+
+                movies = movies_data.findAll("a")  # getting the movie name and desc
+                for movie in movies:
+                    movie_name = movie.string
+                    movie_desc = "https://www.cgv.id" + movie.get("href")
+                    movielist.append(movie_name)
+                    desclist.append(movie_desc)
 
                 try :
                     schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
@@ -725,8 +720,12 @@ class Function:
                     schedulelist = " ".join(schedulelist)
                     schedulelist = schedulelist.split("#")
                     schedulelist.remove("")
-                except :
-                    print ("ERROR PART 3")
+
+                except LineBotApiError as e:
+                    print("FAKING CODE")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
                 print(movielist,desclist,schedulelist)
                 moviedata = zip(movielist, desclist, schedulelist)
