@@ -627,7 +627,7 @@ class Function:
                 reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
                 ask_for_request = True
             elif len(cinemas) > 2:
-                reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
+                reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
                 ask_for_request = True
             else:
                 try:
@@ -675,11 +675,11 @@ class Function:
 
                         links = mod_page.findAll('a', {"class": "cinema_fav"})
                         for link in links:
-                            cinema_name = link.string
-                            cinema_link = "https://www.cgv.id" + link.get("href")
+                            name = link.string
+                            link = "https://www.cgv.id" + link.get("href")
                             if all(word in cinema_name.lower() for word in search_keyword):
-                                cinemas_name.append(cinema_name)
-                                cinemas_link.append(cinema_link)
+                                cinemas_name.append(name)
+                                cinemas_link.append(link)
 
                         cinemas = zip(cinema_name, cinema_link)
                         return cinemas
@@ -746,7 +746,7 @@ class Function:
                     reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
                     ask_for_request = True
                 elif len(found_cinema) > 2:
-                    reply = Lines.show_cinema_movie_schedule("Too much cinemas") % (", ".join(search_keyword))
+                    reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
                     ask_for_request = True
                 else:
                     try:
@@ -782,7 +782,6 @@ class Function:
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
     def show_cinema_list(cond):
-        print ("====================================== SHOW LIST ==============")
 
         if cond == "xxi" :
             def get_cinema_list():
@@ -837,36 +836,31 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
         elif cond == "cgv" :
-            try :
-                cinema_list = []
-                page_url = "https://www.cgv.id/en/schedule/cinema/"
+            cinema_list = []
+            page_url = "https://www.cgv.id/en/schedule/cinema/"
 
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                cinemas = mod_page.findAll('a', {"class": "cinema_fav"})
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            cinemas = mod_page.findAll('a', {"class": "cinema_fav"})
 
-                for cinema in cinemas:
-                    cinema = cinema.string
-                    cinema_list.append(cinema)
+            for cinema in cinemas:
+                cinema = cinema.string
+                cinema_list.append(cinema)
 
-                cinema_list = sorted(cinema_list)
-                cinema_list.insert(0,Lines.show_cinema_movie_schedule("show cinema list"))
-                report = "\n".join(cinema_list)
+            cinema_list = sorted(cinema_list)
+            cinema_list.insert(0, Lines.show_cinema_movie_schedule("show cinema list"))
+            report = "\n".join(cinema_list)
 
-                if len(report) > 1800:
-                    report1 = report[:1800] + "..."
-                    report2 = "..." + report[1801:]
-                    line_bot_api.push_message(address, TextSendMessage(text=report1))
-                    line_bot_api.push_message(address, TextSendMessage(text=report2))
-                else:
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-            except LineBotApiError as e:
-                print("SHOW FAILED")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            if len(report) > 1800:
+                report1 = report[:1800] + "..."
+                report2 = "..." + report[1801:]
+                line_bot_api.push_message(address, TextSendMessage(text=report1))
+                line_bot_api.push_message(address, TextSendMessage(text=report2))
+            else:
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
     """====================== Sub Function List ============================="""
 
     def report_bug(event):

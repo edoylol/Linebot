@@ -161,7 +161,7 @@ class Lines:  # class to store respond lines
                      "Megumi can't find the cinema you requested (%s)..",
                      "I don't see any cinema by searching using '%s' :< "
                      ]
-        elif cond == "Too much cinemas" : # accept 1 % tag list
+        elif cond == "Too many cinemas" : # accept 1 % tag list
 
             lines = ["I found too many cinemas with '%s' as tag",
                      "There're too many cinemas \n with '%s' as tag",
@@ -202,6 +202,7 @@ class Lines:  # class to store respond lines
                      "      ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
         elif cond == "asking to show cinema list" :
+
             lines = ["Wanna see the cinema list ?",
                      "Nee,, wanna see the cinema list ?",
                      "Let's take a look at the cinema list :> ",
