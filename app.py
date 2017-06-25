@@ -753,11 +753,9 @@ class Function:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                         try :
-                            print("WAS HEREEEEEEEE 1")
+                            print(cinemas)
                             for item in cinemas:
-                                print("WAS HEREEEEEEEE 2")
-                                print("TEST 1",item[0])
-                                print("TEST 2",item[1])
+                                print("ITEM :",item)
                                 cinema_name = item[0]  # cinema [0] is the cinema name
                                 moviedata = get_movie_data(item[1])  # cinema [1] is the cinema link
                                 print("=============  MOVIE DATA :",moviedata)
