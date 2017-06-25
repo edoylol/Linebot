@@ -755,7 +755,8 @@ class Function:
                         for cinema in cinemas:  # iterate the name only
                             cinema_name = cinema[0]  # cinema [0] is the cinema name
                             moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
-                            print(moviedata)
+                            if moviedata == []:
+                                print("MOVIE DATA EMPTY")
                             reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                             for data in moviedata:
                                 reply.append(data[0])  # movie title
@@ -766,7 +767,11 @@ class Function:
                         reply.append(Lines.show_cinema_movie_schedule("footer"))
                         reply = "\n".join(reply)
                         ask_for_request = False
-                    except:
+                    except LineBotApiError as e:
+                        print("")
+                        print(e.status_code)
+                        print(e.error.message)
+                        print(e.error.details)
                         reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
