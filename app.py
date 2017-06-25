@@ -720,6 +720,7 @@ class Function:
                 schedulelist = schedulelist.split("#")
                 schedulelist.remove("")
 
+                print(movielist,desclist,schedulelist)
                 moviedata = zip(movielist, desclist, schedulelist)
                 return moviedata
 
@@ -759,7 +760,6 @@ class Function:
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                     for cinema in found_cinema:
                         cinema_name = cinema[0]  # cinema [0] is the cinema name
-                        print("ALOHA",cinema[0],cinema[1])
                         moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
                         reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                         try:
