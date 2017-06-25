@@ -689,69 +689,44 @@ class Function:
                 desclist = []
                 schedulelist = []
 
-                try :
-                    req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                    mod_schedule_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "schedule-lists"})),"html.parser")
-                    movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
-                except LineBotApiError as e:
-                    print("FAKING CODE 1")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+                con = urllib.request.urlopen(req)
+                page_source_code_text = con.read()
+                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                mod_schedule_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "schedule-lists"})),"html.parser")
+                movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
 
-                try :
-                    movies = movies_data.findAll("a")  # getting the movie name and desc
-                    for movie in movies:
-                        print(movie)
-                        movie_name = movie.string
-                        movie_desc = "https://www.cgv.id" + movie.get("href")
-                        movielist.append(movie_name)
-                        desclist.append(movie_desc)
-                except LineBotApiError as e:
-                    print("FAKING CODE 2")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                movies = movies_data.findAll("a")  # getting the movie name and desc
+                for movie in movies:
+                    print(movie)
+                    movie_name = movie.string
+                    movie_desc = "https://www.cgv.id" + movie.get("href")
+                    movielist.append(movie_name)
+                    desclist.append(movie_desc)
 
-                try :
-                    schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
-                    last_movie = ""
-                    for schedule in schedules:
-                        print(schedule)
-                        movie_title = schedule.get("movietitle")
-                        time = schedule.string
-                        if movie_title != last_movie:
-                            schedulelist.append("#")
-                            last_movie = movie_title
-                        if time != ", ":
-                            schedulelist.append(time)
+                schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
+                last_movie = ""
+                for schedule in schedules:
+                    print(schedule)
+                    movie_title = schedule.get("movietitle")
+                    time = schedule.string
+                    if movie_title != last_movie:
+                        schedulelist.append("#")
+                        last_movie = movie_title
+                    if time != ", ":
+                        schedulelist.append(time)
 
-                    # re formatting the schedulelist
-                    schedulelist = " ".join(schedulelist)
-                    schedulelist = schedulelist.split("#")
-                    try :
-                        schedulelist.remove("")
-                    except :
-                        print("FAKING CODE 3.1")
+                # re formatting the schedulelist
+                schedulelist = " ".join(schedulelist)
+                schedulelist = schedulelist.split("#")
+                try:
+                    schedulelist.remove("")
+                except:
+                    pass
 
-                except LineBotApiError as e:
-                    print("FAKING CODE 3")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
-
-                try :
-                    print(movielist,desclist,schedulelist)
-                    moviedata = zip(movielist, desclist, schedulelist)
-                    return moviedata
-                except LineBotApiError as e:
-                    print("FAKING CODE 4")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                print(movielist, desclist, schedulelist)
+                moviedata = zip(movielist, desclist, schedulelist)
+                return moviedata
 
 
             def request_cinema_list():
@@ -787,6 +762,8 @@ class Function:
                 try:
                     reply = []
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
+
+                    """ I DONT KNOW WHY HAVE TO ZIP UNZIP AND ZIP AGAIN"""
                     for cinema in found_cinema:
                         cinema_name = cinema[0]  # cinema [0] is the cinema name
                         moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
@@ -802,18 +779,14 @@ class Function:
                     reply = "\n".join(reply)
                     ask_for_request = False
 
-                except LineBotApiError as e:
-                    print(" JUST PRINT ALREADYYYY")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                except:
                     reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
             if ask_for_request:
                 request_cinema_list()
 
-        else :
+        else:
             report = Lines.show_cinema_movie_schedule("specify the company")
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
