@@ -693,6 +693,7 @@ class Function:
                 con = urllib.request.urlopen(req)
                 page_source_code_text = con.read()
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                print(mod_page)
                 schedule_table = str(mod_page.find("table", {"class": "table-theater-det"}))
                 mod_schedule_table = BeautifulSoup(schedule_table, "html.parser")
                 movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
