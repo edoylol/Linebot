@@ -689,24 +689,34 @@ class Function:
                 desclist = []
                 schedulelist = []
 
-                req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                mod_schedule_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "schedule-lists"})),"html.parser")
-                movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
+                try :
+                    req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                    mod_schedule_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "schedule-lists"})),"html.parser")
+                    movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
+                except LineBotApiError as e:
+                    print("FAKING CODE 1")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
-                movies = movies_data.findAll("a")  # getting the movie name and desc
-                print(movies)
-                for movie in movies:
-                    movie_name = movie.string
-                    movie_desc = "https://www.cgv.id" + movie.get("href")
-                    movielist.append(movie_name)
-                    desclist.append(movie_desc)
+                try :
+                    movies = movies_data.findAll("a")  # getting the movie name and desc
+                    for movie in movies:
+                        movie_name = movie.string
+                        movie_desc = "https://www.cgv.id" + movie.get("href")
+                        movielist.append(movie_name)
+                        desclist.append(movie_desc)
+                except LineBotApiError as e:
+                    print("FAKING CODE 2")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
                 try :
                     schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
-                    print(schedules)
                     last_movie = ""
                     for schedule in schedules:
                         movie_title = schedule.get("movietitle")
@@ -723,10 +733,10 @@ class Function:
                     try :
                         schedulelist.remove("")
                     except :
-                        pass
+                        print("FAKING CODE 3.1")
 
                 except LineBotApiError as e:
-                    print("FAKING CODE")
+                    print("FAKING CODE 3")
                     print(e.status_code)
                     print(e.error.message)
                     print(e.error.details)
