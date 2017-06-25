@@ -777,6 +777,10 @@ class Function:
                 print(e.error.message)
                 print(e.error.details)
 
+        else :
+            report = Lines.show_cinema_movie_schedule("specify the company")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
     def show_cinema_list(cond):
         print ("====================================== SHOW LIST ==============")
 

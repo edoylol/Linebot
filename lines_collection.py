@@ -216,6 +216,14 @@ class Lines:  # class to store respond lines
                      "Try to add some of this name into search next time ^^\n",
                      "These are the cinema list you requested..\n",
                      ]
+        elif cond == "specify the company" :
+
+            lines = ["Does it have CGV or XXI ? I don't remember...\n(Try to add either 'cgv' or 'xxi')",
+                     "Is it CGV ? or maybe XXI ? I'm not sure...\n(Try to add either 'cgv' or 'xxi')",
+                     "Which cinema list is it? CGV or XXI ? \n(Try to add either 'cgv' or 'xxi')",
+                     "Which cinema list should I search from?\n(Try to add either 'cgv' or 'xxi')",
+                     "Gomen,, please specify which cinema do you want me to search for..\n(Try to add either 'cgv' or 'xxi')",
+                     ]
         return random.choice(lines)
 
     def notyetcreated(self):
