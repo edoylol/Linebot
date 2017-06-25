@@ -676,11 +676,11 @@ class Function:
                         links = mod_page.findAll('a', {"class": "cinema_fav"})
                         for link in links:
                             print(link)
-                            name = link.string
-                            link = "https://www.cgv.id" + link.get("href")
-                            if all(word in name.lower() for word in search_keyword):
-                                cinemas_name.append(name)
-                                cinemas_link.append(link)
+                            cinema_name = link.string
+                            cinema_link = "https://www.cgv.id" + link.get("href")
+                            if all(word in cinema_name.lower() for word in search_keyword):
+                                cinemas_name.append(cinema_name)
+                                cinemas_link.append(cinema_link)
 
                         cinemas = zip(cinemas_name, cinemas_link)
                         return cinemas
