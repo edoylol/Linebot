@@ -775,6 +775,7 @@ class Function:
                 print(e.status_code)
                 print(e.error.message)
                 print(e.error.details)
+
     def show_cinema_list(cond):
 
         if cond == "xxi" :
