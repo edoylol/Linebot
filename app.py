@@ -698,6 +698,7 @@ class Function:
                 movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
 
                 movies = movies_data.findAll("a")  # getting the movie name and desc
+                print(movies)
                 for movie in movies:
                     movie_name = movie.string
                     movie_desc = "https://www.cgv.id" + movie.get("href")
@@ -706,6 +707,7 @@ class Function:
 
                 try :
                     schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
+                    print(schedules)
                     last_movie = ""
                     for schedule in schedules:
                         movie_title = schedule.get("movietitle")
