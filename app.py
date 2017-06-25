@@ -530,6 +530,7 @@ class Function:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def show_cinema_movie_schedule():
+        print("==================================== show cinema schedulee= ====================")
         if "xxi" in text :
             def get_cinema_list(search_keyword):
                 if search_keyword == [] or search_keyword == [""]:
