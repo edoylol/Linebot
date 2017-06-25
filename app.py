@@ -753,11 +753,10 @@ class Function:
                         reply = []
                         reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
                         print("TEST PRINT")
-                        for x in cinemas :
-                            print ("halo",x[1])
                         try :
+                            print("WAS HEREEEEEEEE 1")
                             for cinema in cinemas:
-                                print("WAS HEREEEEEEEE")
+                                print("WAS HEREEEEEEEE 2")
                                 print("TEST 1",cinema[0])
                                 print("TEST 2",cinema[1])
                                 cinema_name = cinema[0]  # cinema [0] is the cinema name
@@ -780,6 +779,7 @@ class Function:
                         ask_for_request = False
 
                     except :
+                        print("FAHKING FAILED")
                         reply = Lines.show_cinema_movie_schedule("failed to show movie data")
 
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
