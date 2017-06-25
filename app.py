@@ -821,10 +821,13 @@ class Function:
 
             cinema_list = []
             cinemas = get_cinema_list()
-            cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
+
             for cinema in cinemas:
                 cinema_list.append(get_cinema_name(cinema))
-            report = "\n".join(sorted(cinema_list))
+            cinema_list = sorted(cinema_list)
+            cinema_list.insert(0,Lines.show_cinema_movie_schedule("show cinema list"))
+            report = "\n".join(cinema_list)
+
             if len(report) > 1800 :
                 report1 = report[:1800]+"..."
                 report2 = "..."+report[1801:]
@@ -843,12 +846,15 @@ class Function:
                 page_source_code_text = con.read()
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                 cinemas = mod_page.findAll('a', {"class": "cinema_fav"})
-                cinema_list.append(Lines.show_cinema_movie_schedule("show cinema list"))
+
                 for cinema in cinemas:
                     cinema = cinema.string
                     cinema_list.append(cinema)
 
-                report = "\n".join(sorted(cinema_list))
+                cinema_list = sorted(cinema_list)
+                cinema_list.insert(0,Lines.show_cinema_movie_schedule("show cinema list"))
+                report = "\n".join(cinema_list)
+
                 if len(report) > 1800:
                     report1 = report[:1800] + "..."
                     report2 = "..." + report[1801:]
