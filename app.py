@@ -741,9 +741,16 @@ class Function:
                     print(e.error.message)
                     print(e.error.details)
 
-                print(movielist,desclist,schedulelist)
-                moviedata = zip(movielist, desclist, schedulelist)
-                return moviedata
+                try :
+                    print(movielist,desclist,schedulelist)
+                    moviedata = zip(movielist, desclist, schedulelist)
+                    return moviedata
+                except LineBotApiError as e:
+                    print("FAKING CODE 4")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
+
 
             def request_cinema_list():
                 confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
@@ -759,7 +766,6 @@ class Function:
             search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
             cinemas = get_cinema_list(search_keyword)  # return a list with [ cinema name , cinema url]
-            ask_for_request = False
 
             found_cinema_name = []
             found_cinema_link = []
@@ -793,8 +799,6 @@ class Function:
                     reply.append(Lines.show_cinema_movie_schedule("footer"))
                     reply = "\n".join(reply)
                     ask_for_request = False
-
-
 
                 except LineBotApiError as e:
                     print(" JUST PRINT ALREADYYYY")
