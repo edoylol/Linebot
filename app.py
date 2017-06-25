@@ -227,7 +227,7 @@ def handle_postback(event):
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["request cinema list please"])               :
+    elif all(word in text for word in ["request xxi cinema list please"])               :
         print("============= was here ============")
         if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
         elif all(word in text for word in ["cgv"])                                      : Function.show_cinema_list("cgv")
