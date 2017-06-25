@@ -530,12 +530,12 @@ class Function:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     def show_cinema_movie_schedule():
-        print("==================================== show cinema schedulee= ====================")
         if "xxi" in text :
             def get_cinema_list(search_keyword):
                 if search_keyword == [] or search_keyword == [""]:
                     report = Lines.show_cinema_movie_schedule("No keyword found")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
+                    return []
                 else:
                     cinemas = []
                     page_url = "http://www.21cineplex.com/theaters"
