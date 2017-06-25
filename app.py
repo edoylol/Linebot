@@ -771,7 +771,7 @@ class Function:
                 if ask_for_request:
                     request_cinema_list()
             except LineBotApiError as e:
-                print("SHOW MOVIE LIST FAILED")
+                print("SHOW MOVIE LIST FAILEDD")
                 print(e.status_code)
                 print(e.error.message)
                 print(e.error.details)
