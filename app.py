@@ -741,8 +741,10 @@ class Function:
                 found_cinema = []
                 for cinema in cinemas:
                     found_cinema.append(cinema[0])
+                    print(cinema[0])
+                    print(cinema[1])
 
-                print(found_cinema)
+                print("LENGTH =",len(found_cinema))
                 if len(found_cinema) <= 0:
                     reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
                     ask_for_request = True
