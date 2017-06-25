@@ -777,6 +777,7 @@ class Function:
                 print(e.error.details)
 
     def show_cinema_list(cond):
+        print ("====================================== SHOW LIST ==============")
 
         if cond == "xxi" :
             def get_cinema_list():
