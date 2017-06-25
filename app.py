@@ -753,17 +753,16 @@ class Function:
             found_cinema = zip(found_cinema_name, found_cinema_link)
 
             if len(found_cinema_name) <= 0:
-                reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
+                reply = Lines.show_cinema_movie_schedul6e("No cinema found") % (", ".join(search_keyword))
                 ask_for_request = True
             elif len(found_cinema_name) > 2:
                 reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
                 ask_for_request = True
             else:
+                """ if cinema amount is just fine... """
                 try:
                     reply = []
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-
-                    """ I DONT KNOW WHY HAVE TO ZIP UNZIP AND ZIP AGAIN"""
                     for cinema in found_cinema:
                         cinema_name = cinema[0]  # cinema [0] is the cinema name
                         moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
