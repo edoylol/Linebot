@@ -757,29 +757,23 @@ class Function:
                 try:
                     reply = []
                     reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                    try:
-                        for cinema in found_cinema:
-                            cinema_name = cinema[0]  # cinema [0] is the cinema name
-                            moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
-                            reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
-                            try :
-                                for data in moviedata:
-                                    print(data)
-                                    reply.append(data[0])  # movie title
-                                    reply.append(data[1])  # movie description
-                                    reply.append(data[2])  # movie schedule
-                                    reply.append("\n")
-                            except LineBotApiError as e:
-                                print(" JUST PRINT ALREADYYYY")
-                                print(e.status_code)
-                                print(e.error.message)
-                                print(e.error.details)
-                    except LineBotApiError as e:
-                        print(" I DONT FAKING GET THIS ")
-                        print(e.status_code)
-                        print(e.error.message)
-                        print(e.error.details)
-
+                    for cinema in found_cinema:
+                        cinema_name = cinema[0]  # cinema [0] is the cinema name
+                        print("ALOHA",cinema[0],cinema[1])
+                        moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
+                        reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
+                        try:
+                            for data in moviedata:
+                                print(data)
+                                reply.append(data[0])  # movie title
+                                reply.append(data[1])  # movie description
+                                reply.append(data[2])  # movie schedule
+                                reply.append("\n")
+                        except Exception as e:
+                            print(" JUST PRINT ALREADYYYY")
+                            print(e.status_code)
+                            print(e.error.message)
+                            print(e.error.details)
                     reply.append(Lines.show_cinema_movie_schedule("footer"))
                     reply = "\n".join(reply)
                     ask_for_request = False
