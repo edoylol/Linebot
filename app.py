@@ -682,7 +682,7 @@ class Function:
                                 cinemas_name.append(name)
                                 cinemas_link.append(link)
 
-                        cinemas = zip(cinema_name, cinema_link)
+                        cinemas = zip(cinemas_name, cinemas_link)
                         return cinemas
 
                 def get_movie_data(cinema):
