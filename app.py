@@ -741,7 +741,7 @@ class Function:
                 found_cinema_name = []
                 found_cinema_link = []
                 for cinema in cinemas:
-                    found_cinema.append(cinema[0])
+                    found_cinema_name.append(cinema[0])
                     found_cinema_link.append(cinema[1])
 
                 found_cinema = zip(found_cinema_name,found_cinema_link)
