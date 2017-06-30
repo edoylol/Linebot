@@ -227,6 +227,55 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
+    def wiki_search(self,cond):
+        if cond == "page not found" : # takes 2 % (language, keyword)
+            lines = ["I think %s wikipedia does not have an article about '%s' ... ",
+                     "Gomen, I tried to search %s wikipedia, but I can't find '%s' ",
+                     "%s wikipedia doesn't has '%s' titled page I think...",
+                     "I don't see any pages on %s wikipedia titled '%s'...",
+                     "Seems %s wiki doesn't have information about '%s'..."]
+        elif cond == "no keyword found" :
+            lines = ["What do you want me to search for ? ",
+                     "Gomen, what was that ? ",
+                     "Gomen, say it again please ? what was that ? ",
+                     "Gomen, what do you want me to search for ?",
+                     "Gomen, what did you ask just now ?",
+                     "Sorry, I missed the thing you asked just now.. ",
+                     "Please say it again what I should be looking for...",
+                     "Pardon, what do you want me to look for ? "]
+        elif cond == "has disambiguation" :
+            lines = ["FYI, this keyword has other uses...",
+                     "Just saying, this keyword has other uses..",
+                     "This keyword has other uses",
+                     "This keyword has other disambiguation choices",
+                     "This page is auto-redirected, there are other disambiguation..",
+                     "FYI, there are other disambiguation available...",
+                     "Just saying, this keyword has other meaning as well..",
+                     "FYI, this keyword has other meaning as well.. "]
+        elif cond == "not specific page - header" :
+            lines = ["Seems '%s' is not a specific keyword,..",
+                     "I think there are a lot different uses of '%s'..",
+                     "I can't determine which '%s' you are looking for...",
+                     "I'm not sure which is the appropriate answer for '%s' ",
+                     "There are a lot of '%s' ,,"
+                     ]
+        elif cond == "not specific page - content" :
+            lines = ["Here's the list of '%s' people usually search for : \n",
+                     "These are some common uses of '%s'...\n",
+                     "How about pick one from the list of '%s' below ? \n",
+                     "I found some common uses of '%s', how about pick one ? \n",
+                     "I wonder if '%s' you looking for is listed below... \n"
+                     ]
+        elif cond == "ask detail info" :
+            lines = ["Wanna see more detailed info ?",
+                     "Nee,, wanna see the detailed page ?",
+                     "Do you want to see the full page ?  ",
+                     "Take a look at the original page ? ",
+                     "I also have the full page, wanna see ?",
+                     ]
+
+        return random.choice(lines)
+
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
@@ -564,10 +613,10 @@ class Labels: # more like my response template
     def confirmation(self,cond):
         if cond == "yes" :
             lines = ["Sure,,",
-                     "Go ahead..",
+                     "Yes please..",
                      "Ok..",
-                     "Yeah, do it..",
-                     "Do it..",
+                     "Yeah,..",
+                     "Why not...",
                      "Sure Kato..",
                      ]
 
