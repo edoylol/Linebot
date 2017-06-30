@@ -1029,10 +1029,11 @@ class Function:
                     try :
                         req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                         con = urllib.request.urlopen(req)
+                        page_source_code_text = con.read()
+                        mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                     except :
                         print("YEAHAHHHHH")
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
                     exist = True
                 except LineBotApiError as e:
                     print("PAGE NOT FOUND ERROR")
