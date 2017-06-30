@@ -982,10 +982,7 @@ class Function:
                         return
                     else:
                         keyword = " ".join(keyword)
-                        for x in keyword :
-                            if x == " " :
-                                x.replace(" ","_")
-
+                        keyword = keyword.replace(" ", "_")
                         return keyword
 
                 def get_search_language():
