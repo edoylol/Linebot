@@ -973,7 +973,6 @@ class Function:
                 def get_search_keyword():
 
                     split_text = OtherUtil.filter_words(text,"for wiki search")
-                    print("SPLIT TEXT :",split_text)
                     keyword = []
                     for word in split_text:
                         if "'" in word:
@@ -983,7 +982,10 @@ class Function:
                         return
                     else:
                         keyword = " ".join(keyword)
-                        keyword.replace(" ", "_")
+                        for x in keyword :
+                            if x == " " :
+                                x.replace(" ","_")
+
                         return keyword
 
                 def get_search_language():
@@ -1021,7 +1023,6 @@ class Function:
 
             keyword = get_search_keyword()
             language = get_search_language()
-            print("KEYWORD =",keyword,"LANG =",language)
             report = []
             request_detailed_info = False
 
