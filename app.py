@@ -1012,7 +1012,7 @@ class Function:
                 page_source_code_text = con.read()
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                 exist = True
-            except LineBotApiError as e:
+            except urllib.error.HTTPError as e:
                 print("PAGE NOT FOUND ERROR")
                 print(e.status_code)
                 print(e.error.message)
