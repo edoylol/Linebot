@@ -1020,6 +1020,7 @@ class Function:
 
             keyword = get_search_keyword()
             language = get_search_language()
+            print("KEYWORD =",keyword,"LANG =",language)
             report = []
             request_detailed_info = False
 
