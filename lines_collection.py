@@ -234,6 +234,14 @@ class Lines:  # class to store respond lines
                      "%s wikipedia doesn't has '%s' titled page I think...",
                      "I don't see any pages on %s wikipedia titled '%s'...",
                      "Seems %s wikipedia doesn't have information about '%s'..."]
+        elif cond == "try different keyword / language":
+            lines = ["How bout trying different keyword / language ? \nJust in case you need it..",
+                     "How bout trying other keyword / language ? \nHere's the wiki list, just in case..",
+                     "Wanna try other keyword? or maybe language? \nI will put it here, just in case..",
+                     "How about trying other language ? \nHere's the list of wikipedia you can pick..",
+                     "Maybe try other keyword / language ? \nJust in case you need it btw,.. ",
+                     "\nJust in case you need wiki list... ",
+                     ]
         elif cond == "no keyword found" :
             lines = ["What do you want me to search for ? ",
                      "Gomen, what was that ? ",

@@ -1009,6 +1009,8 @@ class Function:
                 exist = True
             except :
                 report.append(Lines.wiki_search("page not found") % (language, keyword))
+                report.append(Lines.wiki_search("try different keyword / language"))
+                report.append("https://meta.wikimedia.org/wiki/List_of_Wikipedias")
                 exist = False
 
             if exist:
@@ -1017,6 +1019,7 @@ class Function:
                     report.append(title)
                     if has_disambiguation(mod_page):
                         report.append(Lines.wiki_search("has disambiguation"))
+
 
                     if first_paragraph_coordinate(mod_page):
                         report.append(get_paragraph(mod_page, 'second'))
