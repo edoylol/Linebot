@@ -1008,7 +1008,7 @@ class Function:
                     header_pic = Picture.header("background")
 
                     buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
-                        URITemplateAction(label=Labels.confirmation("yes"), uri=text)
+                        URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)
                     ])
                     template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
                     line_bot_api.push_message(address, template_message)

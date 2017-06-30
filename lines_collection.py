@@ -244,14 +244,14 @@ class Lines:  # class to store respond lines
                      "Please say it again what I should be looking for...",
                      "Pardon, what do you want me to look for ? "]
         elif cond == "has disambiguation" :
-            lines = ["FYI, this keyword has other uses...",
-                     "Just saying, this keyword has other uses..",
-                     "This keyword has other uses",
-                     "This keyword has other disambiguation choices",
-                     "This page is auto-redirected, there are other disambiguation..",
-                     "FYI, there are other disambiguation available...",
-                     "Just saying, this keyword has other meaning as well..",
-                     "FYI, this keyword has other meaning as well.. "]
+            lines = ["FYI, this keyword has other uses...\n",
+                     "Just saying, this keyword has other uses..\n",
+                     "This keyword has other uses\n",
+                     "This keyword has other disambiguation choices\n",
+                     "This page is auto-redirected, there are other disambiguation..\n",
+                     "FYI, there are other disambiguation available...\n",
+                     "Just saying, this keyword has other meaning as well..\n",
+                     "FYI, this keyword has other meaning as well.. \n"]
         elif cond == "not specific page - header" :
             lines = ["Seems '%s' is not a specific keyword,..",
                      "I think there are a lot different uses of '%s'..",
