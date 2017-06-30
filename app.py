@@ -1012,9 +1012,8 @@ class Function:
                 page_source_code_text = con.read()
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                 exist = True
-            except urllib.error.HTTPError as e:
+            except :
                 print("PAGE NOT FOUND ERROR")
-                print(e)
                 report.append(Lines.wiki_search("page not found") % (language, keyword))
                 exist = False
 
