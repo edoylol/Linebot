@@ -1013,7 +1013,6 @@ class Function:
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                 exist = True
             except :
-                print("PAGE NOT FOUND ERROR")
                 report.append(Lines.wiki_search("page not found") % (language, keyword))
                 exist = False
 

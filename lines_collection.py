@@ -233,7 +233,7 @@ class Lines:  # class to store respond lines
                      "Gomen, I tried to search %s wikipedia, but I can't find '%s' ",
                      "%s wikipedia doesn't has '%s' titled page I think...",
                      "I don't see any pages on %s wikipedia titled '%s'...",
-                     "Seems %s wiki doesn't have information about '%s'..."]
+                     "Seems %s wikipedia doesn't have information about '%s'..."]
         elif cond == "no keyword found" :
             lines = ["What do you want me to search for ? ",
                      "Gomen, what was that ? ",
