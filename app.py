@@ -866,6 +866,7 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
     def wiki_search():
+
         def getting_page_title(mod_page):
             try:
                 first_heading = mod_page.findAll("h1", {"id": "firstHeading"})
