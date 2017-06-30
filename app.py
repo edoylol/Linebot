@@ -153,7 +153,7 @@ def message_text(event):
                 if any(word in text for word in ["showing","list",
                                                  "playing","schedule"])     : Function.show_cinema_movie_schedule()
                 else                                                        : Function.false()
-            elif any(word in text for word in ["wiki","is","are","'"])  : Function.wiki_search()
+            elif any(word in text for word in ["wiki","is","are","'","mean","?"])  : Function.wiki_search()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
@@ -317,7 +317,6 @@ class Function:
         found_options = []
         cursor = 0
         for word in split_text:
-            # print(word)
             if word == "or":
                 # get the previous and after 'or' :
                 try:
@@ -699,7 +698,6 @@ class Function:
 
                 movies = movies_data.findAll("a")  # getting the movie name and desc
                 for movie in movies:
-                    print(movie)
                     movie_name = movie.string
                     movie_desc = "https://www.cgv.id" + movie.get("href")
                     movielist.append(movie_name)
@@ -708,7 +706,6 @@ class Function:
                 schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
                 last_movie = ""
                 for schedule in schedules:
-                    print(schedule)
                     movie_title = schedule.get("movietitle")
                     time = schedule.string
                     if movie_title != last_movie:
@@ -725,7 +722,6 @@ class Function:
                 except:
                     pass
 
-                print(movielist, desclist, schedulelist)
                 moviedata = zip(movielist, desclist, schedulelist)
                 return moviedata
 
@@ -769,7 +765,6 @@ class Function:
                         moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
                         reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
                         for data in moviedata:
-                            print(data)
                             reply.append(data[0])  # movie title
                             reply.append(data[1])  # movie description
                             reply.append(data[2])  # movie schedule
@@ -1138,7 +1133,6 @@ class Function:
         except :
             user = "someone"
 
-        print("SOURCE",event.source)
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
@@ -1167,9 +1161,7 @@ class Function:
 
         elif cond == "pass":
             pass
-            print("func passed")
 
-        print("current status : ", tag_notifier_on)
 
     def dev_print_userlist():
         global userlist_update_count

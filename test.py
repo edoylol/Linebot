@@ -25,10 +25,6 @@ class OtherUtil:
                     text.remove(word)
         return text
 
-keyword = "ganymede (moon)"
-keyword = keyword.replace(" ", "_")
-print(keyword)
-
 
 
 
