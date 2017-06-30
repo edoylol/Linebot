@@ -1006,7 +1006,7 @@ class Function:
                 def request_page():
                     text = Lines.wiki_search("ask detail info")
                     header_pic = Picture.header("background")
-
+                    print(str(page_url))
                     buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
                         URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url))
                     ])
