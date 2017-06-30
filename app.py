@@ -972,7 +972,7 @@ class Function:
             try :
                 def get_search_keyword():
 
-                    split_text = OtherUtil.filter_words(text)
+                    split_text = OtherUtil.filter_words(text,"for wiki search")
                     print("SPLIT TEXT :",split_text)
                     keyword = []
                     for word in split_text:
@@ -1261,18 +1261,22 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 class OtherUtil:
-    def remove_symbols(word):
-        symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
+    def remove_symbols(word,cond="default"):
+        if cond == "default" :
+            symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
+        elif cond == "for wiki search" :
+            symbols = "!@#$%^&*()+=-`~[]{]\|;:/?.>,<\""
+
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
         if len(word) > 0:
             return word
 
-    def filter_words(text):
+    def filter_words(text,cond="default"):
         split_text = text.split(" ")
         filtered_text = []
         for word in split_text:
-            new_word = OtherUtil.remove_symbols(word)
+            new_word = OtherUtil.remove_symbols(word,cond)
             if new_word != None:
                 filtered_text.append(new_word)
         return filtered_text
