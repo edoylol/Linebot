@@ -1014,9 +1014,7 @@ class Function:
                 exist = True
             except urllib.error.HTTPError as e:
                 print("PAGE NOT FOUND ERROR")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+                print(e)
                 report.append(Lines.wiki_search("page not found") % (language, keyword))
                 exist = False
 
