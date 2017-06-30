@@ -1008,7 +1008,7 @@ class Function:
                     header_pic = Picture.header("background")
 
                     buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
-                        URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)
+                        URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url))
                     ])
                     template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
                     line_bot_api.push_message(address, template_message)
@@ -1265,7 +1265,7 @@ class OtherUtil:
         if cond == "default" :
             symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
         elif cond == "for wiki search" :
-            symbols = "!@#$%^&*()+=-`~[]{]\|;:/?.>,<\""
+            symbols = "!@#$%^&*+=-`~[]{]\|;:/?.>,<\""
 
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
