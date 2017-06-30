@@ -1005,7 +1005,6 @@ class Function:
                 def request_page():
                     text = Lines.wiki_search("ask detail info")
                     header_pic = Picture.header("background")
-                    print(str(page_url))
                     buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
                         URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url))
                     ])
@@ -1027,8 +1026,11 @@ class Function:
                 try:
                     keyword = keyword[1:-1]
                     page_url = "https://" + language + ".wikipedia.org/wiki/" + keyword
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
+                    try :
+                        req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                        con = urllib.request.urlopen(req)
+                    except :
+                        print("YEAHAHHHHH")
                     page_source_code_text = con.read()
                     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                     exist = True
