@@ -1080,30 +1080,23 @@ class Function:
                         default = False
 
             if any(word in text for word in ['min','max']):
-                print("CHEKING MIN MAX")
                 split_text = text.split(" ")
                 index = 0
                 for word in split_text :
                     if 'min' in word :
                         try :
-                            print("CHANGING MIN")
-                            print(split_text[index+1])
                             vid_quality_min = int(split_text[index+1])
-                            print("SUCCESS")
                             default = False
                         except :
                             pass
 
                     if 'max' in word :
                         try :
-                            print("CHANGING MAX")
-                            print(split_text[index + 1])
                             vid_quality_max = int(split_text[index+1])
-                            print("SUCCESS")
                             default = False
                         except :
                             pass
-                        
+
                     index = index + 1
 
             return (vid_format.upper(),vid_quality_min,vid_quality_max,default)
@@ -1182,6 +1175,7 @@ class Function:
         if cont:
             page_source_code_text = con.read()
             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            print(mod_page)
             links = mod_page.find_all("a", {"rel": "nofollow"})
             for link in links:
                 try:
