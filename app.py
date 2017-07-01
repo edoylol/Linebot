@@ -1162,20 +1162,27 @@ class Function:
         video_links = []
 
         youtube_link = get_youtube_link()
-        page_url = get_genyoutube(youtube_link)
-        try:
-            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-            con = urllib.request.urlopen(req)
-            cont = True
-        except:
+        if youtube_link == "" :
             report = Lines.download_youtube("page not found")
             line_bot_api.push_message(address, TextSendMessage(text=report))
             cont = False
+        else :
+            cont = True
+
+        if cont :
+            page_url = get_genyoutube(youtube_link)
+            try:
+                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                con = urllib.request.urlopen(req)
+                cont = True
+            except:
+                report = Lines.download_youtube("page not found")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+                cont = False
 
         if cont:
             page_source_code_text = con.read()
             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-            print(mod_page)
             links = mod_page.find_all("a", {"rel": "nofollow"})
             for link in links:
                 try:
