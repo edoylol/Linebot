@@ -1087,6 +1087,7 @@ class Function:
                     if 'min' in word :
                         try :
                             print("CHANGING MIN")
+                            print(split_text[index+1])
                             vid_quality_min = int(split_text[index+1])
                             print("SUCCESS")
                             default = False
@@ -1096,12 +1097,14 @@ class Function:
                     if 'max' in word :
                         try :
                             print("CHANGING MAX")
+                            print(split_text[index + 1])
                             vid_quality_max = int(split_text[index+1])
                             print("SUCCESS")
                             default = False
                         except :
                             pass
-
+                        
+                    index = index + 1
 
             return (vid_format.upper(),vid_quality_min,vid_quality_max,default)
 
