@@ -51,3 +51,12 @@ line_bot_api.push_message(jessin_userid, template_message)
 table = BeautifulSoup(str(mod_page.findAll("div",{"class":"schedule-lists"})),"html.parser")
 movies = BeautifulSoup(str(table.findAll("div",{"class" : "schedule-title"})), "html.parser")
 """
+
+# Common check if text contain
+""" 
+
+any(word in text for word in [] 
+
+"""
+
+

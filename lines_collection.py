@@ -284,6 +284,54 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
+    def download_youtube(self,cond):
+        if cond == "page not found" :
+            lines = ["Are you sure you include the youtube link correctly ?",
+                     "I can't find the link you want to download...",
+                     "Seems the page is unavailable...",
+                     "I can't find the youtube page you requested..",
+                     "The youtube page is unavailable, I think..."]
+        elif cond == "no video found" :
+            lines = ["There's no video with that format...",
+                     "I don't see any video available to download...",
+                     "Seems this video doesn't meet the requested format..",
+                     "Seems this video is not available in that format..",
+                     "I can't find any video to download...try other format(?) "]
+        elif cond == "gathering video data failed" :
+            lines = ["The page is so slow, I can't gather any data...",
+                     "Gomen, seems the video download data corrupted..",
+                     "Gomen, the video data is so unresponsive...",
+                     "Seems something missing from the video download data, making it's unavailable",
+                     "I can't gather the data you requested, seems something wrong..."]
+        elif cond == "pick one to download" :
+            lines = ["Here's the list of available video(s) ",
+                     "Pick one form the list below ,kay ? ^^",
+                     "Here you go :> ",
+                     "Choose one to download...",
+                     "Which one do you want ? .."]
+        elif cond == "send option header" :
+            lines = ["I found some videos with %s",
+                     "Here are some videos with %s",
+                     "Those videos passed %s as filter",
+                     "I tried to filter with %s and these are the result..",
+                     "I tried to use %s as filter, and found those..."]
+        elif cond == "header" :
+            lines = ["This is the list of available formats...\n",
+                     "Try to include one of the format next time...\n",
+                     "These are the available formats... \n",
+                     "Why did you make such a wide filtering ? Try to narrow it down..\n",
+                     "I wonder which one do you want...\n"]
+        elif cond == "footer" :
+            lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
+                     "\n Hope you find the one you want ~",
+                     "\n (=^ ◡ ^=) end 	(=^ ◡ ^=)",
+                     "\n \(＾• ω •＾) found it ?  ",
+                     "\n      ヾ(・ω・)メ(・ω・)ノ    ",
+                     ]
+        return random.choice(lines)
+
+
+
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",

@@ -156,6 +156,9 @@ def message_text(event):
             elif any(word in text for word in ["wiki","is","are","'","mean","?"])  : Function.wiki_search()
             else                                                        : Function.false()
 
+        elif any(word in text for word in ["download ", "save "])   :
+            if any(word in text for word in ["youtube", "video"])       : Function.download_youtube()
+            else                                                        : Function.false()
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
 
         elif "test" in text                                         : Function.TEST(event)
@@ -1042,6 +1045,162 @@ class Function:
         line_bot_api.push_message(address, TextSendMessage(text=report))
         if request_detailed_info:
             request_page()
+
+    def download_youtube():
+
+        def get_youtube_link():
+            keyword = "https://www.youtube.com/watch?v="
+            youtube_link = ""
+            text = original_text
+            if keyword in text.lower():
+                text = text.split(" ")
+                for word in text:
+                    if keyword in word.lower():
+                        youtube_link = word
+
+            return youtube_link
+
+        def get_spec():
+            vid_format = "MP4"
+            vid_quality_min = 720
+            vid_quality_max = 720
+            default = True
+
+            video_audio_format_list = ['3g2', '3gp', 'aa', 'aac', 'aax', 'act', 'amr', 'amv', 'asf', 'au', 'avi',
+                                       'awb', 'dct', 'drc', 'dss', 'dvf', 'f4a', 'f4b', 'f4p', 'f4v', 'flac', 'flv',
+                                       'gif', 'gifv', 'm4a', 'm4b', 'm4p', 'm4v', 'mkv', 'mmf', 'mng', 'mov', 'mp2',
+                                       'mp3', 'mp4', 'mpc', 'mpe', 'mpeg', 'mpg', 'mpv', 'msv', 'ogg', 'ogv', 'rm',
+                                       'rmvb', 'vob', 'wav', 'webm', 'wma', 'wmv', 'yuv']
+
+            if any(word in text for word in video_audio_format_list):
+                split_text = text.split(" ")
+                for word in split_text :
+                    if word in video_audio_format_list :
+                        vid_format = word
+                        default = False
+
+            if any(word in text for word in ['min','max']):
+                split_text = text.split(" ")
+                index = 0
+                for word in split_text :
+                    if 'min' in word :
+                        try :
+                            vid_quality_min = int(split_text[index+1])
+                            default = False
+                        except :
+                            pass
+
+                    if 'max' in word :
+                        try :
+                            vid_quality_max = int(split_text[index+1])
+                            default = False
+                        except :
+                            pass
+
+
+            return (vid_format.upper(),vid_quality_min,vid_quality_max,default)
+
+        def get_genyoutube(youtube_link):
+            video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
+            return "http://video.genyoutube.net/" + video_id
+
+        def get_download_data(link_data):
+            remove_keyword = ['<span class="infow">', '<i class="glyphicon glyphicon-', '">', '</span>', '</i></span>',
+                              'video', 'volume-', '</i>', '<', '>', '/']
+            for i in range(0, len(remove_keyword)):
+                link_data = link_data.replace(remove_keyword[i], "")
+            vid_data = link_data.split(" ")
+            vid_data[2] = vid_data[2].replace("-", " ")
+            return vid_data
+
+        def approved_vid(data, req_format="MP4", req_quality_min=720, req_quality_max=720):
+            vid_format = data[0]
+            vid_quality = data[1]
+
+            remove_keyword = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            for i in range(0, len(remove_keyword)):
+                vid_quality = vid_quality.replace(remove_keyword[i], "")
+            vid_quality = int(vid_quality)
+            return (vid_format == req_format) and (vid_quality >= req_quality_min) and (vid_quality <= req_quality_max)
+
+        def send_vid_option(video_option, video_links):
+            title = "Youtube download"
+            text = Lines.download_youtube("pick one to download")
+            header_pic = Picture.header("background")
+
+            option = len(video_option)
+            if option == 1:
+                actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0]))]
+            elif option == 2:
+                actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                           URITemplateAction(label=video_option[1], uri=str(video_links[1]))]
+            elif option == 3:
+                actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                           URITemplateAction(label=video_option[1], uri=str(video_links[1])),
+                           URITemplateAction(label=video_option[2], uri=str(video_links[2]))]
+            elif option > 3:
+
+                reply = []
+                reply.append(Lines.download_youtube("header"))  # remember to put \n at the end
+                for i in range(0, len(video_option)):
+                    reply.append(video_option[i])
+                reply.append(Lines.download_youtube("footer"))  # remember to put \n at the front
+                reply = "\n".join(reply)
+
+                actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                           URITemplateAction(label=video_option[1], uri=str(video_links[1])),
+                           URITemplateAction(label=video_option[2], uri=str(video_links[2])),
+                           MessageTemplateAction(label='Others...', text=reply)]
+
+            buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=actions)
+            template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+        req_format,req_quality_min,req_quality_max,default = get_spec()
+        video_option = []
+        video_links = []
+
+        youtube_link = get_youtube_link()
+        page_url = get_genyoutube(youtube_link)
+        try:
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            cont = True
+        except:
+            report = Lines.download_youtube("page not found")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+            cont = False
+
+        if cont:
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            links = mod_page.find_all("a", {"rel": "nofollow"})
+            for link in links:
+                try:
+                    href = link.get("href")
+                    vid_keyword = "http://redirector.googlevideo.com"
+                    if vid_keyword in href:
+                        link_data = str(BeautifulSoup(str(link), "html.parser").find('span', {"class": "infow"}))
+                        data = get_download_data(link_data)
+                        if approved_vid(data,req_format,req_quality_min,req_quality_max):
+                            video_option.append(" ".join(data))
+                            video_links.append(href)
+                except:
+                    report = Lines.download_youtube("gathering video data failed")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            if len(video_option) > 0:
+                if default :
+                    report = Lines.download_youtube("send option header") % "default settings"
+                else :
+                    settings = ("format : "+req_format+", min : "+req_quality_min+"p, max : "+req_quality_max+"p")
+                    report = Lines.download_youtube("send option header") % settings
+
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+                send_vid_option(video_option, video_links)
+            else:
+                report = Lines.download_youtube("no video found")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
 
     """====================== Sub Function List ============================="""
 
