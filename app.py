@@ -1080,19 +1080,24 @@ class Function:
                         default = False
 
             if any(word in text for word in ['min','max']):
+                print("CHEKING MIN MAX")
                 split_text = text.split(" ")
                 index = 0
                 for word in split_text :
                     if 'min' in word :
                         try :
+                            print("CHANGING MIN")
                             vid_quality_min = int(split_text[index+1])
+                            print("SUCCESS")
                             default = False
                         except :
                             pass
 
                     if 'max' in word :
                         try :
+                            print("CHANGING MAX")
                             vid_quality_max = int(split_text[index+1])
+                            print("SUCCESS")
                             default = False
                         except :
                             pass
