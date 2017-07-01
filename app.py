@@ -1193,7 +1193,7 @@ class Function:
                 if default :
                     report = Lines.download_youtube("send option header") % "default settings"
                 else :
-                    settings = ("format : "+req_format+", min : "+req_quality_min+"p, max : "+req_quality_max+"p")
+                    settings = ("format : "+str(req_format)+", min : "+str(req_quality_min)+"p, max : "+str(req_quality_max)+"p")
                     report = Lines.download_youtube("send option header") % settings
 
                 line_bot_api.push_message(address, TextSendMessage(text=report))
