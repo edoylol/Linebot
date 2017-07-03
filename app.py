@@ -391,6 +391,7 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     def time_date():
+
         def find_GMT():
             split_text = text.split(" ")
             GMT_found_index = 0
@@ -411,16 +412,20 @@ class Function:
             except:
                 GMT = 7  # default GMT+7
             return GMT
+
         def valid_GMT(GMT):
             if (GMT > 12) or (GMT < (-12)):
                 return False
             else :
                 return True
+
         if valid_GMT(find_GMT()):
             try:
                 GMT = find_GMT()
                 split_time = time.ctime(time.time()+GMT*3600).split(" ")
+                print("SPLIT_TIME :",split_time)
                 splitted_hour = split_time[3].split(":")
+                print("SPLIT_hour :", splitted_hour)
                 day = Lines.day()[split_time[0]]
                 MM = Lines.month()[split_time[1].lower()]
                 DD = split_time[2]
@@ -428,6 +433,7 @@ class Function:
                 hh = splitted_hour[0]
                 mm = splitted_hour[1]
                 ss = splitted_hour[2]
+                print("FORMAT: ",day,MM,DD,YYYY,hh,mm,ss)
 
                 if any(word in text for word in ["date","day"]):
                     reply = Lines.date(day, DD, MM, YYYY)

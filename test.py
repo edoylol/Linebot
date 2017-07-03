@@ -1,4 +1,4 @@
-import urllib,requests,random
+import urllib,requests,random,time
 from bs4 import BeautifulSoup
 
 class OtherUtil:
@@ -24,4 +24,3 @@ class OtherUtil:
                 if word in keyword:
                     text.remove(word)
         return text
-
