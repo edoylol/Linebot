@@ -1328,7 +1328,7 @@ class Function:
             skills_data = BeautifulSoup(str(mod_page.find_all("div", {"id": "content-anchor-inner"})),"html.parser")
             skills_desc = skills_data.find_all("p")
             skill_desc_list = []
-            keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:"]
+            keyword = ["Skill 1", "Skill 2", "Skill 3", "Leader Skill"]
             alter_keyword = [":","turn","Passive"]
 
             for skill in skills_desc:
@@ -1360,7 +1360,7 @@ class Function:
 
             """ combining both of them """
             skills = []
-            if "Leader Skill:" in skill_desc_list[0]:
+            if "Leader Skill" in skill_desc_list[0]:
                 skill_upgrade_list.insert(0," ")
 
             for i in range(0, len(skill_desc_list)):
