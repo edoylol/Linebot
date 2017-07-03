@@ -1241,9 +1241,9 @@ class Function:
             if cond == "default":
                 keyword = get_search_keyword()
                 if len(keyword) > 1:
-                    search_keyword = "%20".join(keyword)
+                    search_keyword = str("%20".join(keyword))
                 else:
-                    search_keyword = keyword
+                    search_keyword = str(keyword)
 
                 page_url = "https://summonerswar.co/?s=" + search_keyword
                 req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
