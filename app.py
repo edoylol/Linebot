@@ -1339,7 +1339,11 @@ class Function:
                     skill_desc_list.append(skill)
 
                 else :
-                    have_leader_skill = "Leader Skill:" in skill_desc_list[0]
+                    try :
+                        have_leader_skill = "Leader Skill:" in skill_desc_list[0]
+                    except :
+                        have_leader_skill = False
+
                     if have_leader_skill and (len(skill_desc_list) >= 4) :
                         break
                     elif not have_leader_skill and (len(skill_desc_list)>=3) :
