@@ -439,7 +439,11 @@ class Function:
                         hh = str(hh)
                         AmPm = "Pm"
                     reply = Lines.time(hh, mm, AmPm)
-            except:
+            except LineBotApiError as e:
+                print("")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
                 reply = "Seems I can't get the date or time, I wonder why..."
 
         else : # happen when GMT is not valid
@@ -538,10 +542,13 @@ class Function:
 
         # send report to sender
         report = Lines.invite_report(cond) % responder
-        if (invitation_sender != "someone") and (invitation_sender != None):
-            line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
-        else:
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        try :
+            if (invitation_sender != "someone") and (invitation_sender != None):
+                line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+            else:
+                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        except :
+            pass
 
     def show_cinema_movie_schedule():
         if "xxi" in text :
