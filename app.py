@@ -1330,11 +1330,15 @@ class Function:
                                         "html.parser")  # actually get skills and review
             skills_desc = skills_data.find_all("p")
             skill_desc_list = []
-            keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:",":","turn","Passive","%"]
+            keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:"]
+            alter_keyword = [":","turn","Passive"]
             for skill in skills_desc:
                 skill = skill.text.strip()
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
+                elif any(word in skill for word in alter_keyword):
+                    skill_desc_list.append(skill)
+
 
             """ getting the skills up part """
             skills_level = skills_data.find_all("ul")
