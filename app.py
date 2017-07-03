@@ -1238,7 +1238,7 @@ class Function:
 
             return text
 
-        def get_page(cond):
+        def get_page(cond="default"):
             if cond == "default":
                 keyword = get_search_keyword()
                 if len(search_keyword) > 1:
