@@ -1326,19 +1326,20 @@ class Function:
             skills = []
 
             """ getting the skill desc part """
-            skills_data = BeautifulSoup(str(mod_page.find_all("div", {"id": "content-anchor-inner"})),
-                                        "html.parser")  # actually get skills and review
+            skills_data = BeautifulSoup(str(mod_page.find_all("div", {"id": "content-anchor-inner"})),"html.parser")
             skills_desc = skills_data.find_all("p")
             skill_desc_list = []
             keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:"]
             alter_keyword = [":","turn","Passive"]
-            have_leader_skill = "Leader Skill:" in skill_desc_list[0]
+
+
             for skill in skills_desc:
                 skill = skill.text.strip()
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
 
                 else :
+                    have_leader_skill = "Leader Skill:" in skill_desc_list[0]
                     if have_leader_skill and (len(skill_desc_list) >= 4) :
                         break
                     elif not have_leader_skill and (len(skill_desc_list)>=3) :
@@ -1352,9 +1353,6 @@ class Function:
             for skill in skills_level:
                 skill = skill.text.strip()
                 skill_upgrade_list.append(skill)
-
-            print("SKILL DESC LIST :",skill_desc_list)
-            print("SKILL UP LIST:",skill_upgrade_list)
 
             """ combining both of them """
             if "Leader Skill:" in skill_desc_list[0]:
