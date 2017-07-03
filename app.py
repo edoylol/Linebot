@@ -1482,8 +1482,13 @@ class Function:
                         nb = len(grade)
                         stats = get_stats(mod_page, nb)
                         for (stat_type, stat_value) in stats:
-                            stat = '{:<18}  {:>6}'.format(stat_type, stat_value)
+                            stat = '{:<15}  {:>6}'.format(stat_type, stat_value)
                             report.append(stat)
+                        report.append(" ")
+                        for (stat_type, stat_value) in stats:
+                            stat = '{:>15}  {:>6}'.format(stat_type, stat_value)
+                            report.append(stat)
+
 
                     elif cond == "show ratings":
                         report.append("")
