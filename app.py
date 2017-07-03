@@ -1246,7 +1246,7 @@ class Function:
                 if len(keyword) > 1:
                     search_keyword = str("%20".join(keyword))
                 else:
-                    search_keyword = str(keyword)
+                    search_keyword = str(keyword[0])
 
                 page_url = "https://summonerswar.co/?s=" + search_keyword
                 print("PAGE URL === ",page_url)
@@ -1397,8 +1397,8 @@ class Function:
             grade, mons_type, usage = get_overview(mod_page)
 
             if cond == "default":
-                title = "Summonerswar Wiki"
-                button_text = name + " " + grade + "\n\n" + Lines.summonerswar_wiki("send button header")
+                title = name + "\n" + grade
+                button_text = Lines.summonerswar_wiki("send button header")
                 header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
 
                 buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
