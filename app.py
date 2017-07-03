@@ -1249,6 +1249,8 @@ class Function:
                     search_keyword = str(keyword)
 
                 page_url = "https://summonerswar.co/?s=" + search_keyword
+                print("PAGE URL === ",page_url)
+
                 req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                 con = urllib.request.urlopen(req)
                 page_source_code_text = con.read()
@@ -1257,6 +1259,7 @@ class Function:
                 for link in links:
                     link = link.get("href")
                     if all(word in link for word in keyword):
+                        print("FOUND LINK ",link)
                         return link
 
             elif cond == "postback":
