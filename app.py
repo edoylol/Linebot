@@ -423,9 +423,8 @@ class Function:
             try:
                 GMT = find_GMT()
                 split_time = time.ctime(time.time()+GMT*3600).split(" ")
-                print("SPLIT_TIME :",split_time)
+                split_time = split_time.remove("")
                 splitted_hour = split_time[3].split(":")
-                print("SPLIT_hour :", splitted_hour)
                 day = Lines.day()[split_time[0]]
                 MM = Lines.month()[split_time[1].lower()]
                 DD = split_time[2]
@@ -433,7 +432,6 @@ class Function:
                 hh = splitted_hour[0]
                 mm = splitted_hour[1]
                 ss = splitted_hour[2]
-                print("FORMAT: ",day,MM,DD,YYYY,hh,mm,ss)
 
                 if any(word in text for word in ["date","day"]):
                     reply = Lines.date(day, DD, MM, YYYY)
@@ -445,11 +443,7 @@ class Function:
                         hh = str(hh)
                         AmPm = "Pm"
                     reply = Lines.time(hh, mm, AmPm)
-            except LineBotApiError as e:
-                print("")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            except:
                 reply = "Seems I can't get the date or time, I wonder why..."
 
         else : # happen when GMT is not valid
