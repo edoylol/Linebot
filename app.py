@@ -1248,7 +1248,7 @@ class Function:
                 else:
                     search_keyword = str(keyword[0])
 
-                page_url = "https://summonerswar.co/?s=" + search_keyword
+                page_url = "https://summonerswar.co/?s=" + '('+search_keyword+')'
                 print("PAGE URL === ",page_url)
 
                 req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
@@ -1350,7 +1350,7 @@ class Function:
                 try :
                     skill = (skill_desc_list[i], skill_upgrade_list[i])
                 except :
-                    skill = (skill_desc_list[i], "")
+                    skill = (skill_desc_list[i], " ")
                 skills.append(skill)
 
             return skills
