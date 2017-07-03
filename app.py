@@ -1376,7 +1376,7 @@ class Function:
 
                 if is_passive and (not has_passive_upgrade) :
                         skill = (skill_desc_list[i], " ")
-                else :
+                else : # not passive or passive with upgrade
                     try :
                         skill = (skill_desc_list[i], skill_upgrade_list[i])
                     except :
@@ -1432,6 +1432,7 @@ class Function:
 
             if cond == "default":
                 title = name + "\n" + grade
+                title = title[:39]
                 button_text = Lines.summonerswar_wiki("send button header")
                 header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
 
@@ -1442,21 +1443,15 @@ class Function:
                     PostbackTemplateAction(label='Skills', data=('summoners_war_wiki skills *' + page_url + '*'))
 
                 ])
-                try :
-                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                    line_bot_api.push_message(address, template_message)
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
 
-                    button_text = Lines.summonerswar_wiki("ask detailed page")
-                    buttons_template = ButtonsTemplate(text=button_text, actions=[
-                        URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
+                button_text = Lines.summonerswar_wiki("ask detailed page")
+                buttons_template = ButtonsTemplate(text=button_text, actions=[
+                    URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
 
-                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                    line_bot_api.push_message(address, template_message)
-                except LineBotApiError as e:
-                    print("")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
 
 
             else:
