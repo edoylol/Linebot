@@ -1240,7 +1240,7 @@ class Function:
         def get_page(cond="default"):
             if cond == "default":
                 keyword = get_search_keyword()
-                if len(search_keyword) > 1:
+                if len(keyword) > 1:
                     search_keyword = "%20".join(keyword)
                 else:
                     search_keyword = keyword
