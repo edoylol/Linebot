@@ -1337,12 +1337,11 @@ class Function:
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
 
-                if len(skill_desc_list) >= 4 :
-                    break
-
-                elif any(word in skill for word in alter_keyword):
-                    skill_desc_list.append(skill)
-
+                else :
+                    if len(skill_desc_list) >= 4 :
+                        break
+                    elif any(word in skill for word in alter_keyword):
+                        skill_desc_list.append(skill)
 
             """ getting the skills up part """
             skills_level = skills_data.find_all("ul")
