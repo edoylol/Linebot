@@ -1245,8 +1245,10 @@ class Function:
 
                 if len(keyword) > 1:
                     search_keyword = str("%20".join(keyword))
-                else:
+                elif len(keyword) == 1 :
                     search_keyword = str(keyword[0])
+                else :
+                    return None
 
                 page_url = "https://summonerswar.co/?s=" + '('+search_keyword+')'
                 print("PAGE URL === ",page_url)
@@ -1348,9 +1350,15 @@ class Function:
             """ combining both of them """
             for i in range(0, len(skill_desc_list)):
                 if "Leader Skill:" in skill_desc_list[i] :
-                    skill = (skill_desc_list[i], " ")
+                    try :
+                        skill = (skill_desc_list[i], " ")
+                    except :
+                        pass
                 else :
-                    skill = (skill_desc_list[i], skill_upgrade_list[i])
+                    try :
+                        skill = (skill_desc_list[i], skill_upgrade_list[i])
+                    except :
+                        skill = (skill_desc_list[i], " ")
 
                 skills.append(skill)
 
@@ -1374,7 +1382,7 @@ class Function:
 
         print("PAGE URL",page_url)
 
-        if page_url == "" :
+        if page_url == None :
             report.append(Lines.summonerswar_wiki("no keyword found"))
             report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
