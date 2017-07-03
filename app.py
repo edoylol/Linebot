@@ -1240,6 +1240,9 @@ class Function:
         def get_page(cond="default"):
             if cond == "default":
                 keyword = get_search_keyword()
+
+                print("KEYWORD = ",keyword)
+
                 if len(keyword) > 1:
                     search_keyword = str("%20".join(keyword))
                 else:
@@ -1362,7 +1365,9 @@ class Function:
         else:
             page_url = get_page("postback")
 
-        if page_url == "https://summonerswar.co/?s=" :
+        print("PAGE URL",page_url)
+
+        if page_url == "" :
             report.append(Lines.summonerswar_wiki("no keyword found"))
             report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
@@ -1376,7 +1381,6 @@ class Function:
                 con = urllib.request.urlopen(req)
                 cont = True
             except :
-                print("PAGE LINK = ",page_url)
                 report.append(Lines.summonerswar_wiki("page not found"))
                 report = "\n".join(report)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
