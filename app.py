@@ -1364,8 +1364,16 @@ class Function:
                 skill_upgrade_list.insert(0," ")
 
             for i in range(0, len(skill_desc_list)):
-                is_passive = "passive" in skill_desc_list[i].lower()
-                has_passive_upgrade = all(word in skill_upgrade_list[i].lower() for word in ['lv','2'])
+                try :
+                    is_passive = "passive" in skill_desc_list[i].lower()
+                except :
+                    is_passive = False
+
+                try :
+                    has_passive_upgrade = all(word in skill_upgrade_list[i].lower() for word in ['lv','2'])
+                except :
+                    has_passive_upgrade = False
+
                 if is_passive and (not has_passive_upgrade) :
                         skill = (skill_desc_list[i], " ")
                 else :
@@ -1434,16 +1442,22 @@ class Function:
                     PostbackTemplateAction(label='Skills', data=('summoners_war_wiki skills *' + page_url + '*'))
 
                 ])
+                try :
+                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                    line_bot_api.push_message(address, template_message)
 
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
+                    button_text = Lines.summonerswar_wiki("ask detailed page")
+                    buttons_template = ButtonsTemplate(text=button_text, actions=[
+                        URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
 
-                button_text = Lines.summonerswar_wiki("ask detailed page")
-                buttons_template = ButtonsTemplate(text=button_text, actions=[
-                    URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
+                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                    line_bot_api.push_message(address, template_message)
+                except LineBotApiError as e:
+                    print("")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
 
             else:
 
