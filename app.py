@@ -1232,7 +1232,6 @@ class Function:
                        'thought', 'to', 'use', 'uses', 'war', 'what', 'whats', 'worth', 'worthed', 'you', 'your'
                        ]
 
-            text = random.choice(text)
             text = OtherUtil.filter_words(text, "sw wiki")
             text = OtherUtil.filter_keywords(text, keyword)
 
