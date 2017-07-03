@@ -1241,8 +1241,6 @@ class Function:
             if cond == "default":
                 keyword = get_search_keyword()
 
-                print("KEYWORD = ",keyword)
-
                 if len(keyword) > 1:
                     search_keyword = str("%20".join(keyword))
                 elif len(keyword) == 1 :
@@ -1251,7 +1249,6 @@ class Function:
                     return None
 
                 page_url = "https://summonerswar.co/?s=" + '('+search_keyword+')'
-                print("PAGE URL === ",page_url)
 
                 req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                 con = urllib.request.urlopen(req)
@@ -1261,7 +1258,6 @@ class Function:
                 for link in links:
                     link = link.get("href")
                     if all(word in link for word in keyword):
-                        print("FOUND LINK ",link)
                         return link
 
             elif cond == "postback":
@@ -1347,18 +1343,18 @@ class Function:
                 skill = skill.text.strip()
                 skill_upgrade_list.append(skill)
 
+            print("SKILL DESC LIST :",skill_desc_list)
+            print("SKILL UP LIST:",skill_upgrade_list)
+
             """ combining both of them """
+            if "Leader Skill:" in skill_desc_list[0]:
+                skill_upgrade_list.append(" ")
+
             for i in range(0, len(skill_desc_list)):
-                if "Leader Skill:" in skill_desc_list[i] :
-                    try :
-                        skill = (skill_desc_list[i], " ")
-                    except :
-                        pass
-                else :
-                    try :
-                        skill = (skill_desc_list[i], skill_upgrade_list[i])
-                    except :
-                        skill = (skill_desc_list[i], " ")
+                try :
+                    skill = (skill_desc_list[i], skill_upgrade_list[i])
+                except :
+                    skill = (skill_desc_list[i], " ")
 
                 skills.append(skill)
 
@@ -1380,7 +1376,6 @@ class Function:
         else:
             page_url = get_page("postback")
 
-        print("PAGE URL",page_url)
 
         if page_url == None :
             report.append(Lines.summonerswar_wiki("no keyword found"))
