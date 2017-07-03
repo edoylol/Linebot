@@ -1336,6 +1336,10 @@ class Function:
                 skill = skill.text.strip()
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
+
+                if len(skill_desc_list) >= 4 :
+                    break
+
                 elif any(word in skill for word in alter_keyword):
                     skill_desc_list.append(skill)
 
@@ -1475,14 +1479,9 @@ class Function:
                         report.append("")
                         report.append(skillup)
                         report.append("")
-                try :
-                    report = "\n".join(report)
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                except LineBotApiError as e:
-                    print("")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
 
     """====================== Sub Function List ============================="""
 
