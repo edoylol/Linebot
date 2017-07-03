@@ -1364,6 +1364,7 @@ class Function:
 
         if page_url == "https://summonerswar.co/?s=" :
             report.append(Lines.summonerswar_wiki("no keyword found"))
+            report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
             cont = False
         else :
@@ -1376,6 +1377,7 @@ class Function:
                 cont = True
             except :
                 report.append(Lines.summonerswar_wiki("page not found"))
+                report = "\n".join(report)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 cont = False
 
