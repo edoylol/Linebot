@@ -1481,8 +1481,9 @@ class Function:
                     for (desc, skillup) in skills:
                         report.append(desc)
                         report.append("")
-                        report.append(skillup)
-                        report.append("")
+                        if skillup != "" :
+                            report.append(skillup)
+                            report.append("")
 
                 report = "\n".join(report)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
