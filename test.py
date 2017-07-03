@@ -28,17 +28,3 @@ class OtherUtil:
 
 
 
-
-page_url = "https://summonerswar.co/?s=(theo)"
-req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-con = urllib.request.urlopen(req)
-page_source_code_text = con.read()
-mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-search_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "loop list row"})), "html.parser")
-links = search_table.find_all("a")
-for link in links:
-    title_text = link.text.strip().lower()
-    link = link.get("href")
-    if all(word in link for word in ['theo']) or all(word in title_text for word in ['theo']):
-        print( link)
-
