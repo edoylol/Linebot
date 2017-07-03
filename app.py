@@ -1328,19 +1328,18 @@ class Function:
             skills_data = BeautifulSoup(str(mod_page.find_all("div", {"id": "content-anchor-inner"})),"html.parser")
             skills_desc = skills_data.find_all("p")
             skill_desc_list = []
-            keyword = ["Skill 1", "Skill 2", "Skill 3", "Leader Skill"]
-            alter_keyword = [":","turn","Passive"]
+            keyword = ["skill 1", "skill 2", "skill 3", "leader skill"]
+            alter_keyword = [":","turn","passive"]
 
             for skill in skills_desc:
                 skill = skill.text.strip()
-                if any(word in skill for word in keyword):
+                if any(word in skill.lower() for word in keyword):
                     skill_desc_list.append(skill)
-
 
                 else :
                     """ special case when skill is not written / theres desc and extra useless review """
-                    try :
-                        have_leader_skill = "Leader Skill:" in skill_desc_list[0] # determine if there's leaderskill
+                    try : # determine if there's leader skill
+                        have_leader_skill = "leader skill" in skill_desc_list[0].lower()
                     except :
                         have_leader_skill = False
 
@@ -1348,7 +1347,8 @@ class Function:
                         break
                     elif not have_leader_skill and (len(skill_desc_list)>=3) :
                         break
-                    elif any(word in skill for word in alter_keyword): # if there's slot, then might be missed skill info...
+                    elif any(word in skill for word in alter_keyword):
+                        # if there's slot, then might be missed skill info...
                         skill_desc_list.append(skill)
 
             """ getting the skills up part """
@@ -1360,7 +1360,7 @@ class Function:
 
             """ combining both of them """
             skills = []
-            if "Leader Skill" in skill_desc_list[0]:
+            if "leader skill" in skill_desc_list[0].lower():
                 skill_upgrade_list.insert(0," ")
 
             for i in range(0, len(skill_desc_list)):
@@ -1449,6 +1449,7 @@ class Function:
                     pros = procons[0]
                     cons = procons[1]
 
+                    report.append("")
                     report.append(Lines.summonerswar_wiki("overview header") % (mons_type.lower(), usage.lower()))
                     report.append("")
                     report.append(Lines.summonerswar_wiki("good points"))
