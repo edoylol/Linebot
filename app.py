@@ -1475,9 +1475,14 @@ class Function:
                         report.append("")
                         report.append(skillup)
                         report.append("")
-
-                report = "\n".join(report)
-                line_bot_api.push_message(address, TextSendMessage(text=report))
+                try :
+                    report = "\n".join(report)
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                except LineBotApiError as e:
+                    print("")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
     """====================== Sub Function List ============================="""
 
