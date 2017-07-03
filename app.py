@@ -1323,7 +1323,6 @@ class Function:
             return ratings
 
         def get_skills(mod_page):
-            skills = []
 
             """ getting the skill desc part """
             skills_data = BeautifulSoup(str(mod_page.find_all("div", {"id": "content-anchor-inner"})),"html.parser")
@@ -1332,15 +1331,16 @@ class Function:
             keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:"]
             alter_keyword = [":","turn","Passive"]
 
-
             for skill in skills_desc:
                 skill = skill.text.strip()
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
 
+
                 else :
+                    """ special case when skill is not written / theres desc and extra useless review """
                     try :
-                        have_leader_skill = "Leader Skill:" in skill_desc_list[0]
+                        have_leader_skill = "Leader Skill:" in skill_desc_list[0] # determine if there's leaderskill
                     except :
                         have_leader_skill = False
 
@@ -1348,7 +1348,7 @@ class Function:
                         break
                     elif not have_leader_skill and (len(skill_desc_list)>=3) :
                         break
-                    elif any(word in skill for word in alter_keyword):
+                    elif any(word in skill for word in alter_keyword): # if there's slot, then might be missed skill info...
                         skill_desc_list.append(skill)
 
             """ getting the skills up part """
@@ -1359,6 +1359,7 @@ class Function:
                 skill_upgrade_list.append(skill)
 
             """ combining both of them """
+            skills = []
             if "Leader Skill:" in skill_desc_list[0]:
                 skill_upgrade_list.insert(0," ")
 
@@ -1481,7 +1482,7 @@ class Function:
                     for (desc, skillup) in skills:
                         report.append(desc)
                         report.append("")
-                        if skillup != "" :
+                        if skillup != " " : # to reduce blankspace between leaderskill and first skill
                             report.append(skillup)
                             report.append("")
 
