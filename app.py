@@ -423,7 +423,11 @@ class Function:
             try:
                 GMT = find_GMT()
                 split_time = time.ctime(time.time()+GMT*3600).split(" ")
-                split_time = split_time.remove("")
+                if ('' in split_time) or (None in split_time):
+                    for element in split_time :
+                        if (element == '') or (element == None):
+                            split_time.remove(element)
+
                 splitted_hour = split_time[3].split(":")
                 day = Lines.day()[split_time[0]]
                 MM = Lines.month()[split_time[1].lower()]
