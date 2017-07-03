@@ -1347,7 +1347,10 @@ class Function:
 
             """ combining both of them """
             for i in range(0, len(skill_desc_list)):
-                skill = (skill_desc_list[i], skill_upgrade_list[i])
+                try :
+                    skill = (skill_desc_list[i], skill_upgrade_list[i])
+                except :
+                    skill = (skill_desc_list[i], "")
                 skills.append(skill)
 
             return skills
@@ -1414,7 +1417,7 @@ class Function:
 
                 button_text = Lines.summonerswar_wiki("ask detailed page")
                 buttons_template = ButtonsTemplate(text=button_text, actions=[
-                    URITemplateAction(label=Labes.confirmation("yes"), uri=page_url)])
+                    URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
 
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
