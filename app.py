@@ -1395,115 +1395,119 @@ class Function:
                 argument = argument.text.strip()
                 procons.append(argument)
             return procons
+        try :
+            report = []
+            if cond == "default":
+                page_url = get_page()
+            else:
+                page_url = get_page("postback")
 
-        report = []
 
-        if cond == "default":
-            page_url = get_page()
-        else:
-            page_url = get_page("postback")
-
-
-        if page_url == None :
-            report.append(Lines.summonerswar_wiki("no keyword found"))
-            report = "\n".join(report)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-            cont = False
-        else :
-            cont = True
-
-        if cont :
-            try :
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                cont = True
-            except :
-                report.append(Lines.summonerswar_wiki("page not found"))
+            if page_url == None :
+                report.append(Lines.summonerswar_wiki("no keyword found"))
                 report = "\n".join(report)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 cont = False
+            else :
+                cont = True
 
-        if cont :
-            page_source_code_text = con.read()
-            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            if cont :
+                """ opening web page """
+                try :
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    cont = True
+                except :
+                    report.append(Lines.summonerswar_wiki("page not found"))
+                    report = "\n".join(report)
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    cont = False
 
-            name = get_name(mod_page)
-            grade, mons_type, usage = get_overview(mod_page)
+            if cont :
+                """ procesing web page """
+                page_source_code_text = con.read()
+                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
-            if cond == "default":
-                title = name + "\n" + grade
-                title = title[:39]
-                button_text = Lines.summonerswar_wiki("send button header")
-                header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
+                name = get_name(mod_page)
+                grade, mons_type, usage = get_overview(mod_page)
 
-                buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
-                    PostbackTemplateAction(label='Overview', data=('summoners_war_wiki overview *' + page_url + '*')),
-                    PostbackTemplateAction(label='Ratings', data=('summoners_war_wiki ratings *' + page_url + '*')),
-                    PostbackTemplateAction(label='Stats', data=('summoners_war_wiki stats *' + page_url + '*')),
-                    PostbackTemplateAction(label='Skills', data=('summoners_war_wiki skills *' + page_url + '*'))
+                if cond == "default":
+                    title = name + "\n" + grade
+                    title = title[:39]
+                    button_text = Lines.summonerswar_wiki("send button header")
+                    header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
 
-                ])
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
+                    buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
+                        PostbackTemplateAction(label='Overview', data=('summoners_war_wiki overview *' + page_url + '*')),
+                        PostbackTemplateAction(label='Ratings', data=('summoners_war_wiki ratings *' + page_url + '*')),
+                        PostbackTemplateAction(label='Stats', data=('summoners_war_wiki stats *' + page_url + '*')),
+                        PostbackTemplateAction(label='Skills', data=('summoners_war_wiki skills *' + page_url + '*'))
 
-                button_text = Lines.summonerswar_wiki("ask detailed page")
-                buttons_template = ButtonsTemplate(text=button_text, actions=[
-                    URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
+                    ])
+                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                    line_bot_api.push_message(address, template_message)
 
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
+                    button_text = Lines.summonerswar_wiki("ask detailed page")
+                    buttons_template = ButtonsTemplate(text=button_text, actions=[
+                        URITemplateAction(label=Labels.confirmation("yes"), uri=page_url)])
 
+                    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                    line_bot_api.push_message(address, template_message)
 
-            else:
+                else:
 
-                report.append(name + " " + grade)
+                    report.append(name + " " + grade)
 
-                if cond == "overview":
+                    if cond == "overview":
 
-                    procons = get_procons(mod_page)
-                    pros = procons[0]
-                    cons = procons[1]
+                        procons = get_procons(mod_page)
+                        pros = procons[0]
+                        cons = procons[1]
 
-                    report.append("")
-                    report.append(Lines.summonerswar_wiki("overview header") % (mons_type.lower(), usage.lower()))
-                    report.append("")
-                    report.append(Lines.summonerswar_wiki("good points"))
-                    report.append(pros)
-                    report.append("")
-                    report.append(Lines.summonerswar_wiki("bad points"))
-                    report.append(cons)
-
-                elif cond == "show stats":
-                    report.append("")
-                    report.append(Lines.summonerswar_wiki("stats header"))
-
-                    nb = len(grade)
-                    stats = get_stats(mod_page, nb)
-                    for (stat_type, stat_value) in stats:
-                        stat = '{:<10}  {:<4}'.format(stat_type, stat_value)
-                        report.append(stat)
-
-                elif cond == "show ratings":
-                    report.append("")
-                    ratings = get_rating(mod_page)
-                    for (categ, adm, users) in ratings:
-                        rating = '{:<18}  {:<8}  {:<12}'.format(categ, adm, users)
-                        report.append(rating)
-
-                elif cond == "show skills":
-                    report.append("")
-                    report.append(Lines.summonerswar_wiki("skills header"))
-
-                    skills = get_skills(mod_page)
-                    for (desc, skillup) in skills:
-                        report.append(desc)
                         report.append("")
-                        if skillup != " " : # to reduce blankspace between leaderskill and first skill
-                            report.append(skillup)
-                            report.append("")
+                        report.append(Lines.summonerswar_wiki("overview header") % (mons_type.lower(), usage.lower()))
+                        report.append("")
+                        report.append(Lines.summonerswar_wiki("good points"))
+                        report.append(pros)
+                        report.append("")
+                        report.append(Lines.summonerswar_wiki("bad points"))
+                        report.append(cons)
 
-                report = "\n".join(report)
-                line_bot_api.push_message(address, TextSendMessage(text=report))
+                    elif cond == "show stats":
+                        report.append("")
+                        report.append(Lines.summonerswar_wiki("stats header"))
+
+                        nb = len(grade)
+                        stats = get_stats(mod_page, nb)
+                        for (stat_type, stat_value) in stats:
+                            stat = '{:<10}  {:<4}'.format(stat_type, stat_value)
+                            report.append(stat)
+
+                    elif cond == "show ratings":
+                        report.append("")
+                        ratings = get_rating(mod_page)
+                        for (categ, adm, users) in ratings:
+                            rating = '{:<18}  {:<8}  {:<12}'.format(categ, adm, users)
+                            report.append(rating)
+
+                    elif cond == "show skills":
+                        report.append("")
+                        report.append(Lines.summonerswar_wiki("skills header"))
+                        report.append("")
+
+                        skills = get_skills(mod_page)
+                        for (desc, skillup) in skills:
+                            report.append(desc)
+                            report.append("")
+                            if skillup != " " : # to reduce blankspace between leaderskill and first skill
+                                report.append(skillup)
+                                report.append("")
+
+                    report = "\n".join(report)
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+        except :
+            report = Lines.summonerswar_wiki("random errors")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
     """====================== Sub Function List ============================="""
 

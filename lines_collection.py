@@ -390,6 +390,11 @@ class Lines:  # class to store respond lines
                      "Here's the list of it's skills :",
                      "Here you go...",
                      "Take a look at the skills carefully.."]
+        elif cond == "random errors" :
+            lines = ["I'm really sorry, but me and mastah have tried our best..\nBut you know,, this wiki page is super inconsistent in terms of syntax..\nWe're sorry if some of the feature is not working properly...",
+                     "I'm really sorry if some of the features is not working properly,, \nBut you know,, this wiki page is super inconsistent in terms of syntax..\nWe're sorry since we can't do anything about that..",
+                     "I'm really sorry if some of the features is not working properly,,\nMe and mastah have tried our best..\nBut the wiki is super inconsistent in terms of syntax.."
+                     ]
         return random.choice(lines)
 
     def notyetcreated(self):
