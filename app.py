@@ -1486,7 +1486,7 @@ class Function:
                             report.append(stat)
                         report.append(" ")
                         for (stat_type, stat_value) in stats:
-                            stat = '{:>15}  {:>6}'.format(stat_type, stat_value)
+                            stat = '{:<15}  {15:>6}'.format(stat_type, stat_value)
                             report.append(stat)
 
 
