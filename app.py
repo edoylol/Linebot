@@ -1332,13 +1332,16 @@ class Function:
             skill_desc_list = []
             keyword = ["Skill 1:", "Skill 2:", "Skill 3:", "Leader Skill:"]
             alter_keyword = [":","turn","Passive"]
+            have_leader_skill = "Leader Skill:" in skill_desc_list[0]
             for skill in skills_desc:
                 skill = skill.text.strip()
                 if any(word in skill for word in keyword):
                     skill_desc_list.append(skill)
 
                 else :
-                    if len(skill_desc_list) >= 4 :
+                    if have_leader_skill and (len(skill_desc_list) >= 4) :
+                        break
+                    elif not have_leader_skill and (len(skill_desc_list)>=3) :
                         break
                     elif any(word in skill for word in alter_keyword):
                         skill_desc_list.append(skill)
