@@ -1273,6 +1273,15 @@ class Function:
             name = mod_page.find("h1", {"class": "main-title"})
             return name.text.strip()
 
+        def get_pic(mod_page):
+            image_src = "https://mobilegamerhub.com/wp-content/uploads/2017/02/summoners-war.png"
+            search_keyword = get_search_keyword()
+            images = mod_page.find_all("img")
+            for image in images:
+                image_src = image.get("src")
+                if all(word in image_src.lower() for word in search_keyword):
+                    return image_src
+
         def get_overview(mod_page):
             overview = mod_page.find_all("span", {"class": "detail-content"})
             grade = overview[0].text.strip()
@@ -1437,7 +1446,7 @@ class Function:
                     title = name + "\n" + grade
                     title = title[:39]
                     button_text = Lines.summonerswar_wiki("send button header")
-                    header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
+                    header_pic = get_pic(mod_page)
 
                     buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
                         PostbackTemplateAction(label='Overview', data=('summoners_war_wiki overview *' + page_url + '*')),

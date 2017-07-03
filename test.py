@@ -25,6 +25,20 @@ class OtherUtil:
                     text.remove(word)
         return text
 
+stats = [('HP','11535'),('ATK','747'),('CRI RATE%','15')]
+for (stat_type,stat_value) in stats:
+    stat = '{:<15}  {:>6}'.format(stat_type, stat_value)
+    print(stat)
 
+search_keyword = "camilla"
 
-
+page_url = "https://summonerswar.co/water-valkyrja-camilla/"
+req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+con = urllib.request.urlopen(req)
+page_source_code_text = con.read()
+mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+images = mod_page.find_all("img")
+for image in images :
+    image_src = image.get("src")
+    if search_keyword in image_src.lower() :
+        print(image_src)
