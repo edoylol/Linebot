@@ -1347,10 +1347,11 @@ class Function:
 
             """ combining both of them """
             for i in range(0, len(skill_desc_list)):
-                try :
-                    skill = (skill_desc_list[i], skill_upgrade_list[i])
-                except :
+                if "Leader Skill:" in skill_desc_list[i] :
                     skill = (skill_desc_list[i], " ")
+                else :
+                    skill = (skill_desc_list[i], skill_upgrade_list[i])
+
                 skills.append(skill)
 
             return skills
