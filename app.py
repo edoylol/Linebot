@@ -1232,10 +1232,10 @@ class Function:
                        'thought', 'to', 'use', 'uses', 'war', 'what', 'whats', 'worth', 'worthed', 'you', 'your'
                        ]
 
-            text = OtherUtil.filter_words(text, "sw wiki")
-            text = OtherUtil.filter_keywords(text, keyword)
+            filtered_text = OtherUtil.filter_words(text, "sw wiki")
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
 
-            return text
+            return filtered_text
 
         def get_page(cond="default"):
             if cond == "default":
@@ -1388,10 +1388,10 @@ class Function:
 
             if cond == "default":
                 title = "Summonerswar Wiki"
-                text = name + " " + grade + "\n\n" + Lines.summonerswar_wiki("send button header")
+                button_text = name + " " + grade + "\n\n" + Lines.summonerswar_wiki("send button header")
                 header_pic = "https://43ch47qsavx2jcvnr30057vk-wpengine.netdna-ssl.com/wp-content/uploads/2015/01/logo-sticky.png"
 
-                buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
+                buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
                     PostbackTemplateAction(label='Overview', data=('summoners_war_wiki overview *' + page_url + '*')),
                     PostbackTemplateAction(label='Ratings', data=('summoners_war_wiki ratings *' + page_url + '*')),
                     PostbackTemplateAction(label='Stats', data=('summoners_war_wiki stats *' + page_url + '*')),
@@ -1399,14 +1399,14 @@ class Function:
 
                 ])
 
-                template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
-                text = Lines.summonerswar_wiki("ask detailed page")
-                buttons_template = ButtonsTemplate(text=text, actions=[
+                button_text = Lines.summonerswar_wiki("ask detailed page")
+                buttons_template = ButtonsTemplate(text=button_text, actions=[
                     URITemplateAction(label=Labes.confirmation("yes"), uri=page_url)])
 
-                template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
             else:
