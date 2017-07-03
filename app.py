@@ -1364,12 +1364,18 @@ class Function:
                 skill_upgrade_list.insert(0," ")
 
             for i in range(0, len(skill_desc_list)):
-                try :
-                    skill = (skill_desc_list[i], skill_upgrade_list[i])
-                except :
-                    skill = (skill_desc_list[i], " ")
+                is_passive = "passive" in skill_desc_list[i].lower()
+                has_passive_upgrade = all(word in skill_upgrade_list[i].lower() for word in ['lv','2'])
+                if is_passive and (not has_passive_upgrade) :
+                        skill = (skill_desc_list[i], " ")
+                else :
+                    try :
+                        skill = (skill_desc_list[i], skill_upgrade_list[i])
+                    except :
+                        skill = (skill_desc_list[i], " ")
 
                 skills.append(skill)
+
 
             return skills
 
