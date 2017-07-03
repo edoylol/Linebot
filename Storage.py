@@ -30,6 +30,11 @@ line_bot_api.push_message(jessin_userid, template_message)
 
 """
 
+# Linebot push template
+"""
+line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+"""
+
 # Linebot button template
 """
     title = ""
@@ -55,7 +60,7 @@ movies = BeautifulSoup(str(table.findAll("div",{"class" : "schedule-title"})), "
 # Common check if text contain
 """ 
 
-any(word in text for word in [] 
+any(word in text for word in []) 
 
 """
 

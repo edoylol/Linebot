@@ -231,7 +231,7 @@ class Lines:  # class to store respond lines
         if cond == "page not found" : # takes 2 % (language, keyword)
             lines = ["I think %s wikipedia does not have an article about '%s' ... ",
                      "Gomen, I tried to search %s wikipedia, but I can't find '%s' ",
-                     "%s wikipedia doesn't has '%s' titled page I think...",
+                     "%s wikipedia doesn't have '%s' titled page I think...",
                      "I don't see any pages on %s wikipedia titled '%s'...",
                      "Seems %s wikipedia doesn't have information about '%s'..."]
         elif cond == "try different keyword / language":
@@ -330,7 +330,67 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-
+    def summonerswar_wiki(self,cond):
+        if cond == "send button header" :
+            lines = ["Just tap the information you need...",
+                     "I have several info about this monster..",
+                     "Which one do you want to know ?",
+                     "Here you go...",
+                     "Hope this is what you looking for.."]
+        elif cond == "ask detailed page" :
+            lines = ["Wanna see more detailed info ?",
+                     "Nee,, wanna see the detailed review ?",
+                     "Do you want to see the full page ?  ",
+                     "Need more detailed info ? ",
+                     "I also have the full page, wanna see ?",
+                     ]
+        elif cond == "page not found" :
+            lines = ["I think sw wiki does not have information about that ... ",
+                     "Gomen, I tried to search in sw wiki, but I can't find it.. ",
+                     "Sw wiki doesn't have that monster info I think...",
+                     "I don't see any monster with that name...",
+                     "Are you sure you spelled the name correctly ?"
+                     ]
+        elif cond == "no keyword found" :
+            lines = ["What monster do you want me to search for ? ",
+                     "Gomen, what monster was that ? ",
+                     "Gomen, say the name again please ? what was that ? ",
+                     "Gomen, which monster you want me to search for ?",
+                     "Gomen, what did you ask just now ?",
+                     "Sorry, I missed the name you asked just now.. ",
+                     "Please say it again which monster I should be looking for...",
+                     ]
+        elif cond == "overview header" : # take 2 % (mons type, usage)
+            lines = ["This is a/an %s type monsters, which excels for %s",
+                     "Typically %s type monster, people usually use it for %s",
+                     "Simply %s type monster, you should use it for %s ...",
+                     "This monster is kind of %s type monsters..\nEspecially good for %s",
+                     "Most users said that this %s type monster is good for %s"]
+        elif cond == "good points" :
+            lines = ["Good things about this monster :",
+                     "Some good points of this monster :",
+                     "This monster is good because of :",
+                     "Some reason to use this monster :",
+                     "Some good features of this monster : "]
+        elif cond == "bad points" :
+            lines = ["Weak points you should take care :",
+                     "Some Cons of using this monster :",
+                     "Some people don't use it because of :",
+                     "Things that this monster lacks : ",
+                     "Some users avoid using this monster because of : "]
+        elif cond == "stats header" :
+            lines = ["Here's the Lv40 (Awakened) stats :",
+                     "Here's the stats when it hit Lv40 and awakened",
+                     "When it's at Lv40, the stats look like : ",
+                     "Detail stats of Lv40 (Awakened) monster : ",
+                     "Lv 40 (Awakened) monster stats : "]
+        elif cond == "skills header" :
+            lines = ["SKILLS :",
+                     "Some usable skills :",
+                     "Here's the list of it's skills :",
+                     "Here you go...",
+                     "Take a look at the skills carefully.."]
+        return random.choice(lines)
 
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
