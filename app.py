@@ -1708,16 +1708,22 @@ class Function:
         return granted
 
     def TEST(event):
-        try :
-            audio_message = AudioSendMessage(
-                original_content_url='http://www.fromtexttospeech.com/output/0173466001499181936/25713526.mp3',
-                duration=24000)
-            line_bot_api.push_message(address,audio_message)
-        except LineBotApiError as e:
-            print("")
-            print(e.status_code)
-            print(e.error.message)
-            print(e.error.details)
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(text='hoge1', title='fuga1', actions=[
+                URITemplateAction(
+                    label='Go to line.me', uri='https://line.me'),
+                PostbackTemplateAction(label='ping', data='ping')
+            ]),
+            CarouselColumn(text='hoge2', title='fuga2', actions=[
+                PostbackTemplateAction(
+                    label='ping with text', data='ping',
+                    text='ping'),
+                MessageTemplateAction(label='Translate Rice', text='米')
+            ]),
+        ])
+        template_message = TemplateSendMessage(
+            alt_text='Buttons alt text', template=carousel_template)
+        line_bot_api.reply_message(token, template_message)
 
 
 
