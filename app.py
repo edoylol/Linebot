@@ -1708,9 +1708,10 @@ class Function:
         return granted
 
     def TEST(event):
-        LineBotApi.push_message(address,AudioSendMessage(
+        audio_message = AudioSendMessage(
             original_content_url='http://www.fromtexttospeech.com/output/0173466001499181936/25713526.mp3',
-            duration=24000))
+            duration=24000)
+        line_bot_api.push_message(address,audio_message)
 
 
 
