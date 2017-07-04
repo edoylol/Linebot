@@ -1325,7 +1325,15 @@ class Function:
                                     (71, 83)]  # nat 2
 
             for (a, b) in important_indexs:
-                stat = (stats[a], stats[b])
+                try :
+                    a = stats[a]
+                except :
+                    a = "[undf]"
+                try :
+                    b = stats[b]
+                except :
+                    b = 0
+                stat = (a, b)
                 maxed_stat.append(stat)
 
             return maxed_stat
@@ -1502,7 +1510,6 @@ class Function:
 
                         nb = len(grade)
                         stats = get_stats(mod_page, nb)
-                        print("STATS:",stats)
                         for (stat_type, stat_value) in stats:
                             stat = '{:-<15}  {:->6}'.format(stat_type, stat_value)
                             report.append(stat)
@@ -1511,7 +1518,7 @@ class Function:
                         report.append("")
                         ratings = get_rating(mod_page)
                         for (categ, adm, users) in ratings:
-                            rating = '{:<18}{:-<4}{:->4}'.format(categ, adm, users)
+                            rating = '{:<22}{:-<8}{:->8}'.format(categ, adm, users)
                             report.append(rating)
 
                     elif cond == "show skills":
