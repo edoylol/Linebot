@@ -1511,14 +1511,14 @@ class Function:
                         nb = len(grade)
                         stats = get_stats(mod_page, nb)
                         for (stat_type, stat_value) in stats:
-                            stat = '{} : {}'.format(stat_type, stat_value)
+                            stat = '{}  :  {}'.format(stat_type, stat_value)
                             report.append(stat)
 
                     elif cond == "show ratings":
                         report.append("")
                         ratings = get_rating(mod_page)
                         for (categ, adm, users) in ratings:
-                            rating = '{:<18}{:-<7}{:->7}'.format(categ, adm, users)
+                            rating = '{}  :  {}  |  {}'.format(categ, adm, users)
                             report.append(rating)
 
                     elif cond == "show skills":
