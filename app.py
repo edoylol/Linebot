@@ -1708,10 +1708,16 @@ class Function:
         return granted
 
     def TEST(event):
-        audio_message = AudioSendMessage(
-            original_content_url='http://www.fromtexttospeech.com/output/0173466001499181936/25713526.mp3',
-            duration=24000)
-        line_bot_api.push_message(address,audio_message)
+        try :
+            audio_message = AudioSendMessage(
+                original_content_url='http://www.fromtexttospeech.com/output/0173466001499181936/25713526.mp3',
+                duration=24000)
+            line_bot_api.push_message(address,audio_message)
+        except LineBotApiError as e:
+            print("")
+            print(e.status_code)
+            print(e.error.message)
+            print(e.error.details)
 
 
 
