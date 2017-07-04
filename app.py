@@ -1510,7 +1510,7 @@ class Function:
                         report.append("")
                         ratings = get_rating(mod_page)
                         for (categ, adm, users) in ratings:
-                            rating = '{:-<18}  {:-^6}  {:->6}'.format(categ, adm, users)
+                            rating = '{:-<18}{:->4}{:->4}'.format(categ, adm, users)
                             report.append(rating)
 
                     elif cond == "show skills":
@@ -1528,7 +1528,8 @@ class Function:
 
                     report = "\n".join(report)
                     line_bot_api.push_message(address, TextSendMessage(text=report))
-        except :
+        except Exception as e:
+            print("ERROR DEF",e)
             report = Lines.summonerswar_wiki("random errors")
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
