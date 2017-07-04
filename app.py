@@ -179,6 +179,8 @@ def message_text(event):
                     if any(word in text for word in ["tag notifier",
                                                      "notif", "mention"])       : Function.dev_mode_set_tag_notifier("set")
                     else                                                        : Function.false()
+
+        elif all(word in text for word in ["test new feature"])     : Function.TEST()
         else                                                        : Function.false()
 
     # special tag / mention function
@@ -1705,7 +1707,12 @@ class Function:
         return granted
 
     def TEST(event):
-        return
+        audio_message = AudioSendMessage(
+            original_content_url='http://www.fromtexttospeech.com/output/0173466001499181936/25713526.mp3',
+            duration=24000
+        )
+        LineBotApi.push_message(address,audio_message)
+
 
 
 
