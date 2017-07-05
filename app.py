@@ -1074,13 +1074,13 @@ class Function:
     def download_youtube():
 
         def get_youtube_link():
-            keyword = "https://www.youtube.com/watch?v="
+            keyword = ["https://www.youtube.com/watch?v=","https://youtu.be/"]
             youtube_link = ""
             text = original_text
-            if keyword in text.lower():
+            if any(word in text.lower() for word in keyword) :
                 text = text.split(" ")
                 for word in text:
-                    if keyword in word.lower():
+                    if any(x in word.lower() for x in keyword):
                         youtube_link = word
 
             return youtube_link
@@ -1127,7 +1127,11 @@ class Function:
             return (vid_format.upper(),vid_quality_min,vid_quality_max,default)
 
         def get_genyoutube(youtube_link):
-            video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
+            if "https://www.youtube.com/watch?v=" in youtube_link :
+                video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
+            elif "https://youtu.be/" in youtube_link :
+                video_id = youtube_link.replace("https://youtu.be/", "")
+
             return "http://video.genyoutube.net/" + video_id
 
         def get_download_data(link_data):

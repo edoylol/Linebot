@@ -64,4 +64,12 @@ any(word in text for word in [])
 
 """
 
-
+# Google text to speech
+"""
+read_text = 'I wonder if where I can use this feature '
+language = "en"
+filename = "c:\code\linebot\megumi\\nanasaki\\recording.m4a"
+tts = gTTS(text=read_text, lang=language)
+tts.save(filename)
+os.system(filename)
+"""
