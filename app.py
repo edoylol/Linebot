@@ -1727,7 +1727,7 @@ class Function:
 
                 send_header(city_id_list,city_name_list)
                 owm_detail_page = get_detail_page(city_id,city_name)
-                title = city_name
+                title = "[ "+city_name+" ]"
                 button_text = city_weather_description+" [ "+str(city_temp)+"°C ]"+"\n"+"Temp vary from "+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
                 buttons_template = ButtonsTemplate(title=title, text=button_text[:60], thumbnail_image_url=header_pic, actions=[

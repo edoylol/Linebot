@@ -415,7 +415,7 @@ class Lines:  # class to store respond lines
                      ]
         elif cond == "city search : 2 cities" : #take 1 argument
             lines = ["There is another city which it's name similar to the one you search for : %s ",
-                     " ",
+                     "I think there is another city with the name similar to  ",
                      "another city with similar name (%s) "
                      ]
 
