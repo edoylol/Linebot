@@ -399,17 +399,19 @@ class Lines:  # class to store respond lines
 
     def weatherforecast(self,cond):
         if cond == "header" :
-            lines = ["header",
-                     "header",
-                     "header",
-                     "header",
-                     "header"
+            lines = ["I found the information you requested :>",
+                     "Here's the information you asked for..",
+                     "Here you go...",
+                     "One weather forecast request coming ~",
+                     "Let me check first... ",
+                     "Wait a second.. hmm...."
                      ]
         elif cond == "city search : 3 or more cities" :
-            lines = ["bla bla such as : ",
-                     "bla bla such as : ",
-                     "bla bla such as : ",
-                     "bla bla such as : "
+            lines = ["btw, there are some cities with similar name,..",
+                     "anyway, I picked one to show you, but just let you know,\nThere are some cities with similar name : ",
+                     "I randomly picked one from the list below :",
+                     "There are a lot of cities with similar name you know...\nI chose one from the list below :"
+                     "I'm not sure which one do you mean "
                      ]
         elif cond == "city search : 2 cities" : #take 1 argument
             lines = ["another city with similar name (%s) ",

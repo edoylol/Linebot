@@ -1599,12 +1599,21 @@ class Function:
                     found = False
                     for city in keyword:
                         for item in data:
-                            if city.lower() in item['name'].lower():
+                            if city.lower() == item['name'].lower():
                                 city_id_list.append(item['id'])
                                 city_name_list.append(item['name'])
                                 found = True
                             else:
                                 pass
+                    if not (found): # second attempt
+                        for city in keyword:
+                            for item in data:
+                                if city.lower() in item['name'].lower():
+                                    city_id_list.append(item['id'])
+                                    city_name_list.append(item['name'])
+                                    found = True
+                                else:
+                                    pass
                     if not (found):
                         city_id_list.append("not_found")
 
@@ -1748,29 +1757,32 @@ class Function:
                     try:
                         city_weather_type.append(weather_data['list'][i]['weather'][0]['main'])
                     except:
-                        city_date.append(" ")
+                        city_weather_type.append(" ")
                     try:
                         city_weather_description.append(weather_data['list'][i]['weather'][0]['description'])
                     except:
-                        city_date.append(" ")
+                        city_weather_description.append(" ")
                     try:
                         city_temp.append(weather_data['list'][i]['main']['temp'])
                     except:
-                        city_date.append(" ")
+                        city_temp.append(" ")
                     try:
                         city_temp_min.append(weather_data['list'][i]['main']['temp_min'])
                     except:
-                        city_date.append(" ")
+                        city_temp_min.append(" ")
                     try:
                         city_temp_max.append(weather_data['list'][i]['main']['temp_max'])
                     except:
-                        city_date.append(" ")
+                        city_temp_max.append(" ")
                     try:
                         city_date.append(weather_data['list'][i]['dt_txt'])
                     except:
                         city_date.append(" ")
 
-                title = city_date
+                title = []
+                for i in range(0,5) :
+                    title.append(city_name+"  "+city_date[5:16])
+
                 owm_detail_page = get_detail_page(city_id, city_name)
                 carousel_text = []
                 for i in range(0,5) :
