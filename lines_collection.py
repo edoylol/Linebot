@@ -407,11 +407,11 @@ class Lines:  # class to store respond lines
                      "Wait a second.. hmm...."
                      ]
         elif cond == "city search : 3 or more cities" :
-            lines = ["btw, there are some cities with similar name,..",
+            lines = ["btw, there are some cities which name similar to the one you ask for,..",
                      "anyway, I picked one to show you, but just let you know,\nThere are some cities with similar name : ",
                      "I randomly picked one from the list below :",
                      "There are a lot of cities with similar name you know...\nI chose one from the list below :"
-                     "I'm not sure which one do you mean, there are a lot of cities  "
+                     "I'm not sure which one is the legit one.., \nthere are a lot of cities similar to the one you ask for.. like :"
                      ]
         elif cond == "city search : 2 cities" : #take 1 argument
             lines = ["another city with similar name (%s) ",

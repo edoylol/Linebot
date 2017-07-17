@@ -1737,7 +1737,13 @@ class Function:
                 line_bot_api.push_message(address, template_message)
 
                 report = Lines.weatherforecast_tips(city_weather_type.lower())
-                line_bot_api.push_message(address, TextSendMessage(text=report))
+                try :
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                except LineBotApiError as e:
+                    print("")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
             # get 5 conditions every 3 hours ( data stored as list )
             elif request_type == "forecast":
