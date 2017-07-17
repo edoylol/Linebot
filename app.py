@@ -1781,7 +1781,7 @@ class Function:
 
                 title = []
                 for i in range(0,5) :
-                    title.append(city_name+"  "+city_date[5:16])
+                    title.append(city_name+"  "+city_date[i][5:16])
 
                 owm_detail_page = get_detail_page(city_id, city_name)
                 carousel_text = []
