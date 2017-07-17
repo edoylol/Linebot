@@ -38,15 +38,15 @@ line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 # Linebot button template
 """
     title = ""
-    text = ""
+    button_text = ""
     header_pic = Picture.header("background")
 
-    buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
+    buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
         PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
         PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
         PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
     ])
-    template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+    template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
     line_bot_api.push_message(address, template_message)
 
 """

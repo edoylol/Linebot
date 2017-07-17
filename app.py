@@ -1717,12 +1717,12 @@ class Function:
                 send_header(city_id_list,city_name_list)
 
                 title = city_name
-                text = city_weather_description+" ["+str(city_temp)+"°C]"+"\n"+"Temp vary from ("+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C)"
+                button_text = city_weather_description+" ["+str(city_temp)+"°C]"+"\n"+"Temp vary from ("+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C)"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
-                buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
+                buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
                     URITemplateAction(label='See detail info', uri=owm_weather_call+"&mode=html"),
                 ])
-                template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
                 report = Lines.weatherforecast_tips(city_weather_type.lower())
@@ -1772,7 +1772,7 @@ class Function:
                         city_date.append(" ")
 
             title = city_date
-            text = []
+            carousel_text = []
             for i in range(0,5) :
                 text.append(city_weather_description[i] + " [" + str(city_temp[i]) + "°C]" + "\n" + "Temp vary from (" + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C)")
 
@@ -1783,19 +1783,19 @@ class Function:
             send_header(city_id_list,city_name_list)
 
             carousel_template = CarouselTemplate(columns=[
-                CarouselColumn(title=title[0], text=text[0], thumbnail_image_url=header_pic[0], actions=[
+                CarouselColumn(title=title[0], text=carousel_text[0], thumbnail_image_url=header_pic[0], actions=[
                     URITemplateAction(label='See detail..', uri=owm_weather_call+"&mode=html")]),
-                CarouselColumn(title=title[1], text=text[1], thumbnail_image_url=header_pic[1], actions=[
+                CarouselColumn(title=title[1], text=carousel_text[1], thumbnail_image_url=header_pic[1], actions=[
                     URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                CarouselColumn(title=title[2], text=text[2], thumbnail_image_url=header_pic[2], actions=[
+                CarouselColumn(title=title[2], text=carousel_text[2], thumbnail_image_url=header_pic[2], actions=[
                     URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                CarouselColumn(title=title[3], text=text[3], thumbnail_image_url=header_pic[3], actions=[
+                CarouselColumn(title=title[3], text=carousel_text[3], thumbnail_image_url=header_pic[3], actions=[
                     URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                CarouselColumn(title=title[4], text=text[4], thumbnail_image_url=header_pic[4], actions=[
+                CarouselColumn(title=title[4], text=carousel_text[4], thumbnail_image_url=header_pic[4], actions=[
                     URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
             ])
 
-            template_message = TemplateSendMessage(alt_text=text, template=carousel_template)
+            template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
     """====================== Sub Function List ============================="""
