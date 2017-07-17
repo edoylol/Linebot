@@ -1,0 +1,42 @@
+{
+    "base": "stations",
+    "clouds": {
+        "all": 75
+    },
+    "cod": 200,
+    "coord": {
+        "lat": 24,
+        "lon": 121
+    },
+    "dt": 1500276600,
+    "id": 1668284,
+    "main": {
+        "humidity": 79,
+        "pressure": 1013,
+        "temp": 29,
+        "temp_max": 29,
+        "temp_min": 29
+    },
+    "name": "Taiwan",
+    "sys": {
+        "country": "TW",
+        "id": 7499,
+        "message": 0.007,
+        "sunrise": 1500239909,
+        "sunset": 1500288340,
+        "type": 1
+    },
+    "visibility": 10000,
+    "weather": [
+        {
+            "description": "broken clouds",
+            "icon": "04d",
+            "id": 803,
+            "main": "Clouds"
+        }
+    ],
+    "wind": {
+        "deg": 310,
+        "speed": 2.1
+    }
+}

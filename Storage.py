@@ -73,3 +73,48 @@ tts = gTTS(text=read_text, lang=language)
 tts.save(filename)
 os.system(filename)
 """
+
+# Code timer
+"""
+    tic = time.clock()
+    # the code that is going to be timed
+    toc = time.clock()
+    print("Time elapsed:",(toc - tic),"second(s)")
+"""
+
+# RegEx
+"""
+IDENTIFIERS : 
+\d any number
+\D anything but a number 
+\s space
+\S anything but a space
+\w any character
+\W anythin but a character
+.  any character, except new line
+\b the whitespace around words
+\. a period
+
+MODIFIERS:
+{1,3} we're expecting 1-3 \d{1-3}
++ Match 1 or more
+? Match 0 or 1
+* Match 0 or more
+$ Match the end of a string
+^ Match the beginning of a string
+| either or ,,, for example : \d{1-3 | \w{1-3}  (looking for digit with len 1-3 or word with len 1-3)
+[] range or "variance" ,,, for example [1-5] means the things to look for is one of '1','2','3','4','5'
+{x} expecting 'x' amount
+
+WHITESPACE CHARACTERS:
+\n new line
+\s space
+\t tab
+\e escape
+\f form feed
+\r return
+
+DONT FORGET TO ESCAPE THIS SYMBOL :
+. + * ? [ ] $ ^ ( ) { } | \
+
+"""

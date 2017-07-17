@@ -397,6 +397,59 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
+    def weatherforecast(self,cond):
+        if cond == "header" :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     ""]
+        elif cond == "city search : 3 or more cities" :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     ""]
+        elif cond == "city search : 2 cities" :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     ""]
+
+        else :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     ""]
+        return random.choice(lines)
+
+    def weatherforecast_tips(self,cond):
+        if cond == "a" : # USE LOWER AS COND
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     ""]
+
+        else :
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     "",
+                     ""]
+        return random.choice(lines)
+
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
@@ -808,6 +861,19 @@ class Picture :
                    "https://static.videezy.com/system/resources/thumbnails/000/005/038/small/Alive_4K_Motion_Background_Loop.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/042/small/Beautiful_Slide_4K_Motion_Background_Loop.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        return random.choice(pic)
+
+    def weatherforecast(self,cond):
+        if cond == "clear" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        else :
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                  "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
                    ]
         return random.choice(pic)
