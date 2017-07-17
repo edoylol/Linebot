@@ -1672,6 +1672,7 @@ class Function:
         if cont:
             owm_call_head = "http://api.openweathermap.org/data/2.5/" + request_type
             owm_call_tail = "&units=metric&appid=" + str(open_weather_map_key)
+            owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
 
             if use_city_id:
                 owm_weather_call = owm_call_head + "?id=" + str(city_id) + owm_call_tail
@@ -1708,10 +1709,10 @@ class Function:
                 send_header(city_id_list,city_name_list)
 
                 title = city_name
-                button_text = city_weather_description+" [ "+str(city_temp)+"°C ]"+"\n"+"Temperature vary from "+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C"
+                button_text = city_weather_description+" [ "+str(city_temp)+"°C ]"+"\n"+"Temp vary from "+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
-                buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
-                    URITemplateAction(label='See detail info', uri=owm_weather_call+"&mode=html"),
+                buttons_template = ButtonsTemplate(title=title, text=button_text[:60], thumbnail_image_url=header_pic, actions=[
+                    URITemplateAction(label='See detail info', uri=owm_detail_page),
                 ])
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
@@ -1765,25 +1766,27 @@ class Function:
                 title = city_date
                 carousel_text = []
                 for i in range(0,5) :
-                    carousel_text.append(city_weather_description[i] + " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temperature vary from " + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C")
+                    carousel_text.append(city_weather_description[i] + " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temp vary from " + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C")
 
                 header_pic = []
                 for i in range(0, 5):
                     header_pic.append(Picture.weatherforecast(city_weather_type[i].lower()))
 
+
+
                 send_header(city_id_list,city_name_list)
 
                 carousel_template = CarouselTemplate(columns=[
-                    CarouselColumn(title=title[0], text=carousel_text[0][:59], thumbnail_image_url=header_pic[0], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_weather_call+"&mode=html")]),
-                    CarouselColumn(title=title[1], text=carousel_text[1][:59], thumbnail_image_url=header_pic[1], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[2], text=carousel_text[2][:59], thumbnail_image_url=header_pic[2], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[3], text=carousel_text[3][:59], thumbnail_image_url=header_pic[3], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[4], text=carousel_text[4][:59], thumbnail_image_url=header_pic[4], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
+                    CarouselColumn(title=title[0], text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+                    CarouselColumn(title=title[1], text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+                    CarouselColumn(title=title[2], text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+                    CarouselColumn(title=title[3], text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+                    CarouselColumn(title=title[4], text=carousel_text[4][:60], thumbnail_image_url=header_pic[4], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
                 ])
 
                 template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
