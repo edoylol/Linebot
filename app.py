@@ -1565,14 +1565,11 @@ class Function:
 
         def get_search_keyword():
             keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'be', 'city', 'cold', 'cond',
-                       'condition',
-                       'do', 'does', 'forecast', 'going', 'gonna', 'have', 'hot', 'how', 'in', 'information', 'is',
-                       'it',
-                       'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,', 'megumi', 'megumi,', 'morning',
-                       'near', 'nearby', 'now', 'please', 'rain', 'said', 'show', 'sky', 'sunny', 'the', 'think',
-                       'this',
-                       'to', 'today', 'tomorrow', 'tonight', 'weather', 'weathers', 'what', "what's", 'whats', 'will',
-                       'you']
+                       'condition','do', 'does', 'forecast', 'for', 'going', 'gonna', 'have', 'hot', 'how', 'in',
+                       'information', 'is', 'it', 'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,',
+                       'megumi', 'megumi,', 'morning', 'near', 'nearby', 'now', 'please', 'rain', 'said', 'show',
+                       'sky', 'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
+                       'weathers', 'what', "what's", 'whats', 'will', 'you']
 
             filtered_text = OtherUtil.filter_words(text)
             filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
@@ -1717,7 +1714,7 @@ class Function:
                 send_header(city_id_list,city_name_list)
 
                 title = city_name
-                button_text = city_weather_description+" ["+str(city_temp)+"°C]"+"\n"+"Temp vary from ("+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C)"
+                button_text = city_weather_description+" [ "+str(city_temp)+"°C ]"+"\n"+"Temperature vary from "+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
                 buttons_template = ButtonsTemplate(title=title, text=button_text, thumbnail_image_url=header_pic, actions=[
                     URITemplateAction(label='See detail info', uri=owm_weather_call+"&mode=html"),
@@ -1774,7 +1771,7 @@ class Function:
                 title = city_date
                 carousel_text = []
                 for i in range(0,5) :
-                    text.append(city_weather_description[i] + " [" + str(city_temp[i]) + "°C]" + "\n" + "Temp vary from (" + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C)")
+                    carousel_text.append(city_weather_description[i] + " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temperature vary from " + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C")
 
                 header_pic = []
                 for i in range(0, 5):
