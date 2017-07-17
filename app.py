@@ -1565,7 +1565,7 @@ class Function:
 
         def get_search_keyword():
             keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'be', 'city', 'cold', 'cond',
-                       'condition','do', 'does', 'forecast', 'for', 'going', 'gonna', 'have', 'hot', 'how', 'in',
+                       'condition','do', 'does', 'forecast', 'for', 'going', 'gonna', 'have', 'hot', 'how', 'how\'s', 'in',
                        'information', 'is', 'it', 'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,',
                        'megumi', 'megumi,', 'morning', 'near', 'nearby', 'now', 'please', 'rain', 'said', 'show',
                        'sky', 'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
@@ -1635,6 +1635,16 @@ class Function:
 
             report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        def get_detail_page(city_id,city_name):
+            if city_id != "not_found" :
+                owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
+            else :
+                city_id_list,city_name_list = get_city_id(city_name)
+                city_id = city_id_list[0]
+                owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
+
+            return owm_detail_page
 
         """ basic flags """
         cont = True
@@ -1707,7 +1717,7 @@ class Function:
                     city_temp_max = "Undefined"
 
                 send_header(city_id_list,city_name_list)
-
+                owm_detail_page = get_detail_page(city_id,city_name)
                 title = city_name
                 button_text = city_weather_description+" [ "+str(city_temp)+"°C ]"+"\n"+"Temp vary from "+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
@@ -1724,11 +1734,8 @@ class Function:
             elif request_type == "forecast":
                 try:
                     city_name = weather_data['city']['name']
-                    city_country = weather_data['city']['country']
                 except:
-                    print("can't get city name (forecast)")
                     city_name = "Undefined"
-                    city_country = " "
 
                 city_weather_type = []
                 city_weather_description = []
@@ -1764,6 +1771,7 @@ class Function:
                         city_date.append(" ")
 
                 title = city_date
+                owm_detail_page = get_detail_page(city_id, city_name)
                 carousel_text = []
                 for i in range(0,5) :
                     carousel_text.append(city_weather_description[i] + " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temp vary from " + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C")
@@ -1790,13 +1798,7 @@ class Function:
                 ])
 
                 template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
-                try :
-                    line_bot_api.push_message(address, template_message)
-                except LineBotApiError as e:
-                    print("")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                line_bot_api.push_message(address, template_message)
 
     """====================== Sub Function List ============================="""
 
