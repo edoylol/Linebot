@@ -415,16 +415,13 @@ class Lines:  # class to store respond lines
                      ]
         elif cond == "city search : 2 cities" : #take 1 argument
             lines = ["There is another city which it's name similar to the one you search for : %s ",
-                     "I think there is another city with the name similar to  ",
-                     "another city with similar name (%s) "
+                     "Try to ask for %s if this is not the correct one",
+                     "There is another alternative : %s",
+                     "If this is not what you want, try %s instead..",
+                     "I'm not sure if this is what you want, if I'm wrong, try %s instead ^^ ",
+                     "I don't know which one is the correct one, but try to look at %s instead.."
                      ]
 
-        else :
-            lines = ["test",
-                     "test",
-                     "test",
-                     "test",
-                     "test"]
         return random.choice(lines)
 
     def weatherforecast_tips(self,cond):

@@ -1707,7 +1707,6 @@ class Function:
                 except:
                     print("can't get city name (weather)")
                     city_name = "Undefined"
-
                 try:
                     city_weather_type = weather_data["weather"][0]['main']
                     city_weather_description = weather_data["weather"][0]['description']
@@ -1734,13 +1733,7 @@ class Function:
                     URITemplateAction(label='See detail info', uri=owm_detail_page),
                 ])
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                try:
-                    line_bot_api.push_message(address, template_message)
-                except LineBotApiError as e:
-                    print("")
-                    print(e.status_code)
-                    print(e.error.message)
-                    print(e.error.details)
+                line_bot_api.push_message(address, template_message)
 
                 report = Lines.weatherforecast_tips(city_weather_type.lower())
                 line_bot_api.push_message(address, TextSendMessage(text=report))
@@ -1798,8 +1791,6 @@ class Function:
                 for i in range(0, 5):
                     header_pic.append(Picture.weatherforecast(city_weather_type[i].lower()))
 
-
-
                 send_header(city_id_list,city_name_list)
 
                 carousel_template = CarouselTemplate(columns=[
@@ -1815,7 +1806,7 @@ class Function:
                         URITemplateAction(label='See detail..', uri=owm_detail_page)]),
                 ])
 
-                template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
+                template_message = TemplateSendMessage(alt_text=carousel_text[0],template=carousel_template)
                 line_bot_api.push_message(address, template_message)
 
     """====================== Sub Function List ============================="""
