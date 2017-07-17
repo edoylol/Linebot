@@ -32,6 +32,3 @@ class OtherUtil:
                 if word in keyword:
                     text.remove(word)
         return text
-
-text = "2017-07-17 15:00:00"
-print(text[5:16])

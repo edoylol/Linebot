@@ -82,6 +82,15 @@ os.system(filename)
     print("Time elapsed:",(toc - tic),"second(s)")
 """
 
+# Crawl JSON
+"""
+
+database = ".json"
+with open(database, encoding='utf8') as json_data:
+data = json.load(json_data)
+
+"""
+
 # RegEx
 """
 IDENTIFIERS : 

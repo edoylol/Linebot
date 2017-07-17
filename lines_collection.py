@@ -410,7 +410,7 @@ class Lines:  # class to store respond lines
             lines = ["btw, there are some cities which name similar to the one you ask for,..",
                      "anyway, I picked one to show you, but just let you know,\nThere are some cities with similar name : ",
                      "I randomly picked one from the list below :",
-                     "There are a lot of cities with similar name you know...\nI chose one from the list below :"
+                     "There are a lot of cities with similar name you know...\nI chose one from the list below :",
                      "I'm not sure which one is the legit one.., \nthere are a lot of cities similar to the one you ask for.. like :"
                      ]
         elif cond == "city search : 2 cities" : #take 1 argument
@@ -425,16 +425,67 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     def weatherforecast_tips(self,cond):
-        if cond == "a" : # USE LOWER AS COND
-            lines = ["better to..",
-                     "better to..",
-                     "better to.."
+        if cond == "clouds" : # USE LOWER AS COND
+            lines = ["The sky seems a bit cloudy today...\nI wonder if it will rain soon...",
+                     "Don't forget to bring umbrella if you are going out.. \nIt's kinda cloudy right now..",
+                     "Do you have any outdoor activity ?\n If you do, probably you should bring an umbrella just in case..",
+                     "What a gloomy day... \n\nBut I know you love this kind of weather don't you ? :>",
+                     "Cloudy with a chance of meatballs !! \n#JK :P",
+                     "A cloudy day have as great an influence on many constitutions as the most recent blessings or misfortunes.",
+                     "I think it will be a gloomy and windy day.. \ntry not to catch the 'gloominess' ,kay?.. xD ",
+                     "Best day to curl up in blanket and just do nothing..."
                      ]
-
+        elif cond == "clear" : # USE LOWER AS COND
+            lines = ["It's a nice weather.. what a waste to do nothing ! ",
+                     "Such a nice weather outside... Thanks God :> ",
+                     "Such a perfect day... ^^ ",
+                     "The sky is crystal-clear...\n\nI wonder if we could stargaze tonight... ",
+                     "Such a perfect day to play outside...",
+                     "Look at the sky, look at the earth... \nwhat a blessing to be alive ~ "
+                     "This is a nice weather right ? don't you think so too ? :) "
+                     ]
+        elif cond == "rain" : # USE LOWER AS COND
+            lines = ["Rain rain rain... pouring into my feeling...",
+                     "Make sure you stay dry ,kay ? :)",
+                     "I wish I could stay at home, curling inside blanket and.. zzz",
+                     "The best thing one can do when it's raining is to let it rain ~",
+                     "Rain is grace, without rain, there would be no life..",
+                     "Hot chocolate, warm blanket, and of course you, make a rainy day feels good :3 ",
+                     "Stay silent... \nthe sound of the rain is so soothing isn't it ? ",
+                     "Just don't go outside when it's pouring..."
+                     ]
+        elif cond == "snow" : # USE LOWER AS COND
+            lines = ["Make sure you stay warm :>",
+                     "Don't go outside when it's pouring..",
+                     "I wonder if it will piled up or not...",
+                     "SO COLD...",
+                     "Imagine sitting in front of a fireplace with hot chocolate on a snowy day..."
+                     ]
+        elif cond == "extreme" : # USE LOWER AS COND
+            lines = ["I'm not sure about this weather.. try to stay at home..",
+                     "I think it's better to stay at home...",
+                     "The weather is not very good to go outside... how bout stay at home ?",
+                     "It's not very recommended to go outside right now.."
+                     "Hope this weather passed quickly... "
+                     ]
+        elif cond == "mist":  # USE LOWER AS COND
+            lines = ["Woa... what a rare sight...",
+                     "It's been a while since the last time isn't it ?",
+                     "No wonder it's kinda cold right now...",
+                     "Drive slowly if you have to ... safety first !",
+                     "Feels like kinda magical or mysterious feeling..."
+                     ]
+        elif cond == "drizzle" : # USE LOWER AS COND
+            lines = ["Make sure you stay dry ,kay ? :)",
+                     "I wonder if it will keep goes on..",
+                     "Drop more pleasee... :> ",
+                     ]
         else :
-            lines = ["better to..",
-                     "better to..",
-                     "better to.."
+            lines = ["I'm not sure about this weather.. never seen it before..",
+                     "I'm not sure, but I think it's better to stay at home...",
+                     "I'm not sure about the weather to be honest..",
+                     "I'm not sure if you want to go outside right now.."
+                     "I'm not sure how long this will be..."
                      ]
         return random.choice(lines)
 
@@ -854,7 +905,37 @@ class Picture :
         return random.choice(pic)
 
     def weatherforecast(self,cond):
-        if cond == "clear" : # USE LOWER AS COND
+        if cond == "clouds" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "clear" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "rain" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "snow" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "extreme" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "mist" : # USE LOWER AS COND
+            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   ]
+        elif cond == "drizzle" : # USE LOWER AS COND
             pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
