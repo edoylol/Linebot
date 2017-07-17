@@ -1734,16 +1734,16 @@ class Function:
                     URITemplateAction(label='See detail info', uri=owm_detail_page),
                 ])
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
-
-                report = Lines.weatherforecast_tips(city_weather_type.lower())
-                try :
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                try:
+                    line_bot_api.push_message(address, template_message)
                 except LineBotApiError as e:
                     print("")
                     print(e.status_code)
                     print(e.error.message)
                     print(e.error.details)
+
+                report = Lines.weatherforecast_tips(city_weather_type.lower())
+                line_bot_api.push_message(address, TextSendMessage(text=report))
 
             # get 5 conditions every 3 hours ( data stored as list )
             elif request_type == "forecast":
