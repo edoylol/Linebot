@@ -1637,7 +1637,13 @@ class Function:
                 report.append(" ")
 
             report = "\n".join(report)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
+            try :
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+            except LineBotApiError as e:
+                print("")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
 
         text = "meg, show me weather around (12.99,123.42)"
 
