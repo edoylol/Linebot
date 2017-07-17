@@ -1622,7 +1622,7 @@ class Function:
 
             return req_type
 
-        def send_header(city_id_list=city_id_list,city_name_list=city_name_list):
+        def send_header(city_id_list,city_name_list):
             report = []
             report.append(Lines.weatherforecast("header"))
             if len(city_id_list) > 2:
