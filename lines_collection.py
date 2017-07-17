@@ -399,23 +399,23 @@ class Lines:  # class to store respond lines
 
     def weatherforecast(self,cond):
         if cond == "header" :
-            lines = ["test",
-                     "test",
-                     "test",
-                     "test",
-                     "test"]
+            lines = ["header",
+                     "header",
+                     "header",
+                     "header",
+                     "header"
+                     ]
         elif cond == "city search : 3 or more cities" :
-            lines = ["test",
-                     "test",
-                     "test",
-                     "test",
-                     "test"]
-        elif cond == "city search : 2 cities" :
-            lines = ["test",
-                     "test",
-                     "test",
-                     "test",
-                     "test"]
+            lines = ["bla bla such as : ",
+                     "bla bla such as : ",
+                     "bla bla such as : ",
+                     "bla bla such as : "
+                     ]
+        elif cond == "city search : 2 cities" : #take 1 argument
+            lines = ["another city with similar name (%s) ",
+                     "another city with similar name (%s) ",
+                     "another city with similar name (%s) "
+                     ]
 
         else :
             lines = ["test",
@@ -427,16 +427,16 @@ class Lines:  # class to store respond lines
 
     def weatherforecast_tips(self,cond):
         if cond == "a" : # USE LOWER AS COND
-            lines = ["test",
-                     "test",
-                     "test",
-                     "test",
-                     "test"]
+            lines = ["better to..",
+                     "better to..",
+                     "better to.."
+                     ]
 
         else :
-            lines = ["test",
-                     "test",
-                     "test"]
+            lines = ["better to..",
+                     "better to..",
+                     "better to.."
+                     ]
         return random.choice(lines)
 
     def notyetcreated(self):
