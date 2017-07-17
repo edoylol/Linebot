@@ -1634,13 +1634,7 @@ class Function:
                 report.append(" ")
 
             report = "\n".join(report)
-            try :
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-            except LineBotApiError as e:
-                print("")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         """ basic flags """
         cont = True
@@ -1793,7 +1787,13 @@ class Function:
                 ])
 
                 template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
-                line_bot_api.push_message(address, template_message)
+                try :
+                    line_bot_api.push_message(address, template_message)
+                except LineBotApiError as e:
+                    print("")
+                    print(e.status_code)
+                    print(e.error.message)
+                    print(e.error.details)
 
     """====================== Sub Function List ============================="""
 
