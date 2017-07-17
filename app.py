@@ -1774,15 +1774,15 @@ class Function:
                 send_header(city_id_list,city_name_list)
 
                 carousel_template = CarouselTemplate(columns=[
-                    CarouselColumn(title=title[0], text=carousel_text[0], thumbnail_image_url=header_pic[0], actions=[
+                    CarouselColumn(title=title[0], text=carousel_text[0][:59], thumbnail_image_url=header_pic[0], actions=[
                         URITemplateAction(label='See detail..', uri=owm_weather_call+"&mode=html")]),
-                    CarouselColumn(title=title[1], text=carousel_text[1], thumbnail_image_url=header_pic[1], actions=[
+                    CarouselColumn(title=title[1], text=carousel_text[1][:59], thumbnail_image_url=header_pic[1], actions=[
                         URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[2], text=carousel_text[2], thumbnail_image_url=header_pic[2], actions=[
+                    CarouselColumn(title=title[2], text=carousel_text[2][:59], thumbnail_image_url=header_pic[2], actions=[
                         URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[3], text=carousel_text[3], thumbnail_image_url=header_pic[3], actions=[
+                    CarouselColumn(title=title[3], text=carousel_text[3][:59], thumbnail_image_url=header_pic[3], actions=[
                         URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
-                    CarouselColumn(title=title[4], text=carousel_text[4], thumbnail_image_url=header_pic[4], actions=[
+                    CarouselColumn(title=title[4], text=carousel_text[4][:59], thumbnail_image_url=header_pic[4], actions=[
                         URITemplateAction(label='See detail..', uri=owm_weather_call + "&mode=html")]),
                 ])
 

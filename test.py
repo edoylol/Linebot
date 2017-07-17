@@ -32,4 +32,3 @@ class OtherUtil:
                 if word in keyword:
                     text.remove(word)
         return text
-
