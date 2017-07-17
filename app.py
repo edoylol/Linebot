@@ -1645,8 +1645,6 @@ class Function:
                 print(e.error.message)
                 print(e.error.details)
 
-        text = "meg, show me weather around (12.99,123.42)"
-
         """ basic flags """
         cont = True
         use_coordinate = False
@@ -1719,7 +1717,7 @@ class Function:
                 send_header(city_id_list,city_name_list)
 
                 title = city_name
-                text = city_weather_description+" ["+city_temp+"°C]"+"\n"+"Temp vary from ("+city_temp_min+"°C to "+city_temp_max+"°C)"
+                text = city_weather_description+" ["+str(city_temp)+"°C]"+"\n"+"Temp vary from ("+str(city_temp_min)+"°C to "+str(city_temp_max)+"°C)"
                 header_pic = Picture.weatherforecast(city_weather_type.lower())
                 buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=[
                     URITemplateAction(label='See detail info', uri=owm_weather_call+"&mode=html"),
@@ -1776,7 +1774,7 @@ class Function:
             title = city_date
             text = []
             for i in range(0,5) :
-                text.append(city_weather_description[i] + " [" + city_temp[i] + "°C]" + "\n" + "Temp vary from (" + city_temp_min[i] + "°C to " + city_temp_max[i] + "°C)")
+                text.append(city_weather_description[i] + " [" + str(city_temp[i]) + "°C]" + "\n" + "Temp vary from (" + str(city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C)")
 
             header_pic = []
             for i in range(0, 5):

@@ -399,55 +399,44 @@ class Lines:  # class to store respond lines
 
     def weatherforecast(self,cond):
         if cond == "header" :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test",
+                     "test",
+                     "test"]
         elif cond == "city search : 3 or more cities" :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test",
+                     "test",
+                     "test"]
         elif cond == "city search : 2 cities" :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test",
+                     "test",
+                     "test"]
 
         else :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test",
+                     "test",
+                     "test"]
         return random.choice(lines)
 
     def weatherforecast_tips(self,cond):
         if cond == "a" : # USE LOWER AS COND
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test",
+                     "test",
+                     "test"]
 
         else :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     ""]
+            lines = ["test",
+                     "test",
+                     "test"]
         return random.choice(lines)
 
     def notyetcreated(self):
