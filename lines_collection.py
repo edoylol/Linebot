@@ -823,7 +823,9 @@ class Lines:  # class to store respond lines
                 'dec' : 'December'}
 
 class Labels: # more like my response template
+
     def confirmation(self,cond):
+
         if cond == "yes" :
             lines = ["Sure,,",
                      "Yes please..",
@@ -841,6 +843,7 @@ class Labels: # more like my response template
                      "No..",
                      "Later..",
                      ]
+
         return random.choice(lines)
 
     def print_userlist(self):
@@ -889,6 +892,7 @@ class Labels: # more like my response template
         return random.choice(lines)
 
 class Picture :
+
     def header(self,cond):
         if cond == "background" :
             pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
@@ -900,49 +904,83 @@ class Picture :
                    "https://static.videezy.com/system/resources/thumbnails/000/005/038/small/Alive_4K_Motion_Background_Loop.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/042/small/Beautiful_Slide_4K_Motion_Background_Loop.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg",
+                   "https://image.prntscr.com/image/XnWrAZXzRbusdRR2Oa1jqQ.png",
+                   "https://image.prntscr.com/image/p_ZhtpMXQbefEpBOkx8zGg.png",
+                   "https://image.prntscr.com/image/ZLb5kK1URSmuAS4h26tzdg.png",
+                   "https://image.prntscr.com/image/zf5HTDIrSbebNcNqJS_t7g.png"
                    ]
+        elif cond == "ask" : # pic of question mark
+            pic = ["https://image.prntscr.com/image/t2BFLWxiRf2OJq_G4kKKtw.png",
+                   "https://image.prntscr.com/image/nSJazwxBSxeClYngG-TJRA.png",
+                   "https://image.prntscr.com/image/cOcP56B-TZmMB1JPyHr6jA.png",
+                   "https://image.prntscr.com/image/GZM3QV4ARKqd-2yrYJiMlA.png",
+                   "https://image.prntscr.com/image/CpdR3MrwRP2vpvNBQvRe-w.png"
+                   ]
+
         return random.choice(pic)
 
     def weatherforecast(self,cond):
         if cond == "clouds" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/PGZ4Gs3tTYWr9qFJVfxIpQ.png",
+                    "https://image.prntscr.com/image/gUspo5phTG6Zaak1ZIgUIQ.png",
+                    "https://image.prntscr.com/image/vG5496PTQhCDsNUR2DPW9Q.png",
+                    "https://image.prntscr.com/image/_rcPb1dfQ52rtgrckc1ylw.png",
+                    "https://image.prntscr.com/image/q9GM5yHxQ4qZDqwMOHpthg.png"
                    ]
+
         elif cond == "clear" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/6WuCC2waSRuGB1UE2tacrg.png",
+                   "https://image.prntscr.com/image/8C3uy2XhT1_Z2iTogruoRg.png",
+                   "https://image.prntscr.com/image/CoMxClunSnSUkUR9ICxXTA.png",
+                   "https://image.prntscr.com/image/Y1DcoH_ZQduyfKrJisT7vA.png",
+                   "https://image.prntscr.com/image/DL6R4D5jRdi6zjby21L8gA.png",
+                   "https://image.prntscr.com/image/Bh3wW9k7SDevz5hhJcFirg.png",
+                   "https://image.prntscr.com/image/0SO5lsxvQUCP6BiLSyRNbg.png",
+                   "https://image.prntscr.com/image/J_axWG2PQIiLhffxLSz4hg.png"
                    ]
-        elif cond == "rain" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+
+        elif (cond == "rain") or (cond == "drizzle") : # USE LOWER AS COND
+            pic = ["https://image.prntscr.com/image/5WT8CDGzRJiwmB4LWiruqQ.png",
+                   "https://image.prntscr.com/image/e9_Nsew_SQuheBN4igjwhQ.png",
+                   "https://image.prntscr.com/image/cn7TJRnCSlizpt8LZY5o5A.png",
+                   "https://image.prntscr.com/image/q-wiQ4zJTnqvvMb0gba58Q.png",
+                   "https://image.prntscr.com/image/oiSibwvPS_O4qB6bpnfghA.png",
+                   "https://image.prntscr.com/image/edf1XiRGR2u_A0ke2DWaqQ.png",
+                   "https://image.prntscr.com/image/2ZC8qpGkTxGPmLONeVfQWA.png",
+                   "https://image.prntscr.com/image/OXYCQVeKQrWJg7a6QQW7Xw.png"
                    ]
+
         elif cond == "snow" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/LDEYpPsWRLK-Ir7pxDddAw.png",
+                   "https://image.prntscr.com/image/cgpt7PqgRQaQ93bpz8rlkw.png",
+                   "https://image.prntscr.com/image/ETEH05euQVWOMBKk1_d5yw.png",
+                   "https://image.prntscr.com/image/F1kazAtERguXiHHNQE6ZLA.png",
+                   "https://image.prntscr.com/image/v7_tw7goTCKWjRnMm3kfZg.png"
                    ]
+
         elif cond == "extreme" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/_v2Sl2sWQlyiSv-Q77Namw.png",
+                   "https://image.prntscr.com/image/_N8jIhjESsSObPC2t-mxHA.png",
+                   "https://image.prntscr.com/image/dWJnXtkDSW_FgHZpwZXbUA.png",
+                   "https://image.prntscr.com/image/wNkCAYQFTECGU2JPYxuTgw.png",
+                   "https://image.prntscr.com/image/LY4H7k31QQaWilsIx_ySfQ.png"
                    ]
+
         elif cond == "mist" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/KQsc4A9jSF2e55otWrE3Bw.png",
+                   "https://image.prntscr.com/image/vV0IeYeyROCPsZFyldQmNA.png",
+                   "https://image.prntscr.com/image/orjbuhdWRRS83ENUMIuXjg.png",
+                   "https://image.prntscr.com/image/fE6WH_NqR9GD6Sw6XEBa1Q.png",
+                   "https://image.prntscr.com/image/ixc6IBMERZyedENAsuV-Ww.png"
                    ]
-        elif cond == "drizzle" : # USE LOWER AS COND
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
-                   ]
+
         else :
-            pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
-                  "https://static.videezy.com/system/resources/thumbnails/000/005/615/small/abstract-blue-bokeh-b-roll-4k-stock-video.jpg",
-                   "https://static.videezy.com/system/resources/thumbnails/000/006/812/small/colorful-bokeh.jpg"
+            pic = ["https://image.prntscr.com/image/t2BFLWxiRf2OJq_G4kKKtw.png",
+                   "https://image.prntscr.com/image/nSJazwxBSxeClYngG-TJRA.png",
+                   "https://image.prntscr.com/image/cOcP56B-TZmMB1JPyHr6jA.png",
+                   "https://image.prntscr.com/image/GZM3QV4ARKqd-2yrYJiMlA.png",
+                   "https://image.prntscr.com/image/CpdR3MrwRP2vpvNBQvRe-w.png"
                    ]
+
         return random.choice(pic)
