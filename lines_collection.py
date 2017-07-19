@@ -503,7 +503,8 @@ class Lines:  # class to store respond lines
         if cond == "header":  # take 1 argument itb_keyword
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
                      "%s right ? Let me check first... ",
-                     "Sure, wait a second,.. looking for %s in the ARC-ITB database"
+                     "Sure, wait a second,.. looking for %s in the ARC-ITB database...",
+                     "Okay, please wait ...searching for %S in the ARC-ITB database..."
                      ]
 
         elif cond == "default category":

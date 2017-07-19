@@ -1848,7 +1848,7 @@ class Function:
 
         def get_keyword():
 
-            index_start = text.find("'")
+            index_start = text.find("'")+1
             index_end = text.rfind("'")
             keyword = text[index_start:index_end]
 
