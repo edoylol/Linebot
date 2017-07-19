@@ -502,15 +502,15 @@ class Lines:  # class to store respond lines
 
         if cond == "header":  # take 1 argument itb_keyword
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
-                     "%s right ? Let me check first... ",
+                     "%s right? Let me check first... ",
                      "Sure, wait a second,.. looking for %s in the ARC-ITB database...",
-                     "Okay, please wait ...searching for %s in the ARC-ITB database...",
-                     "%s ?? Wait.. let me check..."
+                     "Okay, please wait... searching for %s in the ARC-ITB database...",
+                     "%s?? Wait... let me check..."
                      ]
 
         elif cond == "default category":
             lines = ["I'm searching under 'students' category, since you didn't specify the category..",
-                     "Btw, I'm searching for keyword under 'students' category..",
+                     "Btw, I'm searching for the keyword under 'students' category..",
                      "I'm not sure if it is listed under 'students' category, but let's try...",
                      "I assume it is listed under 'students', since it's the most common category...",
                      "I assume you want me to search under 'students', since you didn't specify it"
@@ -522,28 +522,28 @@ class Lines:  # class to store respond lines
                      "The database has %s data under that keyword",
                      "I've found %s data by searching through the database",
                      "Seems these %s are the one you search for",
-                     "I'm not sure which one of these %s is the one you looking for.."]
+                     "I'm not sure which one of these %s, is the one you looking for.."]
 
         elif cond == "count result one":
-            lines = ["I only found one data which fulfil the keyword...",
+            lines = ["I only found one detail which fulfils the keyword...",
                      "Seems there is only one... ",
-                     "I tried to search in ARC-ITB database, and found this one..",
+                     "I tried to search in ARC - ITB database, and found this one..",
                      "I'm pretty sure that this one is the correct one :> ",
-                     "Is this one the right one ? "]
+                     "Is this one the right one? "]
 
         elif cond == "not found":
-            lines = ["Are you sure that keyword listed ? I can't find it...",
-                     "There is no data under that tag..",
-                     "Nothing found... try other keyword maybe ? ",
-                     "Hmm... I didn't see anything that fulfil the keyword...",
+            lines = ["Are you sure that keyword listed? I can't find it...",
+                     "There are no data under that tag..",
+                     "Nothing found... try another key word maybe? ",
+                     "Hmm... I didn't see anything that fulfils the keyword...",
                      "Please re-check the keyword.. I found nothing here..."]
 
         elif cond == "only send top 5":
-            lines = ["Since there are too much information to send,...\nI will send only the first five",
-                     "Is the first five result enough?",
+            lines = ["Since there are too much information to send,...\nI will send only the first-five",
+                     "Are the first-five results enough ??",
                      "There are too much information to send,..can't send them all..",
-                     "I will pick and send the first five ,kay ? ",
-                     "I can't send them all in a batch, how bout the first five only ?"]
+                     "I will pick and send the first-five ,kay ? ",
+                     "I can't send them all in a batch, how bout the first-five only ?"]
 
         elif cond == "footer" :
             lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
