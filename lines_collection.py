@@ -504,7 +504,8 @@ class Lines:  # class to store respond lines
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
                      "%s right ? Let me check first... ",
                      "Sure, wait a second,.. looking for %s in the ARC-ITB database...",
-                     "Okay, please wait ...searching for %s in the ARC-ITB database..."
+                     "Okay, please wait ...searching for %s in the ARC-ITB database...",
+                     "%s ?? Wait.. let me check..."
                      ]
 
         elif cond == "default category":
@@ -514,8 +515,8 @@ class Lines:  # class to store respond lines
 
         elif cond == "count result plural":  # take 1 argument result count
             lines = ["I have found %s results after doing quick search...",
-                     "plural",
-                     "plural"]
+                     "plural %s",
+                     "plural %s"]
 
         elif cond == "count result one":
             lines = ["I only found one result which fulfil the keyword...",
