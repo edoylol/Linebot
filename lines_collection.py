@@ -421,6 +421,15 @@ class Lines:  # class to store respond lines
                      "I'm not sure if this is what you want, if I'm wrong, try %s instead ^^ ",
                      "I don't know which one is the correct one, but try to look at %s instead.."
                      ]
+        elif cond == "default location" : #take 1 argument
+            lines = ["Since you did't ask for specific location, \nI assume you are at %s now... ",
+                     "I'll give you weather information at %s since you didn't ask for specific location...",
+                     "Did you ask for weather around %s ? I assume so...",
+                     "I'll give you weather forecast around %s...",
+                     "Since you did't ask for specific location, \nI assume you ask for weather forecast around %s... ",
+                     "I think you asked for weather forecast around %s, right? "
+                     ]
+
 
         return random.choice(lines)
 
@@ -930,14 +939,13 @@ class Picture :
                    ]
 
         elif cond == "clear" : # USE LOWER AS COND
-            pic = ["https://image.prntscr.com/image/6WuCC2waSRuGB1UE2tacrg.png",
+            pic = ["https://image.prntscr.com/image/J_axWG2PQIiLhffxLSz4hg.png",
                    "https://image.prntscr.com/image/8C3uy2XhT1_Z2iTogruoRg.png",
                    "https://image.prntscr.com/image/CoMxClunSnSUkUR9ICxXTA.png",
                    "https://image.prntscr.com/image/Y1DcoH_ZQduyfKrJisT7vA.png",
                    "https://image.prntscr.com/image/DL6R4D5jRdi6zjby21L8gA.png",
                    "https://image.prntscr.com/image/Bh3wW9k7SDevz5hhJcFirg.png",
-                   "https://image.prntscr.com/image/0SO5lsxvQUCP6BiLSyRNbg.png",
-                   "https://image.prntscr.com/image/J_axWG2PQIiLhffxLSz4hg.png"
+                   "https://image.prntscr.com/image/0SO5lsxvQUCP6BiLSyRNbg.png"
                    ]
 
         elif (cond == "rain") or (cond == "drizzle") : # USE LOWER AS COND
