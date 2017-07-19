@@ -510,28 +510,40 @@ class Lines:  # class to store respond lines
 
         elif cond == "default category":
             lines = ["I'm searching under 'students' category, since you didn't specify the category..",
-                     "default",
-                     "default"]
+                     "Btw, I'm searching for keyword under 'students' category..",
+                     "I'm not sure if it is listed under 'students' category, but let's try...",
+                     "I assume it is listed under 'students', since it's the most common category...",
+                     "I assume you want me to search under 'students', since you didn't specify it"
+                     ]
 
         elif cond == "count result plural":  # take 1 argument result count
-            lines = ["I have found %s results after doing quick search...",
-                     "plural %s",
-                     "plural %s"]
+            lines = ["I've found %s data after doing a quick search...",
+                     "There are %s listed data that fulfil the keyword",
+                     "The database has %s data under that keyword",
+                     "I've found %s data by searching through the database",
+                     "Seems these %s are the one you search for",
+                     "I'm not sure which one of these %s is the one you looking for.."]
 
         elif cond == "count result one":
-            lines = ["I only found one result which fulfil the keyword...",
-                     "one",
-                     "one"]
+            lines = ["I only found one data which fulfil the keyword...",
+                     "Seems there is only one... ",
+                     "I tried to search in ARC-ITB database, and found this one..",
+                     "I'm pretty sure that this one is the correct one :> ",
+                     "Is this one the right one ? "]
 
         elif cond == "not found":
             lines = ["Are you sure that keyword listed ? I can't find it...",
-                     "not not",
-                     "not not"]
+                     "There is no data under that tag..",
+                     "Nothing found... try other keyword maybe ? ",
+                     "Hmm... I didn't see anything that fulfil the keyword...",
+                     "Please re-check the keyword.. I found nothing here..."]
 
-        elif cond == "only send top 10":
-            lines = ["Since there are too much information to send,...\nI will send only the first ten",
-                     "first ten",
-                     "first ten"]
+        elif cond == "only send top 5":
+            lines = ["Since there are too much information to send,...\nI will send only the first five",
+                     "Is the first five result enough?",
+                     "There are too much information to send,..can't send them all..",
+                     "I will pick and send the first five ,kay ? ",
+                     "I can't send them all in a batch, how bout the first five only ?"]
 
         elif cond == "footer" :
             lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",

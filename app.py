@@ -1871,8 +1871,8 @@ class Function:
 
         def get_student_info():
 
-            if search_result_count > 10:
-                max_data = 10
+            if search_result_count > 5:
+                max_data = 5
             else:
                 max_data = search_result_count
 
@@ -1893,8 +1893,8 @@ class Function:
 
         def get_lecturer_info():
 
-            if search_result_count > 10:
-                max_data = 10
+            if search_result_count > 5:
+                max_data = 5
             else:
                 max_data = search_result_count
 
@@ -1909,8 +1909,8 @@ class Function:
 
         def get_major_info():
 
-            if search_result_count > 10:
-                max_data = 10
+            if search_result_count > 5:
+                max_data = 5
             else:
                 max_data = search_result_count
 
@@ -1938,12 +1938,11 @@ class Function:
         def send_result_count():
             report = []
 
-            report.append(" ")
             if search_result_count > 1:
                 report.append(Lines.itb_arc_database("count result plural") % (str(search_result_count)))
-                if search_result_count > 10:
+                if search_result_count > 5:
                     report.append(" ")
-                    report.append(Lines.itb_arc_database("only send top 10"))
+                    report.append(Lines.itb_arc_database("only send top 5"))
             elif search_result_count == 1:
                 report.append(Lines.itb_arc_database("count result one"))
             else:
