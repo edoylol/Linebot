@@ -156,10 +156,16 @@ def message_text(event):
                 if any(word in text for word in ["showing","list",
                                                  "playing","schedule"])     : Function.show_cinema_movie_schedule()
                 else                                                        : Function.false()
-            elif any(word in text for word in ["is","are","info","?"])         :
+            elif any(word in text for word in ["is","are","info",
+                                               "information","?"])      :
                 if any(word in text for word in ["sw","summonerswar",
                                                  "summoner"])               : Function.summonerswar_wiki()
-                elif any(word in text for word in ["mean","wiki","'"])      : Function.wiki_search()
+                elif all(word in text for word in ["itb"])                  :
+                    if "'" in text                                              : Function.itb_arc_database()
+                    else                                                        : Function.false()
+                elif any(word in text for word in ["mean","wiki"])          :
+                    if "'" in text                                              : Function.wiki_search()
+                    else                                                        : Function.false()
                 else                                                        : Function.false()
             else                                                        : Function.false()
 
@@ -167,6 +173,11 @@ def message_text(event):
             if any(word in text for word in ["weather", "forecast"])    : Function.weather_forcast()
             else                                                        : Function.false()
 
+        elif all(word in text for word in ["who"])                  :
+            if all(word in text for word in ["itb"])                    :
+                if "'" in text                                              : Function.itb_arc_database()
+                else                                                        : Function.false()
+            else                                                        : Function.false()
 
         elif any(word in text for word in ["download ", "save "])   :
             if any(word in text for word in ["youtube", "video"])       : Function.download_youtube()
@@ -260,7 +271,6 @@ def handle_postback(event):
         if Function.dev_authority_check(event)                                          :
             if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
             else                                                                            : Function.false()
-
 
 @handler.add(JoinEvent)
 def handle_join(event):
@@ -1558,12 +1568,14 @@ class Function:
     def weather_forcast():
 
         def get_search_keyword():
-            keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'be', 'city', 'cold', 'cond',
-                       'condition','do', 'does', 'forecast', 'for', 'going', 'gonna', 'have', 'hot', 'how', 'how\'s', 'in',
-                       'information', 'is', 'it', 'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,',
-                       'megumi', 'megumi,', 'morning', 'near', 'nearby', 'now', 'please', 'rain', 'said', 'show',
-                       'sky', 'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
-                       'weathers', 'what', "what's", 'whats', 'will', 'you']
+            keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'bad', 'be',
+                       'city', 'cold', 'cond', 'condition', 'do', 'does', 'for', 'forecast', 'going',
+                       'gonna', 'good', 'have', 'hot', 'how', "how's", 'in', 'information', 'is', 'it',
+                       'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,', 'megumi', 'megumi,',
+                       'morning', 'near', 'nearby', 'now', 'please', 'pls', 'rain', 'said', 'show', 'sky',
+                       'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
+                       'weathers', 'what', "what's", 'whats', 'will', 'you'
+                       ]
 
             filtered_text = OtherUtil.filter_words(text)
             filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
@@ -1831,6 +1843,141 @@ class Function:
             # get 5 conditions every 3 hours ( data stored as list )
             elif request_type == "forecast":
                 send_forecast()
+
+    def itb_arc_database():
+
+        def get_keyword():
+
+            index_start = text.find("'")
+            index_end = text.rfind("'")
+            keyword = text[index_start:index_end]
+
+            return keyword
+
+        def get_category():
+            is_default_category = False
+
+            if any(word in text for word in ["student", "students", "stud", "std", "stds", "studnt", "stdnt"]):
+                category = "student"
+            elif any(word in text for word in ["lecturer", "lecture", "prof", "professor", "lctrer", "lctr", "dr"]):
+                category = "lecturer"
+            elif any(word in text for word in ["major", "faculty", "fclty", "fclt", "mjr", "maj", "fac", "fac"]):
+                category = "major"
+            else:
+                category = "student"
+                is_default_category = True
+
+            return category, is_default_category
+
+        def get_student_info():
+
+            if search_result_count > 10:
+                max_data = 10
+            else:
+                max_data = search_result_count
+
+            for i in range(0, max_data):
+                student_name = ARC_ITB_api_data['result'][i]['fullname']
+                student_nim = ARC_ITB_api_data['result'][i]['nim']
+                student_major = ARC_ITB_api_data['result'][i]['major']['title']
+                student_faculty = ARC_ITB_api_data['result'][i]['major']['faculty']['title']
+                student_major_year = ARC_ITB_api_data['result'][i]['year']
+
+                search_result.append("NIM : " + str(student_nim))
+                search_result.append(student_name)
+                search_result.append(student_major + " [ " + str(student_major_year) + " ]")
+                search_result.append(student_faculty)
+                search_result.append(" ")
+
+            search_result.append(Lines.itb_arc_database("footer"))
+
+        def get_lecturer_info():
+
+            if search_result_count > 10:
+                max_data = 10
+            else:
+                max_data = search_result_count
+
+            for i in range(0, max_data):
+                lecturer_name = ARC_ITB_api_data['result'][i]['fullname']
+                lecturer_nip = ARC_ITB_api_data['result'][i]['nip']
+
+                search_result.append(lecturer_name)
+                search_result.append("NIP : " + str(lecturer_nip))
+                search_result.append(" ")
+            search_result.append(Lines.itb_arc_database("footer"))
+
+        def get_major_info():
+
+            if search_result_count > 10:
+                max_data = 10
+            else:
+                max_data = search_result_count
+
+            for i in range(0, max_data):
+                major_name = ARC_ITB_api_data['result'][i]['title']
+                major_code = ARC_ITB_api_data['result'][i]['code']
+                major_faculty = ARC_ITB_api_data['result'][i]['faculty']['title']
+
+                search_result.append("[ " + str(major_code) + " ] " + major_name)
+                search_result.append(major_faculty)
+                search_result.append(" ")
+            search_result.append(Lines.itb_arc_database("footer"))
+
+        def send_header():
+            report = []
+
+            report.append(Lines.itb_arc_database("header") % itb_keyword)
+            if is_default_category:
+                report.append(" ")
+                report.append(Lines.itb_arc_database("default category"))
+
+            report = "\n".join(report)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+        def send_result_count():
+            report = []
+
+            report.append(" ")
+            if search_result_count > 1:
+                report.append(Lines.itb_arc_database("count result plural") % str(search_result_count))
+                if search_result_count > 10:
+                    report.append(" ")
+                    report.append(Lines.itb_arc_database("only send top 10"))
+            elif search_result_count == 1:
+                report.append(Lines.itb_arc_database("count result one"))
+            else:
+                report.append(Lines.itb_arc_database("not found"))
+
+            report = "\n".join(report)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+        def send_detail_info():
+            report = "\n".join(search_result)
+            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+        itb_keyword = get_keyword()
+        search_category, is_default_category = get_category()
+
+        ARC_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
+        ARC_ITB_api_data = requests.get(ARC_api_call).json()
+        search_result = []
+
+        search_result_count = ARC_ITB_api_data['totalCount']   # get the total result count
+
+        send_header()
+        send_result_count()
+
+        # continue only if the result is available
+        if search_result_count > 0:
+            if search_category == "student":
+                get_student_info()
+            elif search_category == "lecturer":
+                get_lecturer_info()
+            elif search_category == "major":
+                get_major_info()
+
+            send_detail_info()
 
 
     """====================== Sub Function List ============================="""

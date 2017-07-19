@@ -32,6 +32,7 @@ line_bot_api.push_message(jessin_userid, template_message)
 
 # Linebot push template
 """
+report = "\n".join(report)
 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 """
 

@@ -498,6 +498,50 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
+    def itb_arc_database(self, cond):
+
+        if cond == "header":  # take 1 argument itb_keyword
+            lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
+                     "%s right ? Let me check first... ",
+                     "Sure, wait a second,.. looking for %s in the ARC-ITB database"
+                     ]
+
+        elif cond == "default category":
+            lines = ["I'm searching under 'students' category, since you didn't specify the category..",
+                     "default",
+                     "default"]
+
+        elif cond == "count result plural":  # take 1 argument result count
+            lines = ["I have found %s results after doing quick search...",
+                     "plural",
+                     "plural"]
+
+        elif cond == "count result one":
+            lines = ["I only found one result which fulfil the keyword...",
+                     "one",
+                     "one"]
+
+        elif cond == "not found":
+            lines = ["Are you sure that keyword listed ? I can't find it...",
+                     "not not",
+                     "not not"]
+
+        elif cond == "only send top 10":
+            lines = ["Since there are too much information to send,...\nI will send only the first ten",
+                     "first ten",
+                     "first ten"]
+
+        elif cond == "footer" :
+            lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
+                     "\n   (✿◠‿◠)     (◠‿◠✿)    ",
+                     "\n (=^ ◡ ^=) end 	(=^ ◡ ^=)",
+                     "\n \(＾• ω •＾) (＾• ω •＾)/   ",
+                     "\n     ヾ(・ω・)メ(・ω・)ノ    ",
+                     ]
+
+        return random.choice(lines)
+
+
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
