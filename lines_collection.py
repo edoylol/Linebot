@@ -825,17 +825,6 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def template(self):
-        lines = ["",
-                 "",
-                 "",
-                 "",
-                 "",
-                 "",
-                 "",
-                 ""]
-        return random.choice(lines)
-
     def template_cond(self,cond):
         if cond == "a" :
             lines = ["",

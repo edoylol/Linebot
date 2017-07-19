@@ -16,11 +16,9 @@ from __future__ import unicode_literals
 
 import os
 import sys
-import errno
 import random
 import time
 import math
-import tempfile
 import requests,urllib, urllib.request
 import Database
 import json
@@ -1793,7 +1791,7 @@ class Function:
                     URITemplateAction(label='See detail..', uri=owm_detail_page)]),
             ])
 
-            """ Sending button and report """
+            """ Sending carousel and report """
             template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
@@ -1933,7 +1931,7 @@ class Function:
                 report.append(Lines.itb_arc_database("default category"))
 
             report = "\n".join(report)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         def send_result_count():
             report = []
@@ -1949,11 +1947,11 @@ class Function:
                 report.append(Lines.itb_arc_database("not found"))
 
             report = "\n".join(report)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         def send_detail_info():
             report = "\n".join(search_result)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         itb_keyword = get_keyword()
         search_category, is_default_category = get_category()
@@ -2153,6 +2151,7 @@ class Function:
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 class OtherUtil:
+
     def remove_symbols(word,cond="default"):
         if cond == "default" :
             symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""

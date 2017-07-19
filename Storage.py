@@ -19,14 +19,15 @@ except LineBotApiError as e:
 
 # Linebot confirmation template
 """
+report = "" # text to show 
 ans_yes = Labels.confirmation("yes")
 ans_no = Labels.confirmation("no")
-command = "\nMegumi dev mode print userlist"
+command = "" # command to execute
 confirm_template = ConfirmTemplate(text=report, actions=[
     MessageTemplateAction(label=ans_yes, text=(ans_yes+command)),
     MessageTemplateAction(label=ans_no, text=ans_no)])
 template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
-line_bot_api.push_message(jessin_userid, template_message)
+line_bot_api.push_message(address, template_message)
 
 """
 
@@ -52,10 +53,35 @@ line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 """
 
+# Linebot carousel template
+"""
+
+title = []
+carousel_text = []
+header_pic = []
+
+carousel_template = CarouselTemplate(columns=[
+    CarouselColumn(title=title[0], text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+    CarouselColumn(title=title[1], text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+    CarouselColumn(title=title[2], text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
+        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+    CarouselColumn(title=title[3], text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
+        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+    CarouselColumn(title=title[4], text=carousel_text[4][:60], thumbnail_image_url=header_pic[4], actions=[
+        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
+    ])
+
+    template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
+    line_bot_api.push_message(address, template_message)
+    
+"""
+
 # Beautiful soup
 """
-table = BeautifulSoup(str(mod_page.findAll("div",{"class":"schedule-lists"})),"html.parser")
-movies = BeautifulSoup(str(table.findAll("div",{"class" : "schedule-title"})), "html.parser")
+first_mod = BeautifulSoup(str(mod_page.findAll("div",{"class":"aaaa"})),"html.parser")
+second_mod = BeautifulSoup(str(first_mod.findAll("div",{"class" : "aaaa"})), "html.parser")
 """
 
 # Common check if text contain

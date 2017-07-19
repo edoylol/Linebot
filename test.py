@@ -1,7 +1,6 @@
 import urllib,requests,random,time,os,urllib.request
 import json
 from bs4 import BeautifulSoup
-from gtts import gTTS
 
 class OtherUtil:
     def remove_symbols(word,cond="default"):
