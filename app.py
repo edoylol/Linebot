@@ -1940,7 +1940,7 @@ class Function:
 
             report.append(" ")
             if search_result_count > 1:
-                report.append(Lines.itb_arc_database("count result plural") % str(search_result_count))
+                report.append(Lines.itb_arc_database("count result plural") % (str(search_result_count)))
                 if search_result_count > 10:
                     report.append(" ")
                     report.append(Lines.itb_arc_database("only send top 10"))

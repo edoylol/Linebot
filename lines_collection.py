@@ -504,7 +504,7 @@ class Lines:  # class to store respond lines
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
                      "%s right ? Let me check first... ",
                      "Sure, wait a second,.. looking for %s in the ARC-ITB database...",
-                     "Okay, please wait ...searching for %S in the ARC-ITB database..."
+                     "Okay, please wait ...searching for %s in the ARC-ITB database..."
                      ]
 
         elif cond == "default category":
