@@ -2136,6 +2136,21 @@ class Function:
             report = "\n".join(result)
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
+        def send_animelist():
+
+            title = "Cyber12 Anime"
+            button_text = Lines.anime_download_link("send animelist")
+            link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
+            link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
+
+            buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
+                URITemplateAction(label='2017 Anime Update', uri=link_2017),
+                URITemplateAction(label='2016 Anime Update', uri=link_2016)])
+            template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+
+
         keyword = get_keyword()
         if keyword != "not_found" :  # flag to check if keyword is available
             start_ep, is_default_start = get_start_ep()
@@ -2154,8 +2169,12 @@ class Function:
 
             send_final_result(result, is_success)
 
+            if not is_success : # last action, only executed if it's not success
+                send_animelist()
+
         else:
             send_header("not_found")
+            send_animelist()
 
 
     """====================== Sub Function List ============================="""

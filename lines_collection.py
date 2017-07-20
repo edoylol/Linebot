@@ -608,6 +608,13 @@ class Lines:  # class to store respond lines
                      "Seems there's no anime with that title...you sure it's '%s'? ",
                      "How about trying other title ? Seems %s is not in the database yet.. "]
 
+        elif cond == "send animelist":
+        lines = ["Here's the 2017 and 2016 anime list,..\nJust in case you need it..",
+                 "I can only grab the links if the title is listed here..",
+                 "Please check first whether your anime title is in the list or not",
+                 "How about take a look at those list first?",
+                 "Here's the list of all animes which I could get the download link.."]
+
         return random.choice(lines)
 
 
