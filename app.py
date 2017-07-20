@@ -2136,13 +2136,13 @@ class Function:
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
         keyword = get_keyword()
-        print("KEYWORD IS :",keyword)
         if keyword != "not_found" :  # flag to check if keyword is available
             start_ep, is_default_start = get_start_ep()
             hostid, is_default_host = get_host_source()
             send_header()
 
             anime_pasted_link = get_anime_pasted_link(keyword)
+            print(anime_pasted_link)
             if anime_pasted_link != "title not found" :
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
                 result,is_success = get_final_download_link(primary_download_link_list, start_ep)
