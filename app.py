@@ -21,6 +21,7 @@ import time
 import math
 import requests,urllib, urllib.request
 import Database
+import unshortenit
 import json
 
 from argparse import ArgumentParser
@@ -2086,10 +2087,13 @@ class Function:
                     current_ep = i + 1
 
                     primary_download_link = primary_download_link_list[i]
-                    index_start = primary_download_link.find("http")
-                    shortened_link = primary_download_link[index_start:].strip()
-                    download_link, status = unshortenit.unshorten_only(shortened_link)
-                    file_id = get_file_id(download_link)
+                    try:
+                        index_start = primary_download_link.find("http")
+                        shortened_link = primary_download_link[index_start:].strip()
+                        download_link, status = unshortenit.unshorten_only(shortened_link)
+                        file_id = get_file_id(download_link)
+                    except:
+                        pass
 
                     page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
                     post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify , uid is the file name also
