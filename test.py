@@ -34,4 +34,3 @@ class OtherUtil:
                     text.remove(word)
         return text
 
- 

@@ -2110,7 +2110,7 @@ class Function:
             report = []
 
             if cond == "found":
-                report.append(Lines.anime_download_link("header" % keyword))
+                report.append(Lines.anime_download_link("header") % keyword)
                 if is_default_start:
                     report.append(" ")
                     report.append(Lines.anime_download_link("default start ep"))
