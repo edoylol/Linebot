@@ -2149,7 +2149,7 @@ class Function:
                 result,is_success = get_final_download_link(primary_download_link_list, start_ep)
 
             else : # the title is not found
-                result = Lines.anime_download_link("title not found") % keyword
+                result = [Lines.anime_download_link("title not found") % keyword]
                 is_success = False
 
             send_final_result(result, is_success)
