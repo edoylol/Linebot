@@ -555,6 +555,54 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
+    def anime_download_link(self, cond):
+
+        if cond == "header": # take 1 argument (title)
+            lines = ["Sure...be right back, getting %s download links from cyber12...",
+                     "%s right? Let me check first for the download links... ",
+                     "Sure, wait a second,.. searching cyber12 for %s links...",
+                     "Okay, please wait...\n%s download links coming ~",
+                     "%s?? Wait... let me check in cyber12 database first..."
+                     ]
+
+        elif cond == "default start ep":
+            lines = ["I'm getting the links from ep 1, since you didn't specify it..",
+                     "I assume you want the links from ep 1 :> ",
+                     "It's gonna take a while, since I'm digging from ep 1..",
+                     "Is this a new series ? Or you have not downloaded a single one yet ?",
+                     "Just to make sure you got everything, I will give all the links I found"
+                     ]
+
+        elif cond == "default host":
+            lines = ["Btw, is dropjify sound's good? ",
+                     "I will recommend dropjify as the host..",
+                     "I'm looking for dropjify links since I prefer that..",
+                     "I'll recommend using dropjify as file host...",
+                     "Since you didn't specify, I will pick dropjify as the host..."]
+
+        elif cond == "keyword not found":
+            lines = ["Which anime do you want me to search for ?",
+                     "I'm not sure which anime do you want though...",
+                     "Can you say the title again? \nFor example like 're:zero' or 'idolmaster' .. ",
+                     "Sorry, what was the anime's title again ?",
+                     "Sorry, can you repeat the title again?\nSay it like 'fate' or 'sakurasou',.."]
+
+        elif cond == "starting episode not aired":
+            lines = ["I tried to look for the episode you requested, but seems it's not aired yet..",
+                     "Cyber12 doesn't have that episode yet..",
+                     "I don't think that episode is available right now...",
+                     "Seems that episode is not encoded yet...",
+                     "Did you say the wrong episode?\nI can't find that episode though..."]
+
+        elif cond == "header for result":
+            lines = ["Sorry for the delay..",
+                     "I'm back with something you want ~ ",
+                     "Here's what I found on cyber 12 : ",
+                     "Here you go ~ :> ",
+                     "Sorry for the delay,.. here's the list.."]
+
+        return random.choice(lines)
+
 
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",

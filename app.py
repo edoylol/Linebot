@@ -142,18 +142,23 @@ def message_text(event):
 
     if any(word in text for word in Lines.megumi()):
 
-        if "say " in text : Function.echo()
+        if "say " in text                                           : Function.echo()
         elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
 
         elif any(word in text for word in ["what ","show "])        :
             if any(word in text for word in ["date","time","day"])      : Function.time_date()
-            elif any(word in text for word in ["weather","forecast"])      : Function.weather_forcast()
+            elif any(word in text for word in ["weather","forecast"])   : Function.weather_forcast()
             elif any(word in text for word in ["movie ","movies",
                                                "film","films"])         :
                 if any(word in text for word in ["showing","list",
                                                  "playing","schedule"])     : Function.show_cinema_movie_schedule()
                 else                                                        : Function.false()
+
+            elif all(word in text for word in ["anime"])                :
+                if any(word in text for word in ["download","link"])        : Function.anime_download_link()
+                else                                                        : Function.false()
+
             elif any(word in text for word in ["is","are","info",
                                                "information","?"])      :
                 if any(word in text for word in ["sw","summonerswar",
@@ -179,6 +184,7 @@ def message_text(event):
 
         elif any(word in text for word in ["download ", "save "])   :
             if any(word in text for word in ["youtube", "video"])       : Function.download_youtube()
+            elif any(word in text for word in ["anime"])                : Function.anime_download_link()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
@@ -1976,6 +1982,170 @@ class Function:
 
             send_detail_info()
 
+    def anime_download_link():
+
+        def get_keyword():
+            try:
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
+                keyword = text[index_start:index_stop]
+                return keyword
+            except:
+                return "not_found"
+
+        def get_start_ep():
+            is_default_start = True
+
+            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+
+            filtered_text = OtherUtil.filter_words(text)
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+            keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
+
+            for i in range(0, len(filtered_text)):
+                if any(word in filtered_text[i] for word in keyword):
+                    try:
+                        start_ep = int(filtered_text[i + 1])
+                        is_default_start = False
+                    except:
+                        pass
+
+            if is_default_start:
+                return 1, True
+            else:
+                return start_ep, False
+
+        def get_host_source():
+            is_default_host = True
+            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+            anime_hostlist = Database.anime_hostlist
+
+            filtered_text = OtherUtil.filter_words(text)
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+            keyword = ["from", "fr", "source", "src", "frm", "sou"]
+
+            for i in range(0, len(filtered_text)):
+                if any(word in filtered_text[i] for word in keyword):
+                    try:
+                        host_name = (filtered_text[i + 1])
+                        for host in anime_hostlist:
+                            if host_name in host:
+                                host_id = anime_hostlist[host]
+                                is_default_host = False
+
+                    except:
+                        pass
+
+            if is_default_host:
+                return 99, True
+            else:
+                return host_id, False
+
+        def get_anime_pasted_link(keyword):
+            animelist = Database.animelist
+            for anime in animelist:
+                if keyword in anime.lower():
+                    return animelist[anime]
+                else:
+                    pass
+
+        def get_primary_download_link_list(anime_pasted_link):
+            page_url = anime_pasted_link + "/new.php"
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            datas = mod_page.find("textarea", {"class": "pastebox rounded"})
+            download_link_list = datas.text.split("\n")  # get the list of links
+            return download_link_list
+
+        def get_file_id(link):
+            mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
+            index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
+            index_stop = index_start + 8
+            file_id = link[index_start:index_stop]
+            return str(file_id)
+
+        def get_final_download_link(primary_download_link_list, start_ep=1):
+            result = []
+            success = False
+
+            if start_ep > len(primary_download_link_list):  # check if the starting episode is available
+                result.append(Lines.anime_download_link("starting episode not aired"))
+
+            else:
+                for i in range(start_ep - 1, (len(primary_download_link_list))):
+                    current_ep = i + 1
+
+                    primary_download_link = primary_download_link_list[i]
+                    try:
+                        index_start = primary_download_link.find("http")
+                        shortened_link = primary_download_link[index_start:].strip()
+                        download_link, status = unshortenit.unshorten_only(shortened_link)
+                        file_id = get_file_id(download_link)
+                    except:
+                        pass
+
+                    page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
+                    post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify , uid is the file name also
+                    req_post = requests.post(page_url, data=post_data)
+                    page_source_code_text_post = req_post.text
+                    mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+                    final_download_link = mod_page.find("a", {"target": "_blank"})
+                    result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+
+                success = True
+
+            return result,success
+
+        def send_header(cond="found"):
+            report = []
+
+            if cond == "found":
+                report.append(Lines.anime_download_link("header" % keyword))
+                if is_default_start:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default start ep"))
+                if is_default_host:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default host"))
+
+            elif cond == "not_found":
+                report.append(Lines.anime_download_link("keyword not found"))
+
+            report = "\n".join(report)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        def send_final_result(result,success):
+            if success :
+                result.insert(0," ")
+                result.insert(0,Lines.anime_download_link("header for result"))
+
+            report = "\n".join(result)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        keyword = get_keyword()
+        if keyword != "not_found" and keyword is not None :  # flag to check if keyword is available
+            start_ep, is_default_start = get_start_ep()
+            hostid, is_default_host = get_host_source()
+            send_header()
+
+            anime_pasted_link = get_anime_pasted_link(keyword)
+            primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+            result,is_success = get_final_download_link(primary_download_link_list, start_ep)
+            send_final_result(result,is_success)
+
+        else:
+            send_header("not_found")
+
 
     """====================== Sub Function List ============================="""
 
@@ -2154,11 +2324,11 @@ class OtherUtil:
 
     def remove_symbols(word,cond="default"):
         if cond == "default" :
-            symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
+            symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
         elif cond == "for wiki search" :
-            symbols = "!@#$%^&*+=-`~[]{]\|;:/?.>,<\""
+            symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":
-            symbols = "1234567890!@#$%^&*()_+=-`~[]{]\|';:/?.>,<\""
+            symbols = "1234567890!@#$%^&*()_+=-`~[]{}\|';:/?.>,<\""
 
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols

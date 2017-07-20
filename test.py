@@ -1,15 +1,17 @@
 import urllib,requests,random,time,os,urllib.request
 import json
+import unshortenit
+import Database
 from bs4 import BeautifulSoup
 
 class OtherUtil:
     def remove_symbols(word,cond="default"):
         if cond == "default" :
-            symbols = "!@#$%^&*()+=-`~[]{]\|;:'/?.>,<\""
+            symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
         elif cond == "for wiki search" :
-            symbols = "!@#$%^&*+=-`~[]{]\|;:/?.>,<\""
+            symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":
-            symbols = "1234567890!@#$%^&*()_+=-`~[]{]\|';:/?.>,<\""
+            symbols = "1234567890!@#$%^&*()_+=-`~[]{}\|';:/?.>,<\""
 
         for i in range(0, len(symbols)):
             word = word.replace(symbols[i], "")  # strong syntax to remove symbols
@@ -32,3 +34,4 @@ class OtherUtil:
                     text.remove(word)
         return text
 
+ 
