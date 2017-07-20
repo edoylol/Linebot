@@ -34,24 +34,3 @@ class OtherUtil:
                     text.remove(word)
         return text
 
-with open('text.txt','r') as f :
-    page_source_code_text = f.readlines()
-    page_source_code_text = "".join(page_source_code_text)
-    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-    first_mod = BeautifulSoup(str(mod_page.findAll("div", {"class": "_39k5 _5s6c"})), "html.parser")
-    second_mod = BeautifulSoup(str(first_mod.findAll("ul", {"class": "_5a_q _5yj1"})), "html.parser")
-    lists = second_mod.find_all("a")
-
-    result = []
-    result.append("{")
-    for list in lists:
-        text = list.get("href")
-        title = list.text.strip()
-        index_start = text.find("pasted.co")
-        index_stop = text.find("&h=")
-        pasted_link = text[index_start:index_stop]
-        pasted_link = "http://" + pasted_link.replace("%2F", "/")
-        result.append("\""+title.lower()+"\":\""+pasted_link+"\",")
-    result.append("}")
-    result = "\n".join(result)
-    print(result)
