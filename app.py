@@ -2058,7 +2058,8 @@ class Function:
                     if keyword in anime.lower():
                         return animelist[anime]
             except :
-                return "title not found"
+                pass
+            return "title not found"
 
         def get_primary_download_link_list(anime_pasted_link):
             page_url = anime_pasted_link + "/new.php"
