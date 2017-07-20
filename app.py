@@ -2134,8 +2134,7 @@ class Function:
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
         keyword = get_keyword()
-        print("KEYWORD IS NONE : ",keyword is None)
-        if (keyword != "not_found") and (keyword is not None) :  # flag to check if keyword is available
+        if keyword != "not_found" :  # flag to check if keyword is available
             start_ep, is_default_start = get_start_ep()
             hostid, is_default_host = get_host_source()
             send_header()
