@@ -601,6 +601,13 @@ class Lines:  # class to store respond lines
                      "Here you go ~ :> ",
                      "Sorry for the delay,.. here's the list.."]
 
+        elif cond == "title not found": # take 1 argument (title)
+            lines = ["I dont's see any '%s' titled anime..\nMaybe you spelled it wrong ?",
+                     "The database doesn't have %s titled anime..\nHow about request it personally?",
+                     "Please double check the title.. I can't find %s at the database...",
+                     "Seems there's no anime with that title...you sure it's '%s'? ",
+                     "How about trying other title ? Seems %s is not in the database yet.. "]
+
         return random.choice(lines)
 
 

@@ -2051,12 +2051,14 @@ class Function:
                 return host_id, False
 
         def get_anime_pasted_link(keyword):
+
             animelist = Database.animelist
-            for anime in animelist:
-                if keyword in anime.lower():
-                    return animelist[anime]
-                else:
-                    pass
+            try :
+                for anime in animelist:
+                    if keyword in anime.lower():
+                        return animelist[anime]
+            except :
+                return "title not found"
 
         def get_primary_download_link_list(anime_pasted_link):
             page_url = anime_pasted_link + "/new.php"
@@ -2141,9 +2143,15 @@ class Function:
             send_header()
 
             anime_pasted_link = get_anime_pasted_link(keyword)
-            primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
-            result,is_success = get_final_download_link(primary_download_link_list, start_ep)
-            send_final_result(result,is_success)
+            if anime_pasted_link != "title not found" :
+                primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+                result,is_success = get_final_download_link(primary_download_link_list, start_ep)
+
+            else : # the title is not found
+                result = Lines.anime_download_link("title not found") % keyword
+                is_success = False
+
+            send_final_result(result, is_success)
 
         else:
             send_header("not_found")
