@@ -349,5 +349,5 @@ animelist = {
             }
 
 anime_hostlist = {"dropjify":99,"zippyshare":15,"solidfiles":69,"clicknupload":93,"openload":94,
-                  "datafilehost":84,"uptobox":42,"gett":66}
+                  "datafilehost":84,"uptobox":42,"katfile":100}
 
