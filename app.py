@@ -2110,9 +2110,13 @@ class Function:
                     page_source_code_text_post = req_post.text
                     mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
                     final_download_link = mod_page.find("a", {"target": "_blank"})
-                    result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+                    if final_download_link is not None :
+                        result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+                        success = True
+                    else :
+                        result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
 
-                success = True
+
 
             return result,success
 

@@ -34,19 +34,15 @@ class OtherUtil:
                     text.remove(word)
         return text
 
+file_id = "YDXT8AUT"
+hostid=900
+result = []
 
-def get_file_id(link):
-    mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
-    index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
-    index_stop = index_start + 8
-    file_id = link[index_start:index_stop]
-    return str(file_id)
-
-lines = ["Here's the 2017 and 2016 anime list,..\nMaybe you need it..",
-                 "I can only grab the links if the title is listed here..",
-                 "Please check first whether your anime is listed or not",
-                 "How about take a look at those list first?",
-                 "Here's the list of all animes which has download links.."]
-
-for x in lines :
-    print(x, len(x))
+page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
+post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify , uid is the file name also
+req_post = requests.post(page_url, data=post_data)
+page_source_code_text_post = req_post.text
+mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+final_download_link = mod_page.find("a", {"target": "_blank"})
+result.append("Ep. " + str(3) + " : " + final_download_link.get("href"))
+print(result)

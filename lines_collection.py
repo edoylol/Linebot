@@ -608,6 +608,13 @@ class Lines:  # class to store respond lines
                      "Seems there's no anime with that title...you sure it's '%s'? ",
                      "How about trying other title ? Seems %s is not in the database yet.. "]
 
+        elif cond == "host not available": # take 1 argument (episode)
+            lines = ["Seems ep. %s is not available on this host",
+                     "Failed to get the link of ep.%s",
+                     "Seems the ep. %s is not properly uploaded on this host",
+                     "Unable to retrieve ep. %s link, it's not available",
+                     "Ep. %s is not available on this host, try other host..."]
+
         elif cond == "send animelist":
             lines = ["Here's the 2017 and 2016 anime list,..\nMaybe you need it..",
                  "I can only grab the links if the title is listed here..",
