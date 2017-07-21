@@ -2052,14 +2052,17 @@ class Function:
 
         def get_anime_pasted_link(keyword):
 
-            animelist = Database.animelist
-            try :
-                for anime in animelist:
-                    if keyword in anime.lower():
-                        return animelist[anime]
-            except :
-                pass
-            return "title not found"
+            if "pasted.co" in keyword : # enable direct link
+                return keyword
+            else :
+                animelist = Database.animelist
+                try :
+                    for anime in animelist:
+                        if keyword in anime.lower():
+                            return animelist[anime]
+                except :
+                    pass
+                return "title not found"
 
         def get_primary_download_link_list(anime_pasted_link):
             page_url = anime_pasted_link + "/new.php"
@@ -2090,6 +2093,8 @@ class Function:
 
             if start_ep > len(primary_download_link_list):  # check if the starting episode is available
                 result.append(Lines.anime_download_link("starting episode not aired"))
+                result.append(Lines.anime_download_link("send latest episode count") % str(len(primary_download_link_list)))
+
 
             else:
                 for i in range(start_ep - 1, (len(primary_download_link_list))):

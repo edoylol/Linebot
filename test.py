@@ -33,16 +33,3 @@ class OtherUtil:
                 if word in keyword:
                     text.remove(word)
         return text
-
-file_id = "YDXT8AUT"
-hostid=900
-result = []
-
-page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
-post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify , uid is the file name also
-req_post = requests.post(page_url, data=post_data)
-page_source_code_text_post = req_post.text
-mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-final_download_link = mod_page.find("a", {"target": "_blank"})
-result.append("Ep. " + str(3) + " : " + final_download_link.get("href"))
-print(result)

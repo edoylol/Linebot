@@ -594,6 +594,13 @@ class Lines:  # class to store respond lines
                      "Seems that episode is not encoded yet...",
                      "Did you say the wrong episode?\nI can't find that episode though..."]
 
+        elif cond == "send latest episode count": # take 1 argument (last episode)
+            lines = ["I think the latest episode is ep. %s",
+                     "The database only shows %s episode...",
+                     "Seems ep. %s is the latest until now... ",
+                     "Seems the series only has %s episode until now..",
+                     "It's only available up to ep. %s"]
+
         elif cond == "header for result":
             lines = ["Sorry for the delay..",
                      "I'm back with something you want ~ ",
