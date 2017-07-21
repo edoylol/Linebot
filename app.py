@@ -2134,13 +2134,16 @@ class Function:
             report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
-        def send_final_result(result,success):
-            if success :
+        def send_final_result(result,success,is_send_animelist):
+            if success : # title is found and episode is found
                 result.insert(0," ")
                 result.insert(0,Lines.anime_download_link("header for result"))
 
             report = "\n".join(result)
             line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            if is_send_animelist :  # only send if title is not found
+                send_animelist()
 
         def send_animelist():
 
@@ -2153,16 +2156,7 @@ class Function:
                 URITemplateAction(label='2017 Anime Update', uri=link_2017),
                 URITemplateAction(label='2016 Anime Update', uri=link_2016)])
             template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-            try :
-                line_bot_api.push_message(address, template_message)
-            except LineBotApiError as e:
-                print("")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
-
-
-
+            line_bot_api.push_message(address, template_message)
 
 
         keyword = get_keyword()
@@ -2175,15 +2169,14 @@ class Function:
             if anime_pasted_link != "title not found" :
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
                 result,is_success = get_final_download_link(primary_download_link_list, start_ep)
+                is_send_animelist = False
 
             else : # the title is not found
                 result = [Lines.anime_download_link("title not found") % keyword]
                 is_success = False
+                is_send_animelist = True
 
-            send_final_result(result, is_success)
-
-            if not is_success : # last action, only executed if it's not success
-                send_animelist()
+            send_final_result(result, is_success,is_send_animelist)
 
         else:
             send_header("not_found")

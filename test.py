@@ -42,21 +42,11 @@ def get_file_id(link):
     file_id = link[index_start:index_stop]
     return str(file_id)
 
-anime_pasted_link = "http://pasted.co/ecfe642a"
+lines = ["Here's the 2017 and 2016 anime list,..\nMaybe you need it..",
+                 "I can only grab the links if the title is listed here..",
+                 "Please check first whether your anime is listed or not",
+                 "How about take a look at those list first?",
+                 "Here's the list of all animes which has download links.."]
 
-page_url = anime_pasted_link + "/new.php"
-req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-con = urllib.request.urlopen(req)
-page_source_code_text = con.read()
-mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-datas = mod_page.find("textarea", {"class": "pastebox rounded"})
-primary_download_link_list = datas.text.split("\n")  # get the list of links
-
-temp_list = []
-for element in primary_download_link_list :
-    if "http" in element :
-        temp_list.append(element)
-
-primary_download_link_list = temp_list
-del temp_list
-
+for x in lines :
+    print(x, len(x))
