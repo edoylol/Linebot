@@ -2069,7 +2069,13 @@ class Function:
             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
             datas = mod_page.find("textarea", {"class": "pastebox rounded"})
             download_link_list = datas.text.split("\n")  # get the list of links
-            return download_link_list
+
+            download_link_list_filtered = []
+            for link in download_link_list:
+                if "http" in link:
+                    download_link_list_filtered.append(link)
+
+            return download_link_list_filtered
 
         def get_file_id(link):
             mirror_creator_keyword = "https://www.mirrorcreator.com/files/"

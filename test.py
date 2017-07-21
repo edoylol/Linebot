@@ -34,3 +34,29 @@ class OtherUtil:
                     text.remove(word)
         return text
 
+
+def get_file_id(link):
+    mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
+    index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
+    index_stop = index_start + 8
+    file_id = link[index_start:index_stop]
+    return str(file_id)
+
+anime_pasted_link = "http://pasted.co/ecfe642a"
+
+page_url = anime_pasted_link + "/new.php"
+req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+con = urllib.request.urlopen(req)
+page_source_code_text = con.read()
+mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+datas = mod_page.find("textarea", {"class": "pastebox rounded"})
+primary_download_link_list = datas.text.split("\n")  # get the list of links
+
+temp_list = []
+for element in primary_download_link_list :
+    if "http" in element :
+        temp_list.append(element)
+
+primary_download_link_list = temp_list
+del temp_list
+
