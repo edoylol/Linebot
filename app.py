@@ -2153,7 +2153,14 @@ class Function:
                 URITemplateAction(label='2017 Anime Update', uri=link_2017),
                 URITemplateAction(label='2016 Anime Update', uri=link_2016)])
             template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-            line_bot_api.push_message(address, template_message)
+            try :
+                line_bot_api.push_message(address, template_message)
+            except LineBotApiError as e:
+                print("")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
+
 
 
 
