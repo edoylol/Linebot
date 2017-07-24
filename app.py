@@ -166,10 +166,11 @@ def message_text(event):
                 elif all(word in text for word in ["itb"])                  :
                     if "'" in text                                              : Function.itb_arc_database()
                     else                                                        : Function.false()
+                elif any(word in text for word in ["in"])                       : Function.translate_text()
                 elif any(word in text for word in ["mean","wiki"])          :
                     if "'" in text                                              : Function.wiki_search()
                     else                                                        : Function.false()
-                elif any(word in text for word in ["in"])                   : Function.translate_text()
+
                 else                                                        : Function.false()
             else                                                        : Function.false()
 
