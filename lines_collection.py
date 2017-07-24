@@ -934,6 +934,22 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
+    def dev_mode_general_error(self,cond):
+        if cond == "common" :
+            lines = ["Seems some unexpected error happened...",
+                     "Gommen, I tried to do it but I can't...",
+                     "Ugh,, there's some unexpected errors...\nI can't do it now... ",
+                     "Sorry, I can't do that now, seems something wrong happened...",
+                     "Something bad happened...\nI can't do that now.."]
+        elif cond == "dev":
+            lines = ["Mastah, seems some unexpected error happened :\n\nHere's the detail : \n%s",
+                     "Mastah, check this out...\n\nHere's the detail : \n%s",
+                     "I think you should take a look at this..\n\nHere's the detail : \n%s",
+                     "Mastah, seems you need to check this out..\n\nHere's the detail : \n%s",
+                     "Mastah, help me with this...\n\nHere's the detail : \n%s"]
+
+        return random.choice(lines)
+
     def template_cond(self,cond):
         if cond == "a" :
             lines = ["",
