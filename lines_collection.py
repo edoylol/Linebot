@@ -631,6 +631,39 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
+    def translate_text(self, cond):
+        if cond == "text to translate not found":
+            lines = ["Which should I translate?",
+                     "Which sentence do you want me to translate?",
+                     "Sorry, I didn't catch which one should I translate..",
+                     "Which one .-. ?",
+                     "Whatt ?? .-."]
+        elif cond == "destination language not found":
+            lines = ["To which language? English?\n",
+                     "Which language should I translate to? English?\n",
+                     "I'm translating it to english then..\n",
+                     "To what language? English? .-.\n",
+                     "Since you didn't specify, I guess English is fine for you?\n"]
+        elif cond == "destination language not available":  # take 1 argument : language
+            lines = ["I'm not confident about my %s skill, how about other language?",
+                     "Sorry... I haven't learned %s yet,.. Maybe another language?",
+                     "My %s is pretty bad, how about another language?",
+                     "I don't know the suitable translation in %s,...\nI'm sorry...",
+                     "I'm not sure what it is in %s, \nhow about other general language like English?"]
+        elif cond == "send translated":  # take 3 argument : 0.text 1.to 2.translated
+            lines = ["I think in {1},'{0}' is '{2}'",
+                     "'{0}' can be translated into {1} as '{2}'",
+                     "'{2}' means '{0}' in {1}",
+                     "Mostly people say '{2}' for '{0}' in {1}",
+                     "T think '{2}' is common trasnlation for '{0}' in {1}"]
+        elif cond == "already in that language":  # take 1 argument : to language
+            lines = ["Wait..isn't it already in %s ?",
+                     "Wait..I think it's already in %s...isn't it ?",
+                     "Seems it's already in %s... isn't it ?",
+                     "I think it's already in %s,.. right ? ",
+                     "Seems it doesn't need any translation, does it ?"]
+
+        return random.choice(lines)
 
     def notyetcreated(self):
         lines = ["Gomen,, this function is not ready..",

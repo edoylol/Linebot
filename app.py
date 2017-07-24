@@ -50,12 +50,6 @@ from lines_collection import Lines, Labels, Picture
 
 app = Flask(__name__)
 
-# Megumi chat bot (note : remove the whitespace )
-
-# channel_secret = '9d1e7500a205ddaec1c6f2ae0d190e6e'
-# channel_access_token = 'f/jBF6+aFLuvzEmI0NbPNWjfrsK3Kjwxzzl1XUeLun+3uRs6AbDEQGphezyssudufYiyiHBoLQWWjEBqTtV00P0jLOJuV
-#                         lrEQly/Xjo7ZQXY0YMEoKm869aWpCnu9Jhog4zt4nb4DYB4zVMWApdjCQdB04t89/1O/w1cDnyilFU='
-
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
 line_bot_api = LineBotApi(channel_access_token)
@@ -143,8 +137,8 @@ def message_text(event):
 
     if any(word in text for word in Lines.megumi()):
 
-        if "say " in text                                           : Function.echo()
-        elif all(word in text for word in ["pick ","num"])          : Function.rand_int()
+
+        if all(word in text for word in ["pick ","num"])          : Function.rand_int()
         elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
 
         elif any(word in text for word in ["what ","show "])        :
@@ -170,11 +164,13 @@ def message_text(event):
                 elif any(word in text for word in ["mean","wiki"])          :
                     if "'" in text                                              : Function.wiki_search()
                     else                                                        : Function.false()
+                elif any(word in text for word in ["in"])                   : Function.translate_text()
                 else                                                        : Function.false()
             else                                                        : Function.false()
 
         elif any(word in text for word in ["how"])                  :
             if any(word in text for word in ["weather", "forecast"])    : Function.weather_forcast()
+            elif any(word in text for word in ["say"])                  : Function.translate_text()
             else                                                        : Function.false()
 
         elif all(word in text for word in ["who"])                  :
@@ -188,10 +184,9 @@ def message_text(event):
             elif any(word in text for word in ["anime"])                : Function.anime_download_link()
             else                                                        : Function.false()
 
+        elif any(word in text for word in ["translate"])            : Function.translate_text()
+        elif any(word in text for word in ["say "])                 : Function.echo()
         elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
-
-        elif "test" in text                                         : Function.TEST(event)
-        elif "command5 " in text                                    : Function.notyetcreated()
 
 
         elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
@@ -2191,6 +2186,188 @@ class Function:
             send_header("not_found")
             send_animelist()
 
+    def translate_text():
+
+        class AzureAuthClient(object):
+            """
+            Provides a client for obtaining an OAuth token from the authentication service
+            for Microsoft Translator in Azure Cognitive Services.
+            """
+
+            def __init__(self, client_secret):
+                """
+                :param client_secret: Client secret.
+                """
+
+                self.client_secret = client_secret
+                # token field is used to store the last token obtained from the token service
+                # the cached token is re-used until the time specified in reuse_token_until.
+                self.token = None
+                self.reuse_token_until = None
+
+            def get_access_token(self):
+                '''
+                Returns an access token for the specified subscription.
+                This method uses a cache to limit the number of requests to the token service.
+                A fresh token can be re-used during its lifetime of 10 minutes. After a successful
+                request to the token service, this method caches the access token. Subsequent
+                invocations of the method return the cached token for the next 5 minutes. After
+                5 minutes, a new token is fetched from the token service and the cache is updated.
+                '''
+
+                if (self.token is None) or (datetime.utcnow() > self.reuse_token_until):
+                    token_service_url = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+
+                    request_headers = {'Ocp-Apim-Subscription-Key': self.client_secret}
+
+                    response = requests.post(token_service_url, headers=request_headers)
+                    response.raise_for_status()
+
+                    self.token = response.content
+                    self.reuse_token_until = datetime.utcnow() + timedelta(minutes=5)
+
+                return self.token
+
+        def GetTextTranslation(finalToken, textToTranslate, fromLangCode, toLangCode):
+
+            # Call to Microsoft Translator Service
+            headers = {"Authorization ": finalToken}
+            translateUrl = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text={}&from={}&to={}".format(
+                textToTranslate, fromLangCode, toLangCode)
+
+            translationData = requests.get(translateUrl, headers=headers)
+            # parse xml return values
+            translation = ElementTree.fromstring(translationData.text.encode('utf-8'))
+
+            # display translation
+            return translation.text
+
+        def get_text():
+            if "'" in text:
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
+                keyword = text[index_start:index_stop]
+                return keyword
+            return ""
+
+        def get_language(cond):
+            # remove the text to translate, to minimize errors
+            index_start = text.find("'") + 1
+            index_stop = text.rfind("'")
+            crop_text = text.replace(text[index_start:index_stop], '')
+
+            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                       'how', "how's", 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                       'this', 'what', "what's", 'whats', 'will', 'you']
+
+            filtered_text = OtherUtil.filter_words(crop_text)
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+            if cond == "from":
+                specific_keyword = ['from', 'fr']
+            elif cond == "to":
+                specific_keyword = ['in', 'to']
+
+            found = False
+            try:
+                for i in range(0, len(filtered_text) + 1):
+                    if filtered_text[i] in specific_keyword:
+                        language = (filtered_text[i + 1])
+                        found = True
+                        return language, found
+            except:
+                pass
+
+            return "", found
+
+        def get_available_language():
+            page_url = "https://msdn.microsoft.com/en-us/library/hh456380.aspx"
+            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+            con = urllib.request.urlopen(req)
+            page_source_code_text = con.read()
+            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            code_table = mod_page.find_all("td", {"data-th": "Language Code"})
+            name_table = mod_page.find_all("td", {"data-th": "English Name"})
+
+            language_table = {}
+            # create dictionary of language available
+            for i in range(0, len(code_table)):
+                language_code = code_table[i].text.strip()
+                language_name = name_table[i].text.strip()
+                language_table[language_name] = language_code
+
+            return language_table
+
+        def get_language_code(available_language, keyword):
+
+            if keyword != "":
+
+                for key in available_language:  # if the keyword is already in form of code
+                    if keyword in available_language[key].lower():
+                        return available_language[key]
+
+                for key in available_language:  # else if the keyword is in form of name
+                    if keyword in key.lower():
+                        return available_language[key]
+
+            return ""
+
+        cont = True  # create continue-flag
+        result = []
+
+        textToTranslate = get_text()
+
+        # if the text is not available
+        if textToTranslate == "":
+            cont = False
+            result.append(Lines.translate_text("text to translate not found"))
+
+        # if text to translate is available
+        if cont:
+            available_language = get_available_language()
+
+            # extract from-to language from the text
+            from_lang, is_from_lang_found = get_language("from")
+            to_lang, is_to_lang_found = get_language("to")
+
+            # if destination language is found
+            if is_to_lang_found:
+                from_lang_code = get_language_code(available_language, from_lang)
+                to_lang_code = get_language_code(available_language, to_lang)
+
+            # destination language not found
+            else:
+                to_lang = "english"
+                to_lang_code = "en"
+                result.append(Lines.translate_text("destination language not found"))
+
+        # if the destination language is found
+        if cont:
+
+            # if destination language is available
+            if to_lang_code != '':
+                azure_keys = ['1c3ea2f61de74a4f8d3bdcbe4cce7316', '20039c3da1074c9bba90ebd7600f1381']
+                client_secret = random.choice(azure_keys)
+                auth_client = AzureAuthClient(client_secret)
+                raw_bearer_token = str(auth_client.get_access_token())
+                bearer_token = 'Bearer ' + raw_bearer_token[2:-1]
+                translated_text = GetTextTranslation(bearer_token, textToTranslate, from_lang_code, to_lang_code)
+
+            # destination language not available
+            else:
+                cont = False
+                result.append(Lines.translate_text("destination language not available") % to_lang)
+
+        # if the destination language is available
+        if cont:
+            if textToTranslate != translated_text:
+                result.append(Lines.translate_text("send translated").format(textToTranslate, to_lang, translated_text))
+            else:
+                result.append(Lines.translate_text("already in that language"))
+
+        report = "\n".join(result)
+        line_bot_api.push_message(address, TextSendMessage(text=report))
 
     """====================== Sub Function List ============================="""
 
