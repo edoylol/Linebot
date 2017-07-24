@@ -2369,7 +2369,7 @@ class Function:
             if textToTranslate != translated_text:
                 result.append(Lines.translate_text("send translated").format(textToTranslate, to_lang, translated_text))
             else:
-                result.append(Lines.translate_text("already in that language"))
+                result.append(Lines.translate_text("already in that language") % to_lang)
 
         report = "\n".join(result)
         line_bot_api.push_message(address, TextSendMessage(text=report))

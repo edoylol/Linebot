@@ -661,7 +661,7 @@ class Lines:  # class to store respond lines
                      "Wait..I think it's already in %s...isn't it ?",
                      "Seems it's already in %s... isn't it ?",
                      "I think it's already in %s,.. right ? ",
-                     "Seems it doesn't need any translation, does it ?"]
+                     "Seems it doesn't need any translation,\nI'm pretty sure it's already in %s..."]
 
         return random.choice(lines)
 
