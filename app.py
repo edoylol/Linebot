@@ -2311,13 +2311,13 @@ class Function:
 
                 for key in available_language:  # if the keyword is already in form of code
                     if keyword in available_language[key].lower():
-                        return available_language[key]
+                        return available_language[key],key
 
                 for key in available_language:  # else if the keyword is in form of name
                     if keyword in key.lower():
-                        return available_language[key]
+                        return available_language[key],key
 
-            return ""
+            return "",""
 
         cont = True  # create continue-flag
         result = []
@@ -2336,11 +2336,11 @@ class Function:
             # extract from-to language from the text
             from_lang, is_from_lang_found = get_language("from")
             to_lang, is_to_lang_found = get_language("to")
-            from_lang_code = get_language_code(available_language, from_lang)
+            from_lang_code,from_lang = get_language_code(available_language, from_lang)
 
             # if destination language is found
             if is_to_lang_found:
-                to_lang_code = get_language_code(available_language, to_lang)
+                to_lang_code,to_lang = get_language_code(available_language, to_lang)
 
             # destination language not found
             else:
