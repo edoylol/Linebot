@@ -2588,7 +2588,7 @@ class OtherUtil:
                     text.remove(word)
         return text
 
-    def random_error(self,function_name,exception_detail):
+    def random_error(function_name,exception_detail):
         report = Lines.dev_mode_general_error("common")
         line_bot_api.push_message(address, TextSendMessage(text=report))
         if address != jessin_userid:  # send back up notification
