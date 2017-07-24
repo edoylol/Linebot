@@ -1988,9 +1988,9 @@ class Function:
 
                 send_detail_info()
 
-        except Exception as error_detail:
+        except Exception as exception_detail:
             function_name = "ITB ARC database"
-            OtherUtil.random_error(function_name,error_detail)
+            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
     def anime_download_link():
 
