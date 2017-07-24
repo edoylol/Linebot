@@ -16,14 +16,14 @@ from __future__ import unicode_literals
 
 import os
 import sys
+import math
 import random
 import time
-import math
+
 import requests,urllib, urllib.request
 import Database
 import unshortenit
 import json
-
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -69,54 +69,68 @@ userlist_update_count = 0
 tag_notifier_on = True
 
 
-
 @app.route("/callback", methods=['POST'])
-def callback():  # get X-Line-Signature header value
+def callback():
+    """ Get X-Line-Signature header value """
+
     signature = request.headers['X-Line-Signature']
 
-    # get request body as text
+    # Get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    # handle webhook body
+    # Handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
     return 'OK'
 
+
 def get_receiver_addr(event):
+    """ Get the address (source of event) weather it's group or personal chat """
+
+    # Enable calling from all functions and methods
     global address
+
+    # If the event was sent from a group
     if isinstance(event.source, SourceGroup):
-        try:
-            address = event.source.group_id
-        except:
-            address = event.source.user_id
+        address = event.source.group_id
+
+    # If the event was sent from a chat room
     elif isinstance(event.source, SourceRoom):
-        try:
-            address = event.source.room_id
-        except:
-            address = event.source.user_id
+        address = event.source.room_id
+
+    # If the event was sent from a personal chat
     else :
         address = event.source.user_id
+
     return address
 
-def update_user_list(event):
-    global userlist,userlist_update_count
 
+def update_user_list(event):
+    """ Function to notify if the userlist is updated TEMPORARILY """
+    global userlist, userlist_update_count
+
+    # If the add event come from personal chat
     if isinstance(event.source, SourceUser):
-        userlist_init_count = len(userlist.keys()) # list count before update
+        # Get the list count before update
+        userlist_init_count = len(userlist.keys())
 
         try :
+            # Get the user data
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
-            userlist.update({user_id:user})
+            userlist.update({user_id: user})
 
-            if len(userlist.keys()) != userlist_init_count : # theres an update
+            # If there's an update
+            if len(userlist.keys()) != userlist_init_count:
                 userlist_update_count = userlist_update_count + 1
 
-                if userlist_update_count >= 1 : # stay 2 until heroku upgraded / find a way
-                    report = Lines.dev_mode_userlist("notify update userlist") % (userlist_update_count)
+                if userlist_update_count >= 1:  # stay 1 until heroku upgraded (due to 30 mins inactivity)
+
+                    # Send report to Dev (reminder to update the list)
+                    report = Lines.dev_mode_userlist("notify update userlist") % (str(userlist_update_count))
                     command = "megumi dev mode print userlist"
                     buttons_template = ButtonsTemplate(title="Update userlist", text=report, actions=[
                         PostbackTemplateAction(label=Labels.print_userlist(), data=command)
@@ -124,50 +138,55 @@ def update_user_list(event):
                     template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
                     line_bot_api.push_message(jessin_userid, template_message)
 
-        except :
-            pass
+        except Exception as exception_detail:
+            function_name = "Sending Userlist notification"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
+    """ Function to handle event that is a text message """
+
     global token, original_text, text, jessin_userid, user, tag_notifier_on
 
+    # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
+    # Get general information from event
     original_text = event.message.text
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
     update_user_list(event)
 
-
+    # List of command available by sending text message
     if any(word in text for word in Lines.megumi()):
 
+        if all(word in text for word in ["pick ", "num"])            : Function.rand_int()
+        elif any(word in text for word in ["choose ", "which one"])  : Function.choose_one_simple()
 
-        if all(word in text for word in ["pick ","num"])          : Function.rand_int()
-        elif any(word in text for word in ["choose ","which one"])  : Function.choose_one_simple()
-
-        elif any(word in text for word in ["what ","show "])        :
-            if any(word in text for word in ["date","time","day"])      : Function.time_date()
-            elif any(word in text for word in ["weather","forecast"])   : Function.weather_forcast()
-            elif any(word in text for word in ["movie ","movies",
-                                               "film","films"])         :
-                if any(word in text for word in ["showing","list",
-                                                 "playing","schedule"])     : Function.show_cinema_movie_schedule()
+        elif any(word in text for word in ["what ", "show "])        :
+            if any(word in text for word in ["date", "time", "day"])    : Function.time_date()
+            elif any(word in text for word in ["weather", "forecast"])  : Function.weather_forcast()
+            elif any(word in text for word in ["movie ", "movies",
+                                               "film", "films"])        :
+                if any(word in text for word in ["showing", "list",
+                                                 "playing", "schedule"])    : Function.show_cinema_movie_schedule()
                 else                                                        : Function.false()
 
             elif all(word in text for word in ["anime"])                :
-                if any(word in text for word in ["download","link"])        : Function.anime_download_link()
+                if any(word in text for word in ["download", "link"])       : Function.anime_download_link()
                 else                                                        : Function.false()
 
-            elif any(word in text for word in ["is","are","info",
-                                               "information","?"])      :
-                if any(word in text for word in ["sw","summonerswar",
+            elif any(word in text for word in ["is", "are", "info",
+                                               "information", "?"])     :
+                if any(word in text for word in ["sw", "summonerswar",
                                                  "summoner"])               : Function.summonerswar_wiki()
                 elif all(word in text for word in ["itb"])                  :
                     if "'" in text                                              : Function.itb_arc_database()
                     else                                                        : Function.false()
                 elif any(word in text for word in ["in"])                       : Function.translate_text()
-                elif any(word in text for word in ["mean","wiki"])          :
+                elif any(word in text for word in ["mean", "wiki"])         :
                     if "'" in text                                              : Function.wiki_search()
                     else                                                        : Function.false()
 
@@ -192,15 +211,15 @@ def message_text(event):
 
         elif any(word in text for word in ["translate"])            : Function.translate_text()
         elif any(word in text for word in ["say "])                 : Function.echo()
-        elif all(word in text for word in ["send ","invite"])       : Function.send_invite(event)
-
+        elif all(word in text for word in ["send ", "invite"])      : Function.send_invite(event)
 
         elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
         elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
-        elif all(word in text for word in ["dev","mode"])           :
+        elif all(word in text for word in ["dev", "mode"])          :
+
             if Function.dev_authority_check(event)                      :
-                if all(word in text for word in ["print","userlist"])       : Function.dev_print_userlist()
-                elif any(word in text for word in ["turn ","able"])         :
+                if all(word in text for word in ["print", "userlist"])      : Function.dev_print_userlist()
+                elif any(word in text for word in ["turn ", "able"])        :
                     if any(word in text for word in ["tag notifier",
                                                      "notif", "mention"])       : Function.dev_mode_set_tag_notifier("set")
                     else                                                        : Function.false()
@@ -208,8 +227,8 @@ def message_text(event):
         elif all(word in text for word in ["test new feature"])     : Function.TEST()
         else                                                        : Function.false()
 
-    # special tag / mention function
-    if tag_notifier_on :
+    # Special tag / mention function
+    if tag_notifier_on:
         Function.tag_notifier(event)
 
 #@handler.add(MessageEvent, message=StickerMessage)
@@ -246,16 +265,22 @@ def handle_content_message(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
+    """ Function to handle event that is a postback message (send by template message)  """
+
     global token, original_text, text, jessin_userid, user, tag_notifier_on
 
+    # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
+
+    # Get general information from event
     original_text = event.postback.data
     text = original_text.lower()
     token = event.reply_token
     get_receiver_addr(event)
     update_user_list(event)
 
-    if original_text == 'ping': #dummy
+    # List of command that is available for postback event
+    if original_text == 'ping':
         line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
     elif all(word in text for word in ["confirmation invitation"])                  :
@@ -263,7 +288,7 @@ def handle_postback(event):
         elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
         elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
 
-    elif all(word in text for word in ["request","cinema list please"])             :
+    elif all(word in text for word in ["request", "cinema list please"])            :
         if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
         elif all(word in text for word in ["cgv"])                                      : Function.show_cinema_list("cgv")
 
@@ -280,89 +305,140 @@ def handle_postback(event):
 
 @handler.add(JoinEvent)
 def handle_join(event):
+    """ Function to handle join event (when bot join a chat room / group) """
+
     global token,jessin_userid
+
+    # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
     token = event.reply_token
     get_receiver_addr(event)
 
+    # Special function dedicated for join event
     Function.join()
 
 @handler.add(FollowEvent)
 def handle_follow(event):
+    """ Function to handle follow event (when someone add this bot) """
     global token, jessin_userid
+
+    # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     update_user_list(event)
     token = event.reply_token
 
+    # Special function dedicated for follow event
     Function.added(event)
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
+    """ Function to handle follow event (when someone block this bot) """
     global jessin_userid
+
+    # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     update_user_list(event)
 
+    # Special function dedicated for unfollow event
     Function.removed(event)
 
 
 """"===================================== Usable Function List ==================================================="""
 
+
 class Function:
     """====================== Main Function List ==========================="""
 
+    @staticmethod
     def rand_int():
+        """ Function to return random integer between the minimum and maximum number given in text """
+        try:
+            def random_number(min_number=1, max_number=5):
+                """ Function to generate random integer from min to max.
+                min set to 1 and max set to 5 by default. """
 
-        try :
-            def random_number(min=1, max=5):
-                # just in case
-                if min > max :
-                    temp = min
-                    min = max
-                    max = temp
+                # If min and max are wrongly put, swap them
+                if min_number > max_number:
+                    temp = min_number
+                    min_number = max_number
+                    max_number = temp
 
-                a = random.randrange(min, max+1)
-                b = random.randrange(min, max+1)
-                c = random.randrange(min, max+1)
-                d = random.randrange(min, max+1)
-                e = random.randrange(min, max+1)
+                # Sampling random for more random result
+                a = random.randrange(min_number, max_number+1)
+                b = random.randrange(min_number, max_number+1)
+                c = random.randrange(min_number, max_number+1)
+                d = random.randrange(min_number, max_number+1)
+                e = random.randrange(min_number, max_number+1)
 
-                return random.choice([a,b,c,d,e])
+                return random.choice([a, b, c, d, e])
+
+            def get_number():
+                """ Function to extract number from text """
+
+                found = []
+                # Iterate for each word, check weather it's a integer or not
+                for word in split_text:
+                    try:
+                        found.append(int(word))
+                    except ValueError:
+                        continue
+
+                return found
 
             split_text = text.split(" ")
-            found_num = []
-            for word in split_text:
-                try:
-                    found_num.append(int(word))
-                except:
-                    continue
-            try :
-                result = random_number(found_num[0],found_num[1])
-                reply = Lines.rand_int() % str(result)
-            except :
-                reply = "Seems something wrong, try again maybe ?"
+            found_num = get_number()
+            report = []
 
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            # If the number is exactly 2 (min and max)
+            if len(found_num) == 2:
+                result = random_number(found_num[0], found_num[1])
+                report.append(Lines.rand_int("success") % str(result))
+
+            # If the number is incomplete to serve as min and max, use default settings
+            elif len(found_num) < 2:
+                result = random_number()
+                report.append(Lines.rand_int("default"))
+                report.append(Lines.rand_int("success") % str(result))
+
+            # If there are too much number or other error happened
+            else:
+                report.append(Lines.rand_int("failed"))
+
+            # Send the result to the user
+            report = "\n".join(report)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         except Exception as exception_detail:
             function_name = "random integer"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
+    @staticmethod
     def echo():
+        """ Function to echo whatever surrounded by single apostrophe (') """
 
-        try :
-            try :
-                start_index = text.find("say ")+4
-                reply = Lines.echo() % str(original_text[start_index:])
-            except :
-                reply = "What should I say?"
+        try:
+            # Find the index of apostrophe
+            index_start = text.find("'") + 1
+            index_stop = text.rfind("'")
 
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            # If the text (which should be echo-ed) is found
+            if index_start != 0 and index_stop != (-1):
+                echo_text = text[index_start:index_stop]
+                report = Lines.echo("success") % echo_text
+
+            # If the text is not found
+            else:
+                report = Lines.echo("failed")
+
+            # Send the result
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         except Exception as exception_detail:
             function_name = "echo"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def choose_one_simple():
 
         try :
@@ -387,6 +463,7 @@ class Function:
             function_name = "Choose one"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def time_date():
 
         try :
@@ -457,6 +534,7 @@ class Function:
             function_name = "Time and Date"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def send_invite(event):
 
         try :
@@ -540,6 +618,7 @@ class Function:
             function_name = "Send Invite"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def invite_respond(event,cond):
 
         try :
@@ -568,6 +647,7 @@ class Function:
             function_name = "Invite respond"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def show_cinema_movie_schedule():
 
         try :
@@ -830,6 +910,7 @@ class Function:
             function_name = "Show cinema movie schedule"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def show_cinema_list(cond):
 
         try :
@@ -915,6 +996,7 @@ class Function:
             function_name = "Show cinema list"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def wiki_search():
 
         try :
@@ -1098,6 +1180,7 @@ class Function:
             function_name = "Wiki search"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def download_youtube():
 
         try :
@@ -1274,6 +1357,7 @@ class Function:
             function_name = "Youtube download"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def summonerswar_wiki(cond="default"):
 
         try :
@@ -1587,6 +1671,7 @@ class Function:
             function_name = "SW wiki"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def weather_forcast():
 
         try :
@@ -1871,6 +1956,7 @@ class Function:
             function_name = "Weather forecast"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def itb_arc_database():
 
         try:
@@ -1983,33 +2069,49 @@ class Function:
                 report = "\n".join(search_result)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
+            cont = True  # default flag
+
             itb_keyword = get_keyword()
             search_category, is_default_category = get_category()
 
             ARC_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
-            ARC_ITB_api_data = requests.get(ARC_api_call).json()
-            search_result = []
+            try :
+                ARC_ITB_api_data = requests.get(ARC_api_call).json()
+                search_result_count = ARC_ITB_api_data['totalCount']  # get the total result count
+            except :
+                report = Lines.itb_arc_database("database unreachable")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+                cont = False
 
-            search_result_count = ARC_ITB_api_data['totalCount']   # get the total result count
+            # If the data is successfully retrieved
+            if cont :
+                search_result = []
+                send_header()
+                send_result_count()
 
-            send_header()
-            send_result_count()
+                # continue only if the result is available
+                if search_result_count > 0:
 
-            # continue only if the result is available
-            if search_result_count > 0:
-                if search_category == "student":
-                    get_student_info()
-                elif search_category == "lecturer":
-                    get_lecturer_info()
-                elif search_category == "major":
-                    get_major_info()
+                    # re - format the data to make it more beautiful
+                    try :
+                        if search_category == "student":
+                            get_student_info()
+                        elif search_category == "lecturer":
+                            get_lecturer_info()
+                        elif search_category == "major":
+                            get_major_info()
+                        send_detail_info()
 
-                send_detail_info()
+                    except :
+                        report = Lines.itb_arc_database("data formatting failed")
+                        line_bot_api.push_message(address, TextSendMessage(text=report))
+
 
         except Exception as exception_detail:
             function_name = "ITB ARC database"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def anime_download_link():
 
         try :
@@ -2223,6 +2325,7 @@ class Function:
             function_name = "Anime Download Link"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
+    @staticmethod
     def translate_text():
 
         try :
@@ -2414,6 +2517,7 @@ class Function:
 
     """====================== Sub Function List ============================="""
 
+    @staticmethod
     def report_bug(event):
         try :
             user_id = event.source.user_id
@@ -2429,6 +2533,7 @@ class Function:
             reply = Lines.report_bug("fail")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    @staticmethod
     def join():
 
         reply = Lines.join("join")
@@ -2436,6 +2541,7 @@ class Function:
         report = Lines.join("report")
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    @staticmethod
     def leave(event):
 
         if isinstance(event.source, SourceGroup):
@@ -2470,6 +2576,7 @@ class Function:
             reply = Lines.leave("fail")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    @staticmethod
     def tag_notifier(event):
         if any(word in text for word in Lines.jessin()):
             try :
@@ -2479,14 +2586,17 @@ class Function:
             report = Lines.tag_notifier() % (sender,original_text)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    @staticmethod
     def notyetcreated():
         reply = Lines.notyetcreated()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    @staticmethod
     def false():
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    @staticmethod
     def added(event):
         try :
             user_id = event.source.user_id
@@ -2499,6 +2609,7 @@ class Function:
         report = Lines.added("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    @staticmethod
     def removed(event):
         try :
             user_id = event.source.user_id
@@ -2509,6 +2620,7 @@ class Function:
         report = Lines.removed("report") % (user)
         line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+    @staticmethod
     def dev_mode_set_tag_notifier(cond="pass"):
         global tag_notifier_on
         if cond == "set":
@@ -2535,7 +2647,7 @@ class Function:
         elif cond == "pass":
             pass
 
-
+    @staticmethod
     def dev_print_userlist():
         global userlist_update_count
         if userlist_update_count != 0 :
@@ -2551,6 +2663,7 @@ class Function:
             reply = Lines.dev_mode_userlist("userlist not updated yet")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
+    @staticmethod
     def dev_authority_check(event):
         try:
             user_id = event.source.user_id
@@ -2575,55 +2688,71 @@ class Function:
 
         return granted
 
-
-
-
-
-    def TEST(event):
+    @staticmethod
+    def TEST():
         return
-
-
 
 
 class OtherUtil:
 
-    def remove_symbols(word,cond="default"):
-        if cond == "default" :
+    @staticmethod
+    def remove_symbols(word, cond="default"):
+        """ Function to remove symbols from text """
+
+        # Several type of symbol list
+        if cond == "default":
             symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
-        elif cond == "for wiki search" :
+        elif cond == "for wiki search":
             symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":
             symbols = "1234567890!@#$%^&*()_+=-`~[]{}\|';:/?.>,<\""
+        else:
+            symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
 
+        # symbols removal process
         for i in range(0, len(symbols)):
-            word = word.replace(symbols[i], "")  # strong syntax to remove symbols
+            word = word.replace(symbols[i], "")
         if len(word) > 0:
             return word
 
-    def filter_words(text,cond="default"):
+    @staticmethod
+    def filter_words(text, cond="default"):
+        """ Function to filter text from symbols, use remove_symbols function """
+
         split_text = text.split(" ")
         filtered_text = []
         for word in split_text:
-            new_word = OtherUtil.remove_symbols(word,cond)
-            if new_word != None:
+            new_word = OtherUtil.remove_symbols(word, cond)
+            if new_word is not None:
                 filtered_text.append(new_word)
+
         return filtered_text
 
+    @staticmethod
     def filter_keywords(text, keyword):
+        """ Function to remove keywords (listed in a list) if it exist in the text """
+
         while any(word in text for word in keyword):
             for word in text:
                 if word in keyword:
                     text.remove(word)
         return text
 
+    @staticmethod
     def random_error(function_name,exception_detail):
+        """ Function to serve as last resort logger when unexpected error happened.
+        It send the exception via line push to Dev """
+
+        # Report to let group or other normal user know that something unexpected happened
         report = Lines.dev_mode_general_error("common")
         line_bot_api.push_message(address, TextSendMessage(text=report))
-        if address != jessin_userid:  # send back up notification
+
+        # Send back up notification to Dev, to let Dev know that something unexpected happened
+        if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-"""========================================== end of function list ================================================"""
+"""========================================== End of Function List ================================================"""
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
