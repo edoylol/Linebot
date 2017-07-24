@@ -309,7 +309,7 @@ def handle_unfollow(event):
 """"===================================== Usable Function List ==================================================="""
 
 class Function:
-"""====================== Main Function List ==========================="""
+    """====================== Main Function List ==========================="""
 
     def rand_int():
         try :
@@ -1989,7 +1989,7 @@ class Function:
                 send_detail_info()
 
         except Exception as error_detail:
-            function_name = "rand int"
+            function_name = "ITB ARC database"
             OtherUtil.random_error(function_name,error_detail)
 
     def anime_download_link():
