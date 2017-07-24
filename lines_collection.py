@@ -943,10 +943,10 @@ class Lines:  # class to store respond lines
                      "Something bad happened...\nI can't do that now.."]
         elif cond == "dev": # take 2 argument : func name , exception detail
             lines = ["Mastah, seems some unexpected error happened with %s :\n\nHere's the detail : \n%s",
-                     "Mastah, check this out...\n\nHere's the detail : \nError with : %s\n%s",
-                     "I think you should take a look at this..\n\nHere's the detail : \nError with : %s\n%s",
-                     "Mastah, seems you need to check this out..\n\nHere's the detail : \nError with : %s\n%s",
-                     "Mastah, help me with this...\n\nHere's the detail : \nError with : %s\n%s"]
+                     "Mastah, check this out...\nError with : %s\n\nHere's the detail : \n%s",
+                     "I think you should take a look at this..\nError with : %s\n\nHere's the detail : \n%s",
+                     "Mastah, seems you need to check this out..\nError with : %s\n\nHere's the detail : \n%s",
+                     "Mastah, help me with this...\nError with : %s\n\nHere's the detail : \n%s"]
 
         return random.choice(lines)
 
