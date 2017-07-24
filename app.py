@@ -1226,6 +1226,7 @@ class Function:
             else :
                 cont = True
 
+            # if youtube link is available
             if cont :
                 page_url = get_genyoutube(youtube_link)
                 try:
@@ -1237,6 +1238,7 @@ class Function:
                     line_bot_api.push_message(address, TextSendMessage(text=report))
                     cont = False
 
+            # if youtube download link is available
             if cont:
                 page_source_code_text = con.read()
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
