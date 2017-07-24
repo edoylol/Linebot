@@ -2335,10 +2335,10 @@ class Function:
             # extract from-to language from the text
             from_lang, is_from_lang_found = get_language("from")
             to_lang, is_to_lang_found = get_language("to")
+            from_lang_code = get_language_code(available_language, from_lang)
 
             # if destination language is found
             if is_to_lang_found:
-                from_lang_code = get_language_code(available_language, from_lang)
                 to_lang_code = get_language_code(available_language, to_lang)
 
             # destination language not found
