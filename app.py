@@ -2359,6 +2359,7 @@ class Function:
                 raw_bearer_token = str(auth_client.get_access_token())
                 bearer_token = 'Bearer ' + raw_bearer_token[2:-1]
                 translated_text = GetTextTranslation(bearer_token, textToTranslate, from_lang_code, to_lang_code)
+                translated_text = translated_text.lower()
 
             # destination language not available
             else:
@@ -2367,7 +2368,7 @@ class Function:
 
         # if the destination language is available
         if cont:
-            if textToTranslate != translated_text:
+            if textToTranslate != translated_text.lower():
                 result.append(Lines.translate_text("send translated").format(textToTranslate, to_lang, translated_text))
             else:
                 result.append(Lines.translate_text("already in that language") % to_lang)
