@@ -506,14 +506,17 @@ class Function:
                 timezone = default_gmt
 
                 keyword = ["gmt"]
-                # Search for number following gmt in text 
+                # Search for number which follow 'gmt' in text
                 for i in range(0, len(filtered_text)):
+
+                    # If the keyword is found
                     if any(word in filtered_text[i] for word in keyword):
                         try:
                             timezone = int(filtered_text[i + 1])
                             return timezone
                         except Exception:
-                            timezone = default_gmt
+                            # When user said 'time in gmt' it means gmt +0
+                            timezone = 0
 
                 return timezone
 
@@ -532,13 +535,13 @@ class Function:
             def convert_am_pm(hh):
                 """ Function to change 24 hours format into 12 hours format with Am or Pm """
 
-                am_pm = "Am"
+                am_pm = "am"
 
                 if int(hh) > 12:
                     hh = int(hh)
                     hh -= 12
                     hh = str(hh)
-                    am_pm = "Pm"
+                    am_pm = "pm"
 
                 return hh, am_pm
 
@@ -585,7 +588,7 @@ class Function:
 
                 # If user ask for date / day
                 if any(word in text for word in ["date", "day"]):
-                    report = Lines.date_time("show date").format(day, DD, ordinal(int(DD), MM, YYYY))
+                    report = Lines.date_time("show date").format(day, DD, ordinal(int(DD)), MM, YYYY)
 
                 # Else if user ask for time
                 elif "time" in text:
