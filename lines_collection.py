@@ -77,7 +77,7 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def date_time(self,cond):
+    def date_time(self, cond):
 
         if cond == "show date":  # Take 5 format arguments : 0.day 1.DD 2.ordinal(int(DD) 3.MM 4.YYYY
             lines = ["It's {0}, {3} {1}, {4}",  # It's Tuesday, June 16, 2017
@@ -100,6 +100,8 @@ class Lines:  # class to store respond lines
                      "I have the data, but I can't show it to you right now...",
                      "Seems the data is kinda messy...",
                      "I wonder why it's messy like this..."]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
