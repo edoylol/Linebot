@@ -102,7 +102,7 @@ def get_receiver_addr(event):
         address = event.source.room_id
 
     # If the event was sent from a personal chat
-    else :
+    else:
         address = event.source.user_id
 
     return address
@@ -117,7 +117,7 @@ def update_user_list(event):
         # Get the list count before update
         userlist_init_count = len(userlist.keys())
 
-        try :
+        try:
             # Get the user data
             user_id = event.source.user_id
             user = line_bot_api.get_profile(event.source.user_id).display_name
@@ -231,7 +231,7 @@ def message_text(event):
     if tag_notifier_on:
         Function.tag_notifier(event)
 
-#@handler.add(MessageEvent, message=StickerMessage)
+# @handler.add(MessageEvent, message=StickerMessage)
 # what does people do when being sent a sticker ???
 
 """  
@@ -253,7 +253,7 @@ def handle_sticker_message(event):
         print(e.error.details)
 """
 
-#@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+# @handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
 # what does people do when being sent a image, video, or audio ??? #
 
 """
@@ -262,6 +262,7 @@ def handle_content_message(event):
     token = event.reply_token
     get_receiver_addr(event)
 """
+
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
@@ -303,11 +304,12 @@ def handle_postback(event):
             if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
             else                                                                            : Function.false()
 
+
 @handler.add(JoinEvent)
 def handle_join(event):
     """ Function to handle join event (when bot join a chat room / group) """
 
-    global token,jessin_userid
+    global token, jessin_userid
 
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
@@ -317,6 +319,7 @@ def handle_join(event):
 
     # Special function dedicated for join event
     Function.join()
+
 
 @handler.add(FollowEvent)
 def handle_follow(event):
@@ -330,6 +333,7 @@ def handle_follow(event):
 
     # Special function dedicated for follow event
     Function.added(event)
+
 
 @handler.add(UnfollowEvent)
 def handle_unfollow(event):
@@ -422,8 +426,11 @@ class Function:
             index_start = text.find("'") + 1
             index_stop = text.rfind("'")
 
-            # If the text (which should be echo-ed) is found
-            if index_start != 0 and index_stop != (-1):
+            # Determine whether 2 apostrophe are exist and the text exist
+            text_to_echo_available = (index_stop - index_start) >= 1
+
+            # If there are at least 2 apostrophes found and the text (which should be echo-ed) is found as well
+            if text_to_echo_available:
                 echo_text = text[index_start:index_stop]
                 report = Lines.echo("success") % echo_text
 
@@ -436,73 +443,131 @@ class Function:
 
         except Exception as exception_detail:
             function_name = "echo"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def choose_one_simple():
+        """ Function to return one random item from listed items """
 
-        try :
-            split_text = text.split(" ")
-            found_options = []
-            for word in split_text:
-                if '#' in word:
-                    try:
-                        word = OtherUtil.remove_symbols(word)
-                        found_options.append(word)
-                    except:
-                        pass
-            try :
+        try:
+            def get_options(tag):
+                """ Function to return a list of found options """
+
+                found = []
+                split_text = text.split(" ")
+                for word in split_text:
+
+                    # If the word contain the item tag
+                    if tag in word:
+                        word = word.replace(tag, "")
+                        is_word_valid = (word is not None) and (word != "")
+
+                        # If the word is not None and not empty
+                        if is_word_valid:
+                            found.append(word)
+
+                return found
+
+            item_tag = '#'
+            found_options = get_options(item_tag)
+
+            # If the option(s) is/are available
+            if len(found_options) > 0:
                 result = random.choice(found_options)
-                reply = Lines.choose_one("success") % str(result)
-            except :
-                reply = Lines.choose_one("fail")
+                report = Lines.choose_one("success") % str(result)
 
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            # Else if the options is not valid or not available
+            else:
+                report = Lines.choose_one("fail")
+
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         except Exception as exception_detail:
             function_name = "Choose one"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def time_date():
+        """ Function to get the time and date from server """
 
-        try :
-            def find_GMT():
-                split_text = text.split(" ")
-                GMT_found_index = 0
-                for word in split_text:
-                    GMT_found_index += 1
-                    if word.upper() == "GMT":
+        try:
+            def find_gmt(default_gmt):
+                """ Function to return specific gmt if listed in text """
+
+                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                           'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                           'this', 'to', 'what', "what's", 'whats', 'will', 'you'
+                          ]
+                filtered_text = OtherUtil.filter_words(text, cond="date and time")
+                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+                # Initial state for timezone
+                timezone = default_gmt
+
+                keyword = ["gmt"]
+                # Search for number following gmt in text 
+                for i in range(0, len(filtered_text)):
+                    if any(word in filtered_text[i] for word in keyword):
                         try:
-                            for i in range(0, 5):
-                                try:
-                                    GMT = int(split_text[GMT_found_index + i])
-                                except:
-                                    pass
-                            GMT = int(GMT)
-                        except:
-                            GMT = 0
-                try:
-                    GMT = int(GMT)  # if still can't find requested GMT
-                except:
-                    GMT = 7  # default GMT+7
-                return GMT
+                            timezone = int(filtered_text[i + 1])
+                            return timezone
+                        except Exception:
+                            timezone = default_gmt
 
-            def valid_GMT(GMT):
-                if (GMT > 12) or (GMT < (-12)):
+                return timezone
+
+            def valid_gmt(gmt):
+                """ Return boolean whether the GMT is valid or not """
+
+                if (gmt > 12) or (gmt < (-12)):
                     return False
-                else :
+                else:
                     return True
 
-            if valid_GMT(find_GMT()):
-                try:
-                    GMT = find_GMT()
-                    split_time = time.ctime(time.time()+GMT*3600).split(" ")
-                    if ('' in split_time) or (None in split_time):
-                        for element in split_time :
-                            if (element == '') or (element == None):
-                                split_time.remove(element)
+            def ordinal(n):
+                """ Function to return an ordinal style of a number """
+                return str("%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4]))
 
+            def convert_am_pm(hh):
+                """ Function to change 24 hours format into 12 hours format with Am or Pm """
+
+                am_pm = "Am"
+
+                if int(hh) > 12:
+                    hh = int(hh)
+                    hh -= 12
+                    hh = str(hh)
+                    am_pm = "Pm"
+
+                return hh, am_pm
+
+            default_gmt = 7
+
+            cont = True
+            gmt_timezone = find_gmt(default_gmt)
+            is_gmt_valid = valid_gmt(gmt_timezone)
+
+            # Happen when gmt is not valid
+            if not is_gmt_valid:
+                report = "I think the timezone is a little bit off... should be between -12 to 12 isn't ??"
+                cont = False
+
+            # If the GMT is valid, format the data
+            if cont:
+
+                split_time = time.ctime(time.time() + gmt_timezone * 3600).split(" ")
+
+                # If there's unwanted element in the list
+                if ('' in split_time) or (None in split_time):
+
+                    # Remove the unwanted element
+                    for element in split_time :
+                        if (element == '') or (element is None):
+                            split_time.remove(element)
+
+                try:
+                    # Gather the date and time data into several variable
                     splitted_hour = split_time[3].split(":")
                     day = Lines.day()[split_time[0]]
                     MM = Lines.month()[split_time[1].lower()]
@@ -510,29 +575,30 @@ class Function:
                     YYYY = split_time[4]
                     hh = splitted_hour[0]
                     mm = splitted_hour[1]
-                    ss = splitted_hour[2]
 
-                    if any(word in text for word in ["date","day"]):
-                        reply = Lines.date(day, DD, MM, YYYY)
-                    elif "time" in text:
-                        AmPm = "Am"
-                        if int(hh) > 12:
-                            hh = int(hh)
-                            hh -= 12
-                            hh = str(hh)
-                            AmPm = "Pm"
-                        reply = Lines.time(hh, mm, AmPm)
                 except:
-                    reply = "Seems I can't get the date or time, I wonder why..."
+                    report = Lines.date_time("formatting error")
+                    cont = False
 
-            else : # happen when GMT is not valid
-                reply = "I think the timezone is a little bit off... should be between -12 to 12 isn't ??"
+            # If the data formatting success, send the result
+            if cont:
 
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                # If user ask for date / day
+                if any(word in text for word in ["date", "day"]):
+                    report = Lines.date_time("show date").format(day, DD, ordinal(int(DD), MM, YYYY))
+
+                # Else if user ask for time
+                elif "time" in text:
+                    hh, AmPm = convert_am_pm(hh)
+                    report = Lines.date_time("show time").format(hh, mm, AmPm)
+
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         except Exception as exception_detail:
             function_name = "Time and Date"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    """ ==========  26 July 2017 last update ============== """
 
     @staticmethod
     def send_invite(event):
@@ -2702,6 +2768,8 @@ class OtherUtil:
         # Several type of symbol list
         if cond == "default":
             symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
+        elif cond == "date and time":
+            symbols = "!@#$%^&*()+=`~[]{}\|;:'/?.>,<\""
         elif cond == "for wiki search":
             symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":

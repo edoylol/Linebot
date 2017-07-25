@@ -20,6 +20,8 @@ class OtherUtil:
         # Several type of symbol list
         if cond == "default":
             symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
+        elif cond == "date and time":
+            symbols = "!@#$%^&*()+=`~[]{}\|;:'/?.>,<\""
         elif cond == "for wiki search":
             symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":

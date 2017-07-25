@@ -8,7 +8,7 @@ from lines_collection import Lines, Labels, Picture
 from datetime import timedelta
 from datetime import datetime
 from xml.etree import ElementTree
-
+import math
 Lines = Lines()
 
 class OtherUtil:
@@ -20,6 +20,8 @@ class OtherUtil:
         # Several type of symbol list
         if cond == "default":
             symbols = "!@#$%^&*()+=-`~[]{}\|;:'/?.>,<\""
+        elif cond == "date and time":
+            symbols = "!@#$%^&*()+=`~[]{}\|;:'/?.>,<\""
         elif cond == "for wiki search":
             symbols = "!@#$%^&*+=-`~[]{}\|;:/?.>,<\""
         elif cond == "sw wiki":
@@ -69,4 +71,5 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
 

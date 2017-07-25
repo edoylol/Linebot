@@ -7,6 +7,7 @@ class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
 
     def rand_int(self, cond):
+
         if cond == "success":  # Take 1 argument : number
             lines = ["I think I will pick %s",
                      "How about %s ?",
@@ -26,30 +27,36 @@ class Lines:  # class to store respond lines
                      "I'll limit the range from 1 to 5..\n",
                      "Usually I chose between 1 to 5...\n",
                      "Let say the minimum is 1 and maximum is 5..\n"]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     def echo(self, cond):
+
         if cond == "success":  # Take 1 argument : text to be echo-ed
             lines = ["%s",
                      "%s :v",
-                     "wutt... \n\nbut whatever,,, \"%s\" ahahah",
+                     "wutt... \n\nbut whatever,,, \"%s\" ahahah ^^ ",
                      "no xD ! #pfft \n\n\nJK JK okay... \n\"%s\" xD",
                      "... \n\n\n\n\n\"%s\",, I guess (?)",
                      "hee... %s",
-                     "\"%s\",, is that good ?",
-                     "I don't understand, but \"%s\""]
+                     "\"%s\",, is that good ? :3 ",
+                     "Suree... \"%s\""]
         elif cond == "failed":
             lines = ["What should I say?",
                      "Which one?",
                      "Which one should I echo?",
                      "?? ._.\nWhat do you want me to say?",
                      "Which one should I say again?"]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     def choose_one(self, cond):
-        if cond == "success" :
+
+        if cond == "success":
             lines = ["I think I will choose %s",
                      "How about %s ?",
                      "%s I guess (?)",
@@ -58,33 +65,45 @@ class Lines:  # class to store respond lines
                      "I think %s (?)",
                      "%s then..",
                      "I prefer %s I think.."]
-
-        if cond == "fail" :
+        elif cond == "fail":
             lines = ["Try to add '#' before the item, like #this or #that",
                      "I'm sorry, but please add '#' before the item",
                      "Gomen,, I didn't catch that...",
                      "Gomen,, what do you want me to choose ? ",
                      "Gomen,, I can only choose from item with '#' .. ",
                      ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
-    def time(self, hh, mm, AmPm):
-        lines = ["It's %s:%s %s" % (hh,mm,AmPm), #It's 12:24 Am
-                 "About %s:%s %s" % (hh,mm,AmPm), #About 12:24 Am
-                 "%s:%s :>" % (hh,mm), # 12:24 :>
-                 "It's %s:%s right now.." % (hh,mm), #It's 12:24 right now..
-                 "Almost %s:%s,," % (hh,mm) ]#Almost 12:24,,
+    def date_time(self,cond):
+
+        if cond == "show date":  # Take 5 format arguments : 0.day 1.DD 2.ordinal(int(DD) 3.MM 4.YYYY
+            lines = ["It's {0}, {3} {1}, {4}",  # It's Tuesday, June 16, 2017
+                     "It's {2} of {3}",         # It's 16th of June
+                     "{3} {1}, {4}",            # June 16, 2017
+                     "Today is {0},{2} {3}",    # Today is Tuesday, 16th June
+                     "Today's date is {1}",     # Today's date is 16
+                     "I think it's {3} {1}"     # I think it's June 16
+                     ]
+        elif cond == "show time":  # Take 3 format arguments : 0.hh 1.mm 2.AmPm
+            lines = ["It's {0}:{1} {2}",  # It's 12:24 Am
+                     "About {0}:{1} {2}",  # About 12:24 Am
+                     "{0}:{1} :>",  # 12:24 :>
+                     "It's {0}:{1} right now..",  # It's 12:24 right now..
+                     "Almost {0}:{1},,"  # Almost 12:24,,
+                     ]
+        elif cond == "formatting error":
+            lines = ["Seems there's kind of formatting error..",
+                     "I think there's kind of formatting error...",
+                     "I have the data, but I can't show it to you right now...",
+                     "Seems the data is kinda messy...",
+                     "I wonder why it's messy like this..."]
+
         return random.choice(lines)
 
-    def date(self, day, DD, MM, YYYY):
-        ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
-        lines = ["It's %s, %s %s, %s" % (day, MM, DD, YYYY),  # It's Tuesday, June 16, 2017
-                 "It's %s of %s" % (ordinal(int(DD)), MM),  # It's 16th of June
-                 "%s %s, %s" % (MM, DD, YYYY),  # June 16, 2017
-                 "Today is %s,%s %s" % (day, ordinal(int(DD)), MM),  # Today is Tuesday, 16th June
-                 "Today's date is %s" % DD,  # Today's date is 16
-                 "I think it's %s %s" % (MM, DD)]  # I think it's June 16
-        return random.choice(lines)
+    """ ==========  26 July 2017 last update ============== """
 
     def invite(self, cond):
         if cond == "header" : #  % sender
@@ -988,25 +1007,28 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     def template_cond(self, cond):
-        if cond == "a" :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     ""]
 
-        else :
+        if cond == "a":
             lines = ["",
                      "",
                      "",
                      "",
+                     ""]
+        elif cond == "b":
+            lines = ["",
                      "",
                      "",
                      "",
                      ""]
+        elif cond == "c":
+            lines = ["",
+                     "",
+                     "",
+                     "",
+                     ""]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
     """=================== Some Extra Lines Storage ======================="""
