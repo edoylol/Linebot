@@ -6,7 +6,8 @@ import math
 class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
 
-    def rand_int(self, cond):
+    @staticmethod
+    def rand_int(cond):
 
         if cond == "success":  # Take 1 argument : number
             lines = ["I think I will pick %s",
@@ -32,7 +33,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def echo(self, cond):
+    @staticmethod
+    def echo(cond):
 
         if cond == "success":  # Take 1 argument : text to be echo-ed
             lines = ["%s",
@@ -54,7 +56,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def choose_one(self, cond):
+    @staticmethod
+    def choose_one(cond):
 
         if cond == "success":
             lines = ["I think I will choose %s",
@@ -77,7 +80,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def date_time(self, cond):
+    @staticmethod
+    def date_time(cond):
 
         if cond == "show date":  # Take 5 format arguments : 0.day 1.DD 2.ordinal(int(DD) 3.MM 4.YYYY
             lines = ["It's {0}, {3} {1}, {4}",  # It's Tuesday, June 16, 2017
@@ -105,42 +109,46 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    """ ==========  26 July 2017 last update ============== """
+    @staticmethod
+    def invite(cond):
 
-    def invite(self, cond):
-        if cond == "header" : #  % sender
+        if cond == "header":  # Take 1 argument : sender
             lines = ["Konichiwa, %s invite you to : ",
                      "Nee,, %s invite you to : ",
                      "Konichiwa,, you got invitation from %s : ",
                      "Nee,,you got invitation from %s : ",
                      "Sumimasen,, you got invitation from %s : "
-                    ]
-        elif cond == "success" :
+                     ]
+        elif cond == "success":  # Take 1 argument : amount of invitation sent
             lines = ["Done,, %s invitations sent ^^ ",
                      "Invitations sent, Megumi has delivered %s invitation",
                      "Megumi has delivered your invitation to %s participant",
                      "Done,, Megumi has sent your invitation to %s person",
                      "Megumi report : %s invitations sent successfully"
                      ]
-
-        elif cond == "failed" :
+        elif cond == "failed":
             lines = ["Gomenne, seems I can't send the invitation..",
                      "Seems something wrong about the invitation, wanna check it once more time ?",
                      "Megumi can't send your invitation right now.. sorry..",
                      "Hmm.. I wonder why I can't send your invitation though...",
                      "Gomen, please try to send the invitation again.."
                      ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
-    def invite_report(self, cond):
-        if cond == "respond recorded" :
+    @staticmethod
+    def invite_report(cond):
+
+        if cond == "respond recorded":  # Take 1 argument : responder
             lines = ["Thanks for your response %s, Megumi will pass it right now ~",
                      "OK %s..Megumi will let (him/her) know...",
                      "I see.. thanks for your response %s ..",
                      "Thanks %s,, Megumi will tell (him/her) ASAP ^^",
                      "Kay %s, I will let (him/her) know.."
-                    ]
-        elif cond == "desc missing" :
+                     ]
+        elif cond == "desc missing":
             lines = ["I think the description is missing...",
                      "Megumi will still send the invitation, even though there is no description..",
                      "Try to add description next time ,kay ? ^^ ",
@@ -154,49 +162,50 @@ class Lines:  # class to store respond lines
                      "If you want to add participant list next time, just use 'to participant_list'",
                      "If there is no participant list, it will be sent to dev list."
                      ]
-        elif cond == "yes" : #  % responder
+        elif cond == "yes":  # Take 1 argument : responder
             lines = ["About the invitation, %s said that (he/she) will come..",
                      "About the invitation, %s said 'OK'",
                      "About the invitation, %s confirmed 'OK'",
                      "About the invitation, %s said 'sure~'",
                      "About the invitation, I think %s said 'OK'"
                      ]
-        elif cond == "no" :
+        elif cond == "no":  # Take 1 argument : responder
             lines = ["About the invitation, %s said sorry that (he/she) can't go..",
                      "About the invitation, %s rejected the offer",
                      "About the invitation, %s declined the offer",
                      "About the invitation, %s said 'maybe later'",
                      "About the invitation, I think %s said that (he/she) can't fulfill the request"
-                    ]
-
-        elif cond == "pending" :
+                     ]
+        elif cond == "pending":  # Take 1 argument : responder
             lines = ["About the invitation, %s is still thinking whether going or not",
                      "About the invitation, %s will contact you later..",
                      "About the invitation, %s is unsure about that invitation outcome",
                      "About the invitation, %s can't guarantee (his/her) approval",
                      "About the invitation, %s said that (he/she) will think about it"
-                    ]
+                     ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
-    def show_cinema_movie_schedule(self, cond):
-        if cond == "header" : # accept 1 % tag list
+    @staticmethod
+    def show_cinema_movie_schedule(cond):
 
+        if cond == "header":  # Take 1 argument : tag list
             lines = ["Here's the information Megumi found while using '%s' as tag..\n",
                      "I tried using '%s' as tag, and found those...\n",
                      "Here's the information you requested ^^\n(using '%s' as tag)\n",
                      "Here you go~ \nMegumi used '%s' as search tag btw..\n",
                      "Here's the schedule I found with '%s' as tag..\n"
                      ]
-        elif cond == "cinema name" : # accept 1 % cinema name
-
+        elif cond == "cinema name":  # Take 1 argument : cinema name
             lines = [" ♦♦  %s  ♦♦ \n",
                      "(・ω・) %s (・ω・)\n",
                      " ❤❤   %s   ❤❤ \n",
                      " ~~~   %s   ~~~ \n",
                      " >>>   %s   <<< \n"
                      ]
-        elif cond == "No cinema found" : # accept 1 % tag list
-
+        elif cond == "No cinema found":  # Take 1 argument : tag list
             lines = ["No cinema is found :<  \nI tried to search using '%s' as tag",
                      "Somehow Megumi can't find cinema with '%s' name..",
                      "There's no cinema under '%s' name..",
@@ -205,73 +214,78 @@ class Lines:  # class to store respond lines
                      "Megumi can't find the cinema you requested (%s)..",
                      "I don't see any cinema by searching using '%s' :< "
                      ]
-        elif cond == "Too many cinemas" : # accept 1 % tag list
-
+        elif cond == "Too many cinemas":  # Take 1 argument : tag list
             lines = ["I found too many cinemas with '%s' as tag",
                      "There're too many cinemas \n with '%s' as tag",
                      "Try using more specific tags than '%s', there're too many cinemas..",
                      "I can't figure out which cinema with '%s'\nThere're too many of them...",
                      "Be specific please,, there're tons of cinemas with '%s'"
                      ]
-        elif cond == "No keyword found" :
-
+        elif cond == "No keyword found":
             lines = ["Megumi can't find without keyword.. .-.",
                      "Please specify which cinema :> ",
                      "Did you include keyword already ? I don't see those..",
                      "Which cinema do you want ?",
                      "There're a lot of cinemas, which one ?"
                      ]
-        elif cond == "failed to open the the page" :
-
+        elif cond == "failed to open the the page":
             lines = ["Megumi seems can't open the page..",
                      "Something wrong happened when I tried to open the page..",
                      "Gomen, Megumi can't give you the schedule right now..",
                      "Gomen, Megumi failed to open the the page..",
                      "Seems Megumi can't access the information right now.."
                      ]
-        elif cond == "failed to show movie data" :
-
+        elif cond == "failed to get movie data":
             lines = ["Gomen, Megumi failed to gather movies data",
+                     "Seems I can't get the schedule..",
+                     "Gomenne, somehow I can't get the schedule..",
+                     "Gomenne, there's some problem when I want to get the schedule..",
+                     "I've opened the page, but I can't get the data right now ..",
+                     ]
+        elif cond == "failed to show movie data":
+            lines = ["Gomen, Megumi failed to show movies data",
                      "Seems I can't show the schedule..",
                      "Gomenne, somehow I can't show the schedule..",
                      "Gomenne, there's some problem when I want to show the schedule..",
                      "I've gathered the schedule, but I can't send it to you right now ..",
                      ]
-        elif cond == "footer" :
-
+        elif cond == "footer":
             lines = [" ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
                      " Hope you enjoy the show later ~",
                      " (=^ ◡ ^=) end 	(=^ ◡ ^=)",
                      " (＾• ω •＾) enjoy the show ~ ",
                      "      ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
-        elif cond == "asking to show cinema list" :
-
+        elif cond == "asking to show cinema list":
             lines = ["Wanna see the cinema list ?",
                      "Nee,, wanna see the cinema list ?",
                      "Let's take a look at the cinema list :> ",
                      "How about seeing the cinema list ? ",
                      "I have the cinema list, wanna see ?",
                      ]
-        elif cond == "show cinema list" :
-
+        elif cond == "show cinema list":
             lines = ["Here you go..  \n",
                      "These are the cinemas I could find ~\n",
                      "Pick the cinemas from the list below kay ? :> \n",
                      "Try to add some of this name into search next time ^^\n",
                      "These are the cinema list you requested..\n",
                      ]
-        elif cond == "specify the company" :
-
+        elif cond == "specify the company":
             lines = ["Does it have CGV or XXI ? I don't remember...\n(Try to add either 'cgv' or 'xxi')",
                      "Is it CGV ? or maybe XXI ? I'm not sure...\n(Try to add either 'cgv' or 'xxi')",
                      "Which cinema list is it? CGV or XXI ? \n(Try to add either 'cgv' or 'xxi')",
                      "Which cinema list should I search from?\n(Try to add either 'cgv' or 'xxi')",
-                     "Gomen,, please specify which cinema do you want me to search for..\n(Try to add either 'cgv' or 'xxi')",
+                     "Gomen,, please specify which cinema do you want me to search for..\n(Try to add 'cgv' or 'xxi')",
                      ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
-    def wiki_search(self, cond):
+    """ ==========  27 July 2017 last update ============== """
+
+    @staticmethod
+    def wiki_search(cond):
         if cond == "page not found" : # takes 2 % (language, keyword)
             lines = ["I think %s wikipedia does not have an article about '%s' ... ",
                      "Gomen, I tried to search %s wikipedia, but I can't find '%s' ",
@@ -328,7 +342,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def download_youtube(self, cond):
+    @staticmethod
+    def download_youtube(cond):
         if cond == "page not found" :
             lines = ["Are you sure you include the youtube link correctly ?",
                      "I can't find the link you want to download...",
@@ -374,7 +389,8 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-    def summonerswar_wiki(self, cond):
+    @staticmethod
+    def summonerswar_wiki(cond):
         if cond == "send button header" :
             lines = ["Just tap the information you need...",
                      "I have several info about this monster..",
@@ -441,7 +457,8 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-    def weatherforecast(self, cond):
+    @staticmethod
+    def weatherforecast(cond):
         if cond == "header" :
             lines = ["I found the information you requested :>",
                      "Here's the information you asked for..",
@@ -477,7 +494,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def weatherforecast_tips(self, cond):
+    @staticmethod
+    def weatherforecast_tips(cond):
         if cond == "clouds" : # USE LOWER AS COND
             lines = ["The sky seems a bit cloudy today...\nI wonder if it will rain soon...",
                      "Don't forget to bring umbrella if you are going out.. \nIt's kinda cloudy right now..",
@@ -542,7 +560,8 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-    def itb_arc_database(self, cond):
+    @staticmethod
+    def itb_arc_database(cond):
 
         if cond == "header":  # take 1 argument itb_keyword
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
@@ -613,7 +632,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def anime_download_link(self, cond):
+    @staticmethod
+    def anime_download_link(cond):
 
         if cond == "header": # take 1 argument (title)
             lines = ["Sure...be right back, getting %s download links from cyber12...",
@@ -689,7 +709,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def translate_text(self, cond):
+    @staticmethod
+    def translate_text(cond):
         if cond == "text to translate not found":
             lines = ["Which should I translate?",
                      "Which sentence do you want me to translate?",
@@ -723,7 +744,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def notyetcreated(self):
+    @staticmethod
+    def notyetcreated():
         lines = ["Gomen,, this function is not ready..",
                  "Gomen,, please try again later :)",
                  "Gomen,, I can't do that yet :\">",
@@ -734,7 +756,8 @@ class Lines:  # class to store respond lines
                  "Gomen,, I don't understand this yet.., but I wish I could help :)"]
         return random.choice(lines)
 
-    def report_bug(self, cond):
+    @staticmethod
+    def report_bug(cond):
         if cond == "success":
             lines = ["Thank you for your report :>",
                      "Arigatoo... wish me luck to fix this problem :\")",
@@ -764,8 +787,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-
-    def join(self, cond):
+    @staticmethod
+    def join(cond):
 
         if cond == "join" :
             lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend!",
@@ -787,7 +810,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def leave(self, cond):
+    @staticmethod
+    def leave(cond):
         if cond == "leave" :
             lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
                      '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
@@ -824,8 +848,8 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-
-    def false(self):
+    @staticmethod
+    def false():
         lines = ["Gomen,, what was that ?",
                  "Are you calling me ?",
                  "Hmm ? ",
@@ -836,7 +860,8 @@ class Lines:  # class to store respond lines
                  " what ?? ._. "]
         return random.choice(lines)
 
-    def tag_notifier(self):
+    @staticmethod
+    def tag_notifier():
         lines = ['Master, I think %s is calling you.. \n\n"%s"',
                  '%s is calling you master.. \n\n"%s"',
                  'Master, I think your name is being called by %s..\n\n"%s"',
@@ -845,9 +870,8 @@ class Lines:  # class to store respond lines
                  ]
         return random.choice(lines)
 
-
-
-    def added(self, cond):
+    @staticmethod
+    def added(cond):
         if cond == "added" :
             lines = [" Nyaann~ Thanks for adding me %s ^^ \nhope we can be friend !",
                      " Thanks for adding Megumi :3 \nHope we can be friend, %s ^^",
@@ -869,7 +893,8 @@ class Lines:  # class to store respond lines
                      ]
         return random.choice(lines)
 
-    def removed(self, cond):
+    @staticmethod
+    def removed(cond):
         if cond == "removed" :
             lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
                      '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
@@ -899,7 +924,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def dev_mode_set_tag_notifier(self, cond):
+    @staticmethod
+    def dev_mode_set_tag_notifier(cond):
         if cond == "on" :
             lines = ["OK, I will tell you if someone tag you master ~",
                      "Tag notifier is on active mode :> ",
@@ -927,7 +953,8 @@ class Lines:  # class to store respond lines
                      "I think you gave wrong instruction (?) xD"]
         return random.choice(lines)
 
-    def dev_mode_userlist(self, cond):
+    @staticmethod
+    def dev_mode_userlist(cond):
         if cond == "print userlist success" :
             lines = ["Print success, %d new entries recorded.\nDon't forget to print until 0 updates ^^ ~ ",
                      "Roger master,, %d new entries has been recorded.",
@@ -962,7 +989,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def dev_mode_authority_check(self, cond):
+    @staticmethod
+    def dev_mode_authority_check(cond):
         if cond == "failed" :
             lines = ["Megumi can't enter Dev Mode now, try again later..",
                      "Megumi can't verify your id, so I can't grant you access..",
@@ -992,7 +1020,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def dev_mode_general_error(self, cond):
+    @staticmethod
+    def dev_mode_general_error(cond):
         if cond == "common" :
             lines = ["Seems some unexpected error happened...",
                      "Gommen, I tried to do it but I can't...",
@@ -1008,7 +1037,8 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    def template_cond(self, cond):
+    @staticmethod
+    def template_cond(cond):
 
         if cond == "a":
             lines = ["",
@@ -1035,13 +1065,16 @@ class Lines:  # class to store respond lines
 
     """=================== Some Extra Lines Storage ======================="""
 
-    def megumi(self):
+    @staticmethod
+    def megumi():
         return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
 
-    def jessin(self):
+    @staticmethod
+    def jessin():
         return ['jessin','jes','@jessin d','jess','jssin',]
 
-    def day(self):
+    @staticmethod
+    def day():
         return {'Mon' : 'Monday' ,
                 "Tue" : "Tuesday" ,
                 "Wed" : "Wednesday",
@@ -1050,7 +1083,8 @@ class Lines:  # class to store respond lines
                 "Sat" : "Saturday",
                 "Sun" : "Sunday"}
 
-    def month(self):
+    @staticmethod
+    def month():
         return {'jan' : 'January',
                 'feb' : 'February',
                 'mar' : 'March',
@@ -1068,7 +1102,8 @@ class Lines:  # class to store respond lines
 class Labels: # more like my response template
     """=================== Main Labels Storage ======================="""
 
-    def confirmation(self, cond):
+    @staticmethod
+    def confirmation(cond):
 
         if cond == "yes" :
             lines = ["Sure,,",
@@ -1090,7 +1125,8 @@ class Labels: # more like my response template
 
         return random.choice(lines)
 
-    def print_userlist(self):
+    @staticmethod
+    def print_userlist():
         lines = ["Sure,,print it out",
                  "Go ahead..",
                  "Go ahead Megumi..",
@@ -1102,7 +1138,8 @@ class Labels: # more like my response template
                  ]
         return random.choice(lines)
 
-    def template(self):
+    @staticmethod
+    def template():
         lines = ["",
                  "",
                  "",
@@ -1113,7 +1150,8 @@ class Labels: # more like my response template
                  ""]
         return random.choice(lines)
 
-    def template_cond(self, cond):
+    @staticmethod
+    def template_cond(cond):
         if cond == "a" :
             lines = ["",
                      "",
@@ -1139,7 +1177,8 @@ class Labels: # more like my response template
 class Picture :
     """=================== Main Picture URL Storage ======================="""
 
-    def header(self, cond):
+    @staticmethod
+    def header(cond):
         if cond == "background" :
             pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/037/small/Abstract_Blur_4K_Motion_Background_Loop.jpg",
@@ -1166,7 +1205,8 @@ class Picture :
 
         return random.choice(pic)
 
-    def weatherforecast(self, cond):
+    @staticmethod
+    def weatherforecast(cond):
         if cond == "clouds" : # USE LOWER AS COND
             pic = ["https://image.prntscr.com/image/PGZ4Gs3tTYWr9qFJVfxIpQ.png",
                     "https://image.prntscr.com/image/gUspo5phTG6Zaak1ZIgUIQ.png",

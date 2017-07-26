@@ -9,7 +9,7 @@ from datetime import timedelta
 from datetime import datetime
 from xml.etree import ElementTree
 
-Lines = Lines()
+
 
 class OtherUtil:
 
@@ -71,4 +71,3 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-

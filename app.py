@@ -498,7 +498,7 @@ class Function:
                            'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
                            'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
                            'this', 'to', 'what', "what's", 'whats', 'will', 'you'
-                          ]
+                           ]
                 filtered_text = OtherUtil.filter_words(text, cond="date and time")
                 filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
 
@@ -545,9 +545,11 @@ class Function:
 
                 return hh, am_pm
 
+            # General variable
             default_gmt = 7
-
+            report = ""
             cont = True
+
             gmt_timezone = find_gmt(default_gmt)
             is_gmt_valid = valid_gmt(gmt_timezone)
 
@@ -565,7 +567,7 @@ class Function:
                 if ('' in split_time) or (None in split_time):
 
                     # Remove the unwanted element
-                    for element in split_time :
+                    for element in split_time:
                         if (element == '') or (element is None):
                             split_time.remove(element)
 
@@ -601,383 +603,565 @@ class Function:
             function_name = "Time and Date"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    """ ==========  26 July 2017 last update ============== """
-
     @staticmethod
     def send_invite(event):
-
-        try :
+        """ Function to send button template as invitation. Detail and participant list is given in text """
+        try:
             global invitation_sender, invitation_sender_id
 
-            """ invitation data """
+            def get_invitation_data():
+                """ Function to find the description of invitation from text """
 
-            try : # find desc needed
-                found_index = [i for i, x in enumerate(text) if x == '*']
-                desc_start = found_index[0] + 1
-                desc_end = found_index[1]
-                desc = text[desc_start:desc_end]
-                no_desc = False
-            except :
-                no_desc = True
-                desc = " (つ≧▽≦)つ "
+                # Find the index of apostrophe
+                index_start = text.find("'")+1
+                index_stop = text.rfind("'")
 
-            try : # find where to send
-                split_text = text.split(" ")
-                filtered_text = []
-                for word in split_text:
-                    new_word = OtherUtil.remove_symbols(word)
-                    if new_word != None:
-                        filtered_text.append(new_word)
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
 
-                invite_list_index = filtered_text.index("to") + 1
-                list_name = filtered_text[invite_list_index]
-                invite_list = Database.list_dictionary[list_name]
-                no_invite_list = False
-            except :
-                no_invite_list = True
-                invite_list = Database.list_dictionary["dev"]
+                if text_available:
+                    invite_desc = text[index_start:index_stop]
+                    no_invite_desc = False
+                else:
+                    invite_desc = " (つ≧▽≦)つ "
+                    no_invite_desc = True
 
-            """ report if some args missing """
+                return invite_desc, no_invite_desc
 
+            def get_participant_list():
+                """ Function to find participant list from text """
+
+                try:
+                    # Get the participant list name
+                    filtered_text = OtherUtil.filter_words(text)
+                    invite_list_index = filtered_text.index("to") + 1
+                    list_name = filtered_text[invite_list_index]
+
+                    # Try to find the list from database
+                    invite_list = Database.list_dictionary[list_name]
+                    no_invite_list = False
+
+                # If the list is not listed in database, or the list name is unavailable
+                except Exception:
+                    invite_list = Database.list_dictionary["dev"]
+                    no_invite_list = True
+
+                return invite_list, no_invite_list
+
+            # General variable
+            cont = True
+            report = []
+            desc, no_desc = get_invitation_data()
+            invite_list, no_invite_list = get_participant_list()
+
+            # If there is missing element, send special notification
             if no_desc or no_invite_list:
-                if no_desc :
-                    report = Lines.invite_report("desc missing")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                if no_invite_list :
-                    report = Lines.invite_report("participant list missing")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                if no_desc:
+                    report.append(Lines.invite_report("desc missing"))
+                    cont = True
+                if no_invite_list:
+                    report.append(Lines.invite_report("participant list missing"))
+                    cont = False
 
-            header_pic = Picture.header("background")
-            title = 'Invitation'
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            if (isinstance(event.source, SourceGroup)) or (isinstance(event.source, SourceRoom)):
-                invitation_sender = "someone"
-            else:
-                invitation_sender_id = event.source.user_id
-                invitation_sender = userlist[invitation_sender_id]
+            # If the participant list is valid, create the invitation
+            if cont:
 
-            """ generate the invitation """
+                # Default variable for template message
+                header_pic = Picture.header("background")
+                title = 'Invitation'
 
-            buttons_template = ButtonsTemplate(title=title, text=desc, thumbnail_image_url=header_pic, actions=[
-                PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
-                PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
-                PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
-            ])
-            template_message = TemplateSendMessage(alt_text=desc, template=buttons_template)
+                # Get the sender information
+                try:
+                    invitation_sender_id = event.source.user_id
+                    invitation_sender = userlist[invitation_sender_id]
+                except Exception:
+                    invitation_sender = "someone"
 
-            """ sending the invitation """
+                # Generate the invitation
+                buttons_template = ButtonsTemplate(title=title, text=desc, thumbnail_image_url=header_pic, actions=[
+                    PostbackTemplateAction(label='Count me in', data='confirmation invitation : yes'),
+                    PostbackTemplateAction(label='No thanks', data='confirmation invitation : no'),
+                    PostbackTemplateAction(label='Decide later', data='confirmation invitation : pending')
+                ])
+                template_message = TemplateSendMessage(alt_text=desc, template=buttons_template)
 
-            try :
-                report = Lines.invite("header") % invitation_sender
-                invitation_sent = 0
-                for participan in invite_list :
-                    line_bot_api.push_message(participan,TextSendMessage(text=report))
-                    line_bot_api.push_message(participan, template_message)
-                    invitation_sent += 1
-                if invitation_sender != "someone" :
-                    report = Lines.invite("success") % invitation_sent
-                    line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report))
+                # Sending the invitation
+                try:
+                    report = Lines.invite("header") % invitation_sender
+                    invitation_sent = 0
 
-            except :
-                if invitation_sender != "someone" :
-                    report = Lines.invite("failed")
-                    line_bot_api.push_message(invitation_sender_id,TextSendMessage(text=report) )
+                    # Send the invitation to user listed in the participant list
+                    for participant in invite_list:
+                        line_bot_api.push_message(participant, TextSendMessage(text=report))
+                        line_bot_api.push_message(participant, template_message)
+                        invitation_sent += 1
+
+                    # If the invitation request is sent via personal chat, send confirmation of invitations sent
+                    if invitation_sender != "someone":
+                        report = Lines.invite("success") % (str(invitation_sent))
+                        line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+
+                # If there's unexpected error while sending the invite
+                except Exception:
+
+                    # If the sender is known, send 'failed' notification to the sender
+                    if invitation_sender != "someone":
+                        report = Lines.invite("failed")
+                        line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+                    raise
 
         except Exception as exception_detail:
             function_name = "Send Invite"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
-    def invite_respond(event,cond):
+    def invite_respond(event, cond):
+        """ Function to notice the invitation sender about the response from participants """
 
-        try :
+        try:
             global invitation_sender
-            try :
+
+            # Get the responder data
+            try:
                 responder_id = event.source.user_id
                 responder = userlist[responder_id]
-            except :
+            except Exception:
+                responder_id = address
                 responder = "someone"
 
-            # send respond report
+            # Send report to responder if their respond is recorded
             report = Lines.invite_report("respond recorded") % responder
             line_bot_api.push_message(responder_id, TextSendMessage(text=report))
 
-            # send report to sender
-            report = Lines.invite_report(cond) % responder
-            try :
-                if (invitation_sender != "someone") and (invitation_sender != None):
+            # Send report to sender about the response
+            try:
+                report = Lines.invite_report(cond) % responder
+
+                # If the sender is known, send the report
+                if (invitation_sender != "someone") and (invitation_sender is not None):
                     line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
+
+                # If the sender is unknown / group / room, send the report to default userid instead
                 else:
                     line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-            except :
-                pass
+
+            # If there's unexpected error
+            except Exception:
+                raise
 
         except Exception as exception_detail:
             function_name = "Invite respond"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def show_cinema_movie_schedule():
+        """ Function to show list of movies playing at certain cinemas """
 
-        try :
-            if "xxi" in text :
-                def get_cinema_list(search_keyword):
-                    if search_keyword == [] or search_keyword == [""]:
-                        report = Lines.show_cinema_movie_schedule("No keyword found")
-                        line_bot_api.push_message(address, TextSendMessage(text=report))
-                        return []
-                    else:
-                        cinemas = []
-                        page_url = "http://www.21cineplex.com/theaters"
-                        try:
-                            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                            con = urllib.request.urlopen(req)
-                            page_source_code_text = con.read()
-                            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                        except:
-                            report = Lines.show_cinema_movie_schedule("failed to open the the page")
-                            line_bot_api.push_message(address, TextSendMessage(text=report))
+        try:
+            cont = True
 
-                        links = mod_page.findAll('a')
-                        for link in links:
-                            cinema_link = link.get("href")
-                            if all(word in cinema_link for word in
-                                   (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
-                                cinemas.append(cinema_link)
-
-                        if len(cinemas) > 1:
-                            cinemas = set(cinemas)
-                        return cinemas
-
-                def get_movie_data(cinema):
-
-                    movielist = []
-                    desclist = []
-                    schedulelist = []
-
-                    req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                    mod_schedule_table = BeautifulSoup(str(mod_page.find("table", {"class": "table-theater-det"})), "html.parser")
-
-                    movies = mod_schedule_table.findAll('a')
-                    for movie in movies:
-                        title = movie.string
-                        if title is not None:
-                            movielist.append(title)
-                            movie_description = movie.get("href")
-                            if movie_description in desclist :
-                                desclist.append("  ")
-                            else :
-                                desclist.append(movie_description)
-
-                    showtimes = mod_schedule_table.findAll("td", {"align": "right"})
-                    for showtime in showtimes:
-                        schedulelist.append(showtime.string)
-
-                    moviedata = zip(movielist, desclist, schedulelist)
-                    return moviedata
-
-                def get_cinema_name(cinema_link):
-
-                    index_start = cinema_link.find("-") + 1
-                    index_end = cinema_link.find(",")
-                    cinema_name = cinema_link[index_start:index_end]
-                    cinema_name = cinema_name.replace("-", " ")
-
-                    """ Special case TSM """
-                    if cinema_name == "tsm xxi" :
-                        if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
-                            cinema_name = "tsm xxi (Bandung)"
-                        elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
-                            cinema_name = "tsm xxi (Makassar)"
-
-                    return cinema_name
-
-                def request_cinema_list():
-                    confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
-                    buttons_template = ButtonsTemplate(text=confirmation, actions=[
-                            PostbackTemplateAction(label="Sure...", data='request xxi cinema list please',text='Sure...')])
-                    template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
-                    line_bot_api.push_message(address, template_message)
-
-
-
-                keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato','list', 'me', 'meg', 'megumi', 'movie',
-                           'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing','xxi', 'what']
-
-                search_keyword = OtherUtil.filter_words(text)
-                search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
-
-                cinemas = get_cinema_list(search_keyword)
-
-
-                if len(cinemas) <= 0:
-                    reply = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
-                    ask_for_request = True
-                elif len(cinemas) > 2:
-                    reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
-                    ask_for_request = True
-                else:
-                    try:
-                        reply = []
-                        reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                        for cinema in cinemas:
-                            cinema_name = get_cinema_name(cinema)
-                            moviedata = get_movie_data(cinema)
-                            reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
-                            for data in moviedata:
-                                reply.append(data[0])  # movie title
-                                reply.append(data[1])  # movie description
-                                reply.append(data[2])  # movie schedule
-                                reply.append("\n")
-
-                        reply.append(Lines.show_cinema_movie_schedule("footer"))
-                        reply = "\n".join(reply)
-                        ask_for_request = False
-                    except :
-                        reply = Lines.show_cinema_movie_schedule("failed to show movie data")
-
-
-                line_bot_api.reply_message(token,TextSendMessage(text=reply))
-                if ask_for_request :
-                    request_cinema_list()
-
-            elif "cgv" in text :
-                def get_cinema_list(search_keyword):
-                    if search_keyword == [] or search_keyword == [""]:
-                        report = Lines.show_cinema_movie_schedule("No keyword found")
-                        line_bot_api.push_message(address, TextSendMessage(text=report))
-                    else:
-                        cinemas_name = []
-                        cinemas_link = []
-                        page_url = "https://www.cgv.id/en/schedule/cinema/"
-                        try:
-                            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                            con = urllib.request.urlopen(req)
-                            page_source_code_text = con.read()
-                            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                        except:
-                            report = Lines.show_cinema_movie_schedule("failed to open the the page")
-                            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-                        links = mod_page.findAll('a', {"class": "cinema_fav"})
-                        for link in links:
-                            cinema_name = link.string
-                            cinema_link = "https://www.cgv.id" + link.get("href")
-                            if all(word in cinema_name.lower() for word in search_keyword):
-                                cinemas_name.append(cinema_name)
-                                cinemas_link.append(cinema_link)
-
-                        cinemas = zip(cinemas_name, cinemas_link)
-                        return cinemas
-
-                def get_movie_data(cinema):
-
-                    movielist = []
-                    desclist = []
-                    schedulelist = []
-
-                    req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                    mod_schedule_table = BeautifulSoup(str(mod_page.findAll("div", {"class": "schedule-lists"})),"html.parser")
-                    movies_data = BeautifulSoup(str(mod_schedule_table.findAll("div", {"class": "schedule-title"})),"html.parser")
-
-                    movies = movies_data.findAll("a")  # getting the movie name and desc
-                    for movie in movies:
-                        movie_name = movie.string
-                        movie_desc = "https://www.cgv.id" + movie.get("href")
-                        movielist.append(movie_name)
-                        desclist.append(movie_desc)
-
-                    schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})  # getting the movie schedule
-                    last_movie = ""
-                    for schedule in schedules:
-                        movie_title = schedule.get("movietitle")
-                        time = schedule.string
-                        if movie_title != last_movie:
-                            schedulelist.append("#")
-                            last_movie = movie_title
-                        if time != ", ":
-                            schedulelist.append(time)
-
-                    # re formatting the schedulelist
-                    schedulelist = " ".join(schedulelist)
-                    schedulelist = schedulelist.split("#")
-                    try:
-                        schedulelist.remove("")
-                    except:
-                        pass
-
-                    moviedata = zip(movielist, desclist, schedulelist)
-                    return moviedata
-
-
-                def request_cinema_list():
-                    confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
-                    buttons_template = ButtonsTemplate(text=confirmation, actions=[
-                        PostbackTemplateAction(label="Sure...", data='request cgv cinema list please', text='Sure...')])
-                    template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
-                    line_bot_api.push_message(address, template_message)
-
-                keyword = ['are', 'at', 'can', 'cgv', 'film', 'help', 'is', 'kato', 'list', 'me', 'meg', 'megumi', 'movie',
-                           'movies', 'playing', 'please', 'pls', 'schedule', 'show', 'showing', 'what']
-
-                search_keyword = OtherUtil.filter_words(text)
-                search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
-
-                cinemas = get_cinema_list(search_keyword)  # return a list with [ cinema name , cinema url]
-
-                found_cinema_name = []
-                found_cinema_link = []
-                for cinema in cinemas:
-                    found_cinema_name.append(cinema[0])
-                    found_cinema_link.append(cinema[1])
-
-                found_cinema = zip(found_cinema_name, found_cinema_link)
-
-                if len(found_cinema_name) <= 0:
-                    reply = Lines.show_cinema_movie_schedul6e("No cinema found") % (", ".join(search_keyword))
-                    ask_for_request = True
-                elif len(found_cinema_name) > 2:
-                    reply = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
-                    ask_for_request = True
-                else:
-                    """ if cinema amount is just fine... """
-                    try:
-                        reply = []
-                        reply.append(Lines.show_cinema_movie_schedule("header") % (", ".join(search_keyword)))
-                        for cinema in found_cinema:
-                            cinema_name = cinema[0]  # cinema [0] is the cinema name
-                            moviedata = get_movie_data(cinema[1])  # cinema [1] is the cinema link
-                            reply.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
-                            for data in moviedata:
-                                reply.append(data[0])  # movie title
-                                reply.append(data[1])  # movie description
-                                reply.append(data[2])  # movie schedule
-                                reply.append("\n")
-
-                        reply.append(Lines.show_cinema_movie_schedule("footer"))
-                        reply = "\n".join(reply)
-                        ask_for_request = False
-
-                    except:
-                        reply = Lines.show_cinema_movie_schedule("failed to show movie data")
-
-                line_bot_api.reply_message(token, TextSendMessage(text=reply))
-                if ask_for_request:
-                    request_cinema_list()
-
-            else:
+            # If the cinema is not specified, send notification, stop process
+            if not(any(word in text for word in ["xxi", "cgv"])):
                 report = Lines.show_cinema_movie_schedule("specify the company")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
+                cont = False
+
+            # If the cinema is specified either xxi or cgv
+            if cont:
+
+                # The cinema is one of the cinemas XXI
+                if "xxi" in text:
+
+                    def get_cinema_keyword():
+                        """ Function to get cinema's name keyword from text """
+
+                        keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'list', 'me', 'meg', 'megumi',
+                                   'movie', 'movies', 'playing', 'please', 'pls', 'schedule', 'show',
+                                   'showing', 'xxi', 'what']
+                        search_keyword = OtherUtil.filter_words(text)
+                        search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
+
+                        return search_keyword
+
+                    def get_cinema_list(search_keyword):
+                        """ Function to return available cinema list """
+
+                        # If the cinema keyword is unspecified
+                        if search_keyword == [] or search_keyword == [""]:
+                            report = Lines.show_cinema_movie_schedule("No keyword found")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            return []
+
+                        # If cinema's name keyword exist in text
+                        else:
+                            cinemas = []
+                            page_url = "http://www.21cineplex.com/theaters"
+
+                            # Open the XXI page
+                            try:
+                                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                                con = urllib.request.urlopen(req)
+                                page_source_code_text = con.read()
+                                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                            # Failed to open the XXI page
+                            except Exception:
+                                report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                                line_bot_api.push_message(address, TextSendMessage(text=report))
+                                raise
+
+                            # Get the cinema's link that fulfil the keyword
+                            links = mod_page.findAll('a')
+                            for link in links:
+                                cinema_link = link.get("href")
+                                if all(word in cinema_link for word in
+                                       (["http://www.21cineplex.com/theater/bioskop"] + search_keyword)):
+                                    cinemas.append(cinema_link)
+
+                            # Just in case there are duplicate link, remove the duplicates
+                            if len(cinemas) > 1:
+                                cinemas = set(cinemas)
+
+                            return cinemas
+
+                    def get_movie_data(cinema):
+                        """ Function to return the movie's data, in form of (movie, description, schedule) """
+
+                        # Default variable
+                        movielist = []
+                        desclist = []
+                        schedulelist = []
+
+                        # Open the page to parse
+                        try:
+                            req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+                            con = urllib.request.urlopen(req)
+                            page_source_code_text = con.read()
+                            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                            mod_schedule_table = BeautifulSoup(
+                                str(mod_page.find("table", {"class": "table-theater-det"})), "html.parser")
+
+                        # If failed to open the page
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                        # Finding all movie's title, description, and showtime
+                        try:
+                            # Get the movie's title and description
+                            movies = mod_schedule_table.findAll('a')
+                            for movie in movies:
+
+                                # Get the title
+                                title = movie.string
+                                if title is not None:
+                                    movielist.append(title)
+
+                                    # Get the description (nb: put here to limit number of desc <= number of title)
+                                    movie_description = movie.get("href")
+
+                                    # If the description is already existed before, don't append it again
+                                    if movie_description in desclist:
+                                        desclist.append("  ")
+                                    else:
+                                        desclist.append(movie_description)
+
+                            # Get movie's showtime
+                            showtimes = mod_schedule_table.findAll("td", {"align": "right"})
+                            for showtime in showtimes:
+                                schedulelist.append(showtime.string)
+
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to get movie data")
+                            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+                            raise
+
+                        moviedata = zip(movielist, desclist, schedulelist)
+                        return moviedata
+
+                    def get_cinema_name(cinema_link):
+                        """ Function to get cinema name """
+
+                        # Get the cinema name
+                        index_start = cinema_link.find("-") + 1
+                        index_end = cinema_link.find(",")
+                        cinema_name = cinema_link[index_start:index_end]
+                        cinema_name = cinema_name.replace("-", " ")
+
+                        # Special case TSM
+                        if cinema_name == "tsm xxi":
+                            if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm":
+                                cinema_name = "tsm xxi (Bandung)"
+                            elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm":
+                                cinema_name = "tsm xxi (Makassar)"
+
+                        return cinema_name
+
+                    def request_cinema_list():
+                        """ Function to send confirmation whether send request cinema list or not """
+
+                        # Generate button template
+                        confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
+                        buttons_template = ButtonsTemplate(text=confirmation, actions=[
+                                PostbackTemplateAction(label="Sure...", data='request xxi cinema list please',
+                                                       text='Sure...')])
+                        template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
+
+                        # Send the template
+                        line_bot_api.push_message(address, template_message)
+
+                    search_keyword = get_cinema_keyword()
+                    cinemas = get_cinema_list(search_keyword)
+
+                    # Process the cinemas found
+                    if len(cinemas) <= 0:
+                        report = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
+                        ask_for_request = True
+                    elif len(cinemas) > 2:
+                        report = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
+                        ask_for_request = True
+
+                    # If there is one (or 2 at most) cinema(s) found, then process it
+                    else:
+
+                        # Generate header for every type of reply
+                        report = [Lines.show_cinema_movie_schedule("header") % str(", ".join(search_keyword))]
+
+                        # Re-formatting data before sending
+                        try:
+
+                            # Getting data from every cinemas which fulfil keywords
+                            for cinema in cinemas:
+
+                                # Gather the data and re-format it
+                                cinema_name = get_cinema_name(cinema)
+                                movie_data = get_movie_data(cinema)
+                                report.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
+
+                                for data in movie_data:
+                                    report.append(data[0])  # movie title
+                                    report.append(data[1])  # movie description
+                                    report.append(data[2])  # movie schedule
+                                    report.append("\n")
+
+                            report.append(Lines.show_cinema_movie_schedule("footer"))
+                            report = "\n".join(report)
+
+                            ask_for_request = False
+
+                        # If there's unexpected error related to formatting
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to show movie data")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                    # Send report for every conditions
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                    # If there's some problem with cinema's name, ask to send cinema list
+                    if ask_for_request:
+                        request_cinema_list()
+
+                elif "cgv" in text:
+
+                    def get_cinema_list(search_keyword):
+                        """ Function to return available cinema list """
+
+                        # If there's no keyword found
+                        if search_keyword == [] or search_keyword == [""]:
+                            report = Lines.show_cinema_movie_schedule("No keyword found")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                        # If the cinema's keyword found
+                        else:
+                            cinemas_name = []
+                            cinemas_link = []
+                            page_url = "https://www.cgv.id/en/schedule/cinema/"
+
+                            # Open the web page to parse data
+                            try:
+                                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                                con = urllib.request.urlopen(req)
+                                page_source_code_text = con.read()
+                                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                            # Failed to open the page
+                            except Exception:
+                                report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                                line_bot_api.push_message(address, TextSendMessage(text=report))
+                                raise
+
+                            # Parse the web page to find cinema name and link
+                            links = mod_page.findAll('a', {"class": "cinema_fav"})
+                            for link in links:
+                                cinema_name = link.string
+                                cinema_link = "https://www.cgv.id" + link.get("href")
+
+                                # If there's cinema's name which fulfil the search keyword, append it to list
+                                if all(word in cinema_name.lower() for word in search_keyword):
+                                    cinemas_name.append(cinema_name)
+                                    cinemas_link.append(cinema_link)
+
+                            cinemas = zip(cinemas_name, cinemas_link)
+                            return cinemas
+
+                    def get_movie_data(cinema):
+                        """ Function to return the movie's data, in form of (movie, description, schedule) """
+
+                        # Initializing general variable
+                        movielist = []
+                        desclist = []
+                        schedulelist = []
+
+                        # Open the web page to parse data
+                        try:
+                            req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
+                            con = urllib.request.urlopen(req)
+                            page_source_code_text = con.read()
+                            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                        # If failed to open the page
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to open the the page")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                        # Gather the data
+                        try:
+                            # Get the raw data
+                            mod_schedule_table = BeautifulSoup(
+                                str(mod_page.findAll("div", {"class": "schedule-lists"})), "html.parser")
+                            movies_data = BeautifulSoup(
+                                str(mod_schedule_table.findAll("div", {"class": "schedule-title"})), "html.parser")
+                            movies = movies_data.findAll("a")
+
+                            # Get the movie's name and description
+                            for movie in movies:
+                                movie_name = movie.string
+                                movie_desc = "https://www.cgv.id" + movie.get("href")
+                                movielist.append(movie_name)
+                                desclist.append(movie_desc)
+
+                        # If failed to get the data
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to get movie data")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                        # Get the movie's schedule
+                        schedules = mod_schedule_table.findAll("a", {"id": "load-schedule-time"})
+                        last_movie = ""  # Iteration of the last processed movie
+                        for schedule in schedules:
+                            movie_title = schedule.get("movietitle")
+                            time = schedule.string
+
+                            # Determine whether current movie is different from the last one or not
+                            if movie_title != last_movie:
+                                schedulelist.append("#")
+                                last_movie = movie_title
+
+                            # If the showtime is available
+                            if time != ", ":
+                                schedulelist.append(time)
+
+                        # Re-formatting the schedulelist
+                        schedulelist = " ".join(schedulelist)
+                        schedulelist = schedulelist.split("#")
+
+                        # Try to remove empty space in schedule list
+                        try:
+                            schedulelist.remove("")
+                        except Exception:
+                            pass
+
+                        moviedata = zip(movielist, desclist, schedulelist)
+                        return moviedata
+
+                    def request_cinema_list():
+                        """ Function to ask whether to show cinema list or not """
+
+                        # Generate the button template
+                        confirmation = Lines.show_cinema_movie_schedule("asking to show cinema list")
+                        buttons_template = ButtonsTemplate(text=confirmation, actions=[
+                            PostbackTemplateAction(label="Sure...", data='request cgv cinema list please',
+                                                   text='Sure...')])
+                        template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
+                        line_bot_api.push_message(address, template_message)
+
+                    # First filter of keywords and default text filter
+                    keyword = ['are', 'at', 'can', 'cgv', 'film', 'help', 'is', 'kato', 'list', 'me',
+                               'meg', 'megumi', 'movie', 'movies', 'playing', 'please', 'pls',
+                               'schedule', 'show', 'showing', 'what']
+                    search_keyword = OtherUtil.filter_words(text)
+                    search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
+
+                    # Get cinema's name and cinema's url in a list
+                    cinemas = get_cinema_list(search_keyword)
+
+                    # Re-format the cinema's name and cinema's link before append to main cinemas data
+                    found_cinema_name = []
+                    found_cinema_link = []
+                    for cinema in cinemas:
+                        found_cinema_name.append(cinema[0])
+                        found_cinema_link.append(cinema[1])
+
+                    found_cinema = zip(found_cinema_name, found_cinema_link)
+
+                    # Process the cinemas found
+                    if len(found_cinema_name) <= 0:
+                        report = Lines.show_cinema_movie_schedule("No cinema found") % (", ".join(search_keyword))
+                        ask_for_request = True
+                    elif len(found_cinema_name) > 2:
+                        report = Lines.show_cinema_movie_schedule("Too many cinemas") % (", ".join(search_keyword))
+                        ask_for_request = True
+
+                    # If there is one (or 2 at most) cinema(s) found, then process it
+                    else:
+
+                        # Generate header for every type of reply
+                        report = [Lines.show_cinema_movie_schedule("header") % str(", ".join(search_keyword))]
+
+                        # Re-formatting data before sending
+                        try:
+
+                            # Gather the data and re-format it
+                            for cinema in found_cinema:
+                                cinema_name = cinema[0]                 # cinema [0] is the cinema name
+                                moviedata = get_movie_data(cinema[1])   # cinema [1] is the cinema link
+                                report.append(Lines.show_cinema_movie_schedule("cinema name") % cinema_name)
+                                for data in moviedata:
+                                    report.append(data[0])  # movie title
+                                    report.append(data[1])  # movie description
+                                    report.append(data[2])  # movie schedule
+                                    report.append("\n")
+
+                            # Send the report to user
+                            report.append(Lines.show_cinema_movie_schedule("footer"))
+                            report = "\n".join(report)
+                            ask_for_request = False
+
+                        # If there's unexpected error related to formatting
+                        except Exception:
+                            report = Lines.show_cinema_movie_schedule("failed to show movie data")
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                    # Send report for every conditions
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                    # If there's some problem with cinema's name, ask to send cinema list
+                    if ask_for_request:
+                        request_cinema_list()
 
         except Exception as exception_detail:
             function_name = "Show cinema movie schedule"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    """ ==========  26 July 2017 last update ============== """
 
     @staticmethod
     def show_cinema_list(cond):

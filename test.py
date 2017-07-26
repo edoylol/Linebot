@@ -11,6 +11,7 @@ from xml.etree import ElementTree
 import math
 Lines = Lines()
 
+
 class OtherUtil:
 
     @staticmethod
@@ -71,5 +72,4 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
 
