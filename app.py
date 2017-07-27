@@ -166,10 +166,10 @@ def message_text(event):
         elif any(word in text for word in ["choose ", "which one"])  : Function.choose_one_simple()
 
         elif any(word in text for word in ["what ", "show "])        :
-            if any(word in text for word in ["date", "time", "day"])    : Function.time_date()
+            if any(word in text for word in ["date", "time", "day "])   : Function.time_date()
             elif any(word in text for word in ["weather", "forecast"])  : Function.weather_forcast()
             elif any(word in text for word in ["movie ", "movies",
-                                               "film", "films"])        :
+                                               "film ", "films"])       :
                 if any(word in text for word in ["showing", "list",
                                                  "playing", "schedule"])    : Function.show_cinema_movie_schedule()
                 else                                                        : Function.false()
