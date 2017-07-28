@@ -2418,16 +2418,23 @@ class Function:
 
             # Some feature need keyword match case (ex : adf.ly)
             if cond == "original":
-                text = original_text
-
-            # Find the keyword in text
-            try:
-                index_start = text.find("'") + 1
-                index_stop = text.rfind("'")
-                keyword = text[index_start:index_stop]
-                return keyword
-            except:
-                return "not_found"
+                # Find the keyword in original text
+                try:
+                    index_start = original_text.find("'") + 1
+                    index_stop = original_text.rfind("'")
+                    keyword = original_text[index_start:index_stop]
+                    return keyword
+                except:
+                    return "not_found"
+            else:
+                # Find the keyword in text
+                try:
+                    index_start = text.find("'") + 1
+                    index_stop = text.rfind("'")
+                    keyword = text[index_start:index_stop]
+                    return keyword
+                except:
+                    return "not_found"
 
         def get_start_ep():
             """ Function to return starting episode from text """
@@ -2694,10 +2701,11 @@ class Function:
 
         # If keyword is available, get the starting episode and file host, and pasted.co link
         if cont:
+            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
             start_ep, is_default_start = get_start_ep()
             hostid, is_default_host = get_host_source()
             send_header()
-            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+
 
         # If the keyword is not found, send notification and end the process
         else:
