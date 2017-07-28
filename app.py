@@ -2705,7 +2705,7 @@ class Function:
         if cont and not direct_pass:
 
             anime_pasted_link = get_anime_pasted_link(keyword)
-            print(anime_pasted_link)
+            print("ANIME PASTED LINK :",anime_pasted_link)
             cont = anime_pasted_link != "title not found"
 
         # If anime pasted.co link is available or it's direct pass
@@ -2718,7 +2718,7 @@ class Function:
             # Continuation from previous process
             else:
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
-                print(primary_download_link_list)
+                print("PRIMARY DOWNLOAD LINK LIST:",primary_download_link_list)
 
             result, is_success = get_final_download_link(primary_download_link_list, start_ep)
             is_send_animelist = False
