@@ -677,11 +677,11 @@ class Lines:  # class to store respond lines
                      ]
 
         elif cond == "default host":
-            lines = ["Btw, is dropjify sound's good? ",
-                     "I will recommend dropjify as the host..",
-                     "I'm looking for dropjify links since I prefer that..",
-                     "I'll recommend using dropjify as file host...",
-                     "Since you didn't specify, I will pick dropjify as the host..."]
+            lines = ["Btw, is zippyshare sound's good? ",
+                     "I will recommend zippyshare as the host..",
+                     "I'm looking for zippyshare links since I prefer that..",
+                     "I'll recommend using zippyshare as file host...",
+                     "Since you didn't specify, I will pick zippyshare as the host..."]
 
         elif cond == "keyword not found":
             lines = ["Which anime do you want me to search for ?",

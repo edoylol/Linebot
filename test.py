@@ -72,3 +72,21 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+
+page_url = "http://www69.zippyshare.com/v/DuGHrENZ/file.html"
+try:
+    req = urllib.request.Request(page_url, headers={'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"})
+    con = urllib.request.urlopen(req)
+    page_source_code_text = con.read()
+    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+except:
+    report = Lines.general_lines("failed to open page") % page_url
+
+text = page_url
+index_stop = text.rfind(".com/")+4
+keyword = text[:index_stop]
+
+download_link = mod_page.find("a", {"id": "dlbutton"})
+print(download_link)
+print("/d/DuGHrENZ/6263/%5bCCM%5d_Kakegurui_-_04.mp4" in mod_page)

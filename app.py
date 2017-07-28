@@ -169,7 +169,7 @@ def message_text(event):
 
         elif any(word in text for word in ["what ", "show "])        :
             if any(word in text for word in ["date", "time", "day "])   : Function.time_date()
-            elif any(word in text for word in ["weather", "forecast"])  : Function.weather_forcast()
+            elif any(word in text for word in ["weather", "forecast"])  : Function.weather_forecast()
             elif any(word in text for word in ["movie ", "movies",
                                                "film ", "films"])       :
                 if any(word in text for word in ["showing", "list",
@@ -196,7 +196,7 @@ def message_text(event):
             else                                                        : Function.false()
 
         elif any(word in text for word in ["how"])                  :
-            if any(word in text for word in ["weather", "forecast"])    : Function.weather_forcast()
+            if any(word in text for word in ["weather", "forecast"])    : Function.weather_forecast()
             elif any(word in text for word in ["say"])                  : Function.translate_text()
             else                                                        : Function.false()
 
@@ -1967,7 +1967,7 @@ class Function:
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
     @staticmethod
-    def weather_forcast():
+    def weather_forecast():
 
         try:
             def get_search_keyword():
@@ -2472,7 +2472,7 @@ class Function:
 
                 # General variable
                 is_default_host = True
-                host_id = 99  # Default file-hosting is dropjify
+                host_id = 15  # Default file-hosting is zippyshare
                 anime_hostlist = Database.anime_hostlist
 
                 # Simple text filtering
@@ -2616,7 +2616,7 @@ class Function:
                             # POST the data to mirrorcreator to get the download link
                             page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
                             try:
-                                post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify
+                                post_data = dict(uid=file_id, hostid=hostid)
                                 req_post = requests.post(page_url, data=post_data)
                                 page_source_code_text_post = req_post.text
                                 mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
