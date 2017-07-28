@@ -2552,7 +2552,7 @@ class Function:
             # General variable
             file_id = " "
             mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
-            file_id_found = link.find(mirror_creator_keyword) == -1
+            file_id_found = link.find(mirror_creator_keyword) != -1
 
             # If the keyword is found, try to get the file_id
             if file_id_found:
@@ -2597,7 +2597,6 @@ class Function:
 
                     # Get the file id from the mirrorcreator link found before
                     file_id, file_id_found = get_file_id(download_link)
-                    print("FILE ID :",file_id,file_id_found)
                     if file_id_found:
 
                         # POST the data to mirrorcreator to get the download link
@@ -2614,8 +2613,7 @@ class Function:
 
                         # Get the final download link from POST request
                         final_download_link = mod_page.find("a", {"target": "_blank"})
-                        print("FINAL DOWNLOAD LINK :",final_download_link)
-                        
+
                         # If the final download link is available, append it to result
                         if final_download_link is not None:
                             result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
