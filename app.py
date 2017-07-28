@@ -2659,7 +2659,13 @@ class Function:
                 result.insert(0, Lines.anime_download_link("header for result"))
 
             report = "\n".join(result)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
+            try:
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+            except LineBotApiError as e:
+                print("")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
 
             # Only send list of animes available if the title is not found
             if is_send_animelist:
