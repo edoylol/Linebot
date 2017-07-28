@@ -2659,13 +2659,7 @@ class Function:
                 result.insert(0, Lines.anime_download_link("header for result"))
 
             report = "\n".join(result)
-            try:
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-            except LineBotApiError as e:
-                print("")
-                print(e.status_code)
-                print(e.error.message)
-                print(e.error.details)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
             # Only send list of animes available if the title is not found
             if is_send_animelist:
@@ -2711,6 +2705,7 @@ class Function:
         if cont and not direct_pass:
 
             anime_pasted_link = get_anime_pasted_link(keyword)
+            print(anime_pasted_link)
             cont = anime_pasted_link != "title not found"
 
         # If anime pasted.co link is available or it's direct pass
@@ -2723,6 +2718,7 @@ class Function:
             # Continuation from previous process
             else:
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+                print(primary_download_link_list)
 
             result, is_success = get_final_download_link(primary_download_link_list, start_ep)
             is_send_animelist = False
