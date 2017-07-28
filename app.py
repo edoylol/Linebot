@@ -2413,8 +2413,12 @@ class Function:
         Usage example : Meg, show me anime download link 'title' <ep 2> <from zippy> """
 
         #try:
-        def get_keyword():
+        def get_keyword(cond="default"):
             """ Function to return search keyword (either anime title, or link) """
+
+            # Some feature need keyword match case (ex : adf.ly)
+            if cond == "original":
+                text = original_text
 
             # Find the keyword in text
             try:
@@ -2712,6 +2716,8 @@ class Function:
 
             # If the keyword is already in form of mirror link or adf.ly
             if direct_pass:
+                # Re- assign keyword with original match case keyword (before lowered)
+                keyword = get_keyword("original")
                 primary_download_link_list = [keyword]
 
             # Continuation from previous process
