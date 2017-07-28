@@ -2426,6 +2426,8 @@ class Function:
                     return keyword
                 except:
                     return "not_found"
+
+            # If keyword doesn't need to match case
             else:
                 # Find the keyword in text
                 try:
@@ -2627,8 +2629,16 @@ class Function:
 
                         # If the final download link is available, append it to result
                         if final_download_link is not None:
-                            result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+
+                            # Formatting : Do not show current episode if there's only one link
+                            if len(primary_download_link_list) < 2:
+                                result.append(final_download_link.get("href"))
+
+                            # Formatting : Show current episode if there're more than one links
+                            else:
+                                result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
                             success = True
+
                         else:
                             result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
 
