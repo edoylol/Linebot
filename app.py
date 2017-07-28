@@ -20,7 +20,9 @@ import math
 import random
 import time
 
-import requests,urllib, urllib.request
+import requests
+import urllib
+import urllib.request
 import Database
 import unshortenit
 import json
@@ -284,10 +286,10 @@ def handle_postback(event):
     if original_text == 'ping':
         line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
-    elif all(word in text for word in ["confirmation invitation"])                  :
-        if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event,"yes")
-        elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event,"no")
-        elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event,"pending")
+    elif all(word in text for word in ["confirmation invitation"]):
+        if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event, "yes")
+        elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event, "no")
+        elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event, "pending")
 
     elif all(word in text for word in ["request", "cinema list please"])            :
         if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
@@ -356,7 +358,9 @@ class Function:
 
     @staticmethod
     def rand_int():
-        """ Function to return random integer between the minimum and maximum number given in text """
+        """ Function to return random integer between the minimum and maximum number given in text.
+        Usage example : meg, pick one num from 1 to 11 """
+
         try:
             def random_number(min_number=1, max_number=5):
                 """ Function to generate random integer from min to max.
@@ -419,7 +423,8 @@ class Function:
 
     @staticmethod
     def echo():
-        """ Function to echo whatever surrounded by single apostrophe (') """
+        """ Function to echo whatever surrounded by single apostrophe (').
+         Usage example : Meg, try to say 'I love you <3' """
 
         try:
             # Find the index of apostrophe
@@ -447,7 +452,8 @@ class Function:
 
     @staticmethod
     def choose_one_simple():
-        """ Function to return one random item from listed items """
+        """ Function to return one random item from listed items.
+         Usage example : Meg, choose one between #pasta and #pizza """
 
         try:
             def get_options(tag):
@@ -488,7 +494,8 @@ class Function:
 
     @staticmethod
     def time_date():
-        """ Function to get the time and date from server """
+        """ Function to get the time and date from server.
+         Usage example : Meg, what time is it in gmt +4 ?? """
 
         try:
             def find_gmt(default_gmt):
@@ -605,7 +612,9 @@ class Function:
 
     @staticmethod
     def send_invite(event):
-        """ Function to send button template as invitation. Detail and participant list is given in text """
+        """ Function to send button template as invitation. Detail and participant list is given in text.
+         Usage example : meg, can you send invite 'Go to the beach' to close-friend ? """
+
         try:
             global invitation_sender, invitation_sender_id
 
@@ -719,7 +728,8 @@ class Function:
 
     @staticmethod
     def invite_respond(event, cond):
-        """ Function to notice the invitation sender about the response from participants """
+        """ Function to notice the invitation sender about the response from participants.
+         Usage example: (none : passive function) """
 
         try:
             global invitation_sender
@@ -758,7 +768,8 @@ class Function:
 
     @staticmethod
     def show_cinema_movie_schedule():
-        """ Function to show list of movies playing at certain cinemas """
+        """ Function to show list of movies playing at certain cinemas.
+         Usage example : Meg, can you show me citylink xxi movie schedule ? """
 
         try:
             cont = True
@@ -772,7 +783,7 @@ class Function:
             # If the cinema is specified either xxi or cgv
             if cont:
 
-                # The cinema is one of the cinemas XXI
+                # The cinema is one of the XXI cinemas
                 if "xxi" in text:
 
                     def get_cinema_keyword():
@@ -966,6 +977,7 @@ class Function:
                     if ask_for_request:
                         request_cinema_list()
 
+                # The cinema is one of the CGV cinemas
                 elif "cgv" in text:
 
                     def get_cinema_list(search_keyword):
@@ -1161,82 +1173,110 @@ class Function:
             function_name = "Show cinema movie schedule"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    """ ==========  26 July 2017 last update ============== """
-
     @staticmethod
     def show_cinema_list(cond):
+        """ Function to send list of cinema available.
+         Usage example : (none : passive function) """
 
-        try :
-            if cond == "xxi" :
+        try:
+            # The requested list if XXI cinemas
+            if cond == "xxi":
+
                 def get_cinema_list():
+                    """ Function to get raw data of cinema list """
+
+                    # Open the web page to parse the data
                     cinemas = []
                     page_url = "http://www.21cineplex.com/theaters"
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                    try:
+                        req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                        con = urllib.request.urlopen(req)
+                        page_source_code_text = con.read()
+                        mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                    except:
+                        report = Lines.general_lines("failed to open page") % page_url
+                        line_bot_api.push_message(address, TextSendMessage(text=report))
+                        raise
 
+                    # Get every links and filter it to find cinema's link
                     links = mod_page.findAll('a')
                     for link in links:
                         cinema_link = link.get("href")
                         if all(word in cinema_link for word in ["http://www.21cineplex.com/theater/bioskop"]):
                             cinemas.append(cinema_link)
 
+                    # Just in case, remove duplicate
                     cinemas = set(cinemas)
                     return cinemas
 
                 def get_cinema_name(cinema_link):
+                    """ Function to return name of the cinema's link """
 
+                    # Get the name from the link
                     index_start = cinema_link.find("-") + 1
                     index_end = cinema_link.find(",")
                     cinema_name = cinema_link[index_start:index_end]
                     cinema_name = cinema_name.replace("-", " ")
 
-                    """ Special case TSM """
-                    if cinema_name == "tsm xxi" :
-                        if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm" :
+                    # Special case for TSM (nb : 2 different cinemas use same name)
+                    if cinema_name == "tsm xxi":
+                        if cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,186,BDGBSM.htm":
                             cinema_name = "tsm xxi (Bandung)"
-                        elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm" :
+                        elif cinema_link == "http://www.21cineplex.com/theater/bioskop-tsm-xxi,335,UPGTSM.htm":
                             cinema_name = "tsm xxi (Makassar)"
 
                     return cinema_name
 
-
+                # General variable
                 cinema_list = []
                 cinemas = get_cinema_list()
 
+                # Re-formatting the cinema list (sort, format, add header, join text)
                 for cinema in cinemas:
-                    cinema_list.append(get_cinema_name(cinema))
-                cinema_list = sorted(cinema_list)
-                cinema_list.insert(0,Lines.show_cinema_movie_schedule("show cinema list"))
+                    cinema_list.append(get_cinema_name(cinema))                              # Get the cinema's name
+                cinema_list = sorted(cinema_list)                                            # Sort the name
+                cinema_list.insert(0, Lines.show_cinema_movie_schedule("show cinema list"))  # Give header
                 report = "\n".join(cinema_list)
 
-                if len(report) > 1800 :
+                # Just in case the report is too long, split it into 2 post
+                if len(report) > 1800:
                     report1 = report[:1800]+"..."
                     report2 = "..."+report[1801:]
                     line_bot_api.push_message(address, TextSendMessage(text=report1))
                     line_bot_api.push_message(address, TextSendMessage(text=report2))
-                else :
+                else:
                     line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            elif cond == "cgv" :
+            # The requested list if XXI cinemas
+            elif cond == "cgv":
+
+                # General variable
                 cinema_list = []
                 page_url = "https://www.cgv.id/en/schedule/cinema/"
 
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                cinemas = mod_page.findAll('a', {"class": "cinema_fav"})
+                # Open the page
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
+                # Parse the web to get data
+                cinemas = mod_page.findAll('a', {"class": "cinema_fav"})
                 for cinema in cinemas:
                     cinema = cinema.string
                     cinema_list.append(cinema)
 
+                # Re-formatting the data (sort, create header, join text)
                 cinema_list = sorted(cinema_list)
                 cinema_list.insert(0, Lines.show_cinema_movie_schedule("show cinema list"))
                 report = "\n".join(cinema_list)
 
+                # Just in case the report is too long, split it into 2 post
                 if len(report) > 1800:
                     report1 = report[:1800] + "..."
                     report2 = "..." + report[1801:]
@@ -1247,7 +1287,9 @@ class Function:
 
         except Exception as exception_detail:
             function_name = "Show cinema list"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    """ ==========  26 July 2017 last update ============== """
 
     @staticmethod
     def wiki_search():
@@ -1927,7 +1969,7 @@ class Function:
     @staticmethod
     def weather_forcast():
 
-        try :
+        try:
             def get_search_keyword():
                 keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'bad', 'be',
                            'city', 'cold', 'cond', 'condition', 'do', 'does', 'for', 'forecast', 'going',
@@ -1968,7 +2010,7 @@ class Function:
                 else:
                     cont = False
 
-                return use_coordinate,cont
+                return use_coordinate, cont
 
             def get_city_id(keyword, database="citylist.json"):
                 city_id_list = []
@@ -2184,9 +2226,10 @@ class Function:
 
             # Wrong keyword or the city is not available, thus try to use geo location
             else:
-                use_coordinate,cont = is_lat_long_valid() # create flags by validating latitude and longitude
+                latitude, longitude = get_lat_long()
+                use_coordinate, cont = is_lat_long_valid()  # create flags by validating latitude and longitude
 
-            if cont: # If either city id or lat long is available
+            if cont:  # If either city id or lat long is available
                 owm_call_head = "http://api.openweathermap.org/data/2.5/" + request_type
                 owm_call_tail = "&units=metric&appid=" + str(open_weather_map_key)
 
@@ -2366,9 +2409,14 @@ class Function:
 
     @staticmethod
     def anime_download_link():
+        """ Function to return anime download link list according to text.
+        Usage example : Meg, show me anime download link 'title' <ep 2> <from zippy> """
 
-        try :
+        try:
             def get_keyword():
+                """ Function to return search keyword (either anime title, or link) """
+
+                # Find the keyword in text
                 try:
                     index_start = text.find("'") + 1
                     index_stop = text.rfind("'")
@@ -2378,48 +2426,59 @@ class Function:
                     return "not_found"
 
             def get_start_ep():
-                is_default_start = True
+                """ Function to return starting episode from text """
 
+                is_default_start = True
+                start_ep = 1  # Default starting episode
+
+                # Simple text filtering
                 keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
                            'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
                            'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
                            'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-
                 filtered_text = OtherUtil.filter_words(text)
                 filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
 
+                # Find the starting episode using 'next-text after the found-keyword' scheme
                 keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
-
                 for i in range(0, len(filtered_text)):
                     if any(word in filtered_text[i] for word in keyword):
+
+                        # Make sure the starting episode is in form of number
                         try:
                             start_ep = int(filtered_text[i + 1])
                             is_default_start = False
                         except:
                             pass
 
-                if is_default_start:
-                    return 1, True
-                else:
-                    return start_ep, False
+                return start_ep, is_default_start
 
             def get_host_source():
+                """ Function to return chosen file-hosting's id """
+
+                # General variable
                 is_default_host = True
+                host_id = 99  # Default file-hosting is dropjify
+                anime_hostlist = Database.anime_hostlist
+
+                # Simple text filtering
                 keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
                            'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
                            'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
                            'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-                anime_hostlist = Database.anime_hostlist
-
                 filtered_text = OtherUtil.filter_words(text)
                 filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
 
+                # Find the file-hosting id using 'next-text after the found-keyword' scheme
                 keyword = ["from", "fr", "source", "src", "frm", "sou"]
-
                 for i in range(0, len(filtered_text)):
                     if any(word in filtered_text[i] for word in keyword):
+
+                        # If file-hosting-candidate's name is found
                         try:
-                            host_name = (filtered_text[i + 1])
+                            host_name = filtered_text[i + 1]
+
+                            # Try to find the host id in the database
                             for host in anime_hostlist:
                                 if host_name in host:
                                     host_id = anime_hostlist[host]
@@ -2428,34 +2487,58 @@ class Function:
                         except:
                             pass
 
-                if is_default_host:
-                    return 99, True
-                else:
-                    return host_id, False
+                return host_id, is_default_host
+
+            def get_process_starting_point(keyword):
+                """ Function to enable direct pass if mirrorcreator or adf.ly link is already stated explicitly """
+
+                direct_pass = any(word in keyword for word in ["mirrorcreator", "adf.ly"])
+                return direct_pass
 
             def get_anime_pasted_link(keyword):
+                """ Function to get pasted.co link """
 
-                if "pasted.co" in keyword : # enable direct link
+                # If the 'pasted.co' is explicitly writen, enable direct process
+                if "pasted.co" in keyword:
                     return keyword
-                else :
-                    animelist = Database.animelist
-                    try :
-                        for anime in animelist:
-                            if keyword in anime.lower():
-                                return animelist[anime]
-                    except :
-                        pass
-                    return "title not found"
+
+                # Search database using anime's title to get the pasted.co link
+                animelist = Database.animelist
+                try:
+                    for anime in animelist:
+                        if keyword in anime.lower():
+                            return animelist[anime]
+                except:
+                    pass
+
+                # If the pasted.co link is not found
+                return "title not found"
 
             def get_primary_download_link_list(anime_pasted_link):
-                page_url = anime_pasted_link + "/new.php"
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                datas = mod_page.find("textarea", {"class": "pastebox rounded"})
-                download_link_list = datas.text.split("\n")  # get the list of links
+                """ Extract links (adfly or mirrorcreator) from pasted.co """
 
+                # If the 'adfly or mirrorcreator' is explicitly writen, enable direct process
+                if any(word in text for word in ["mirrorcreator", "adf.ly"]):
+                    return [keyword]
+
+                page_url = anime_pasted_link + "/new.php"
+
+                # Open the page (pasted.co)
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Parse the web to get raw data (list of links)
+                datas = mod_page.find("textarea", {"class": "pastebox rounded"})
+                download_link_list = datas.text.split("\n")
+
+                # Append found link to list
                 download_link_list_filtered = []
                 for link in download_link_list:
                     if "http" in link:
@@ -2464,119 +2547,192 @@ class Function:
                 return download_link_list_filtered
 
             def get_file_id(link):
+                """ Function to return file id from mirrorcreator link """
+
+                # General variable
+                file_id = " "
                 mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
-                index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
-                index_stop = index_start + 8
-                file_id = link[index_start:index_stop]
-                return str(file_id)
+                file_id_found = link.find(mirror_creator_keyword) == -1
+
+                # If the keyword is found, try to get the file_id
+                if file_id_found:
+                    index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
+                    index_stop = index_start + 8
+                    file_id = str(link[index_start:index_stop])
+
+                return file_id, file_id_found
 
             def get_final_download_link(primary_download_link_list, start_ep=1):
+                """ Function to return final download link from file-hosting """
+
+                # General variable
                 result = []
                 success = False
+                cont = True
 
-                if start_ep > len(primary_download_link_list):  # check if the starting episode is available
+                # Check if the starting episode is available, if not, send notification
+                latest_episode_count = len(primary_download_link_list)
+                if start_ep > latest_episode_count:
                     result.append(Lines.anime_download_link("starting episode not aired"))
-                    result.append(Lines.anime_download_link("send latest episode count") % str(len(primary_download_link_list)))
+                    result.append(Lines.anime_download_link("send latest episode count") % str(latest_episode_count))
+                    cont = False
 
+                # If the starting episode is available
+                if cont:
 
-                else:
+                    # Iterate from start episode to the last one
                     for i in range(start_ep - 1, (len(primary_download_link_list))):
                         current_ep = i + 1
-
                         primary_download_link = primary_download_link_list[i]
+
+                        # Extract the mirror creator link / adfly link from every lines in pasted.co
                         try:
                             index_start = primary_download_link.find("http")
                             shortened_link = primary_download_link[index_start:].strip()
                             download_link, status = unshortenit.unshorten_only(shortened_link)
-                            file_id = get_file_id(download_link)
-                        except:
-                            pass
 
-                        page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
-                        post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify , uid is the file name also
-                        req_post = requests.post(page_url, data=post_data)
-                        page_source_code_text_post = req_post.text
-                        mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-                        final_download_link = mod_page.find("a", {"target": "_blank"})
-                        if final_download_link is not None :
-                            result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
-                            success = True
-                        else :
-                            result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
+                        # If there's error when trying to get mirrorcreator link, just pass it and go to next one
+                        except Exception:
+                            break
 
+                        # Get the file id from the mirrorcreator link found before
+                        file_id, file_id_found = get_file_id(download_link)
+                        if file_id_found:
 
+                            # POST the data to mirrorcreator to get the download link
+                            page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
+                            try:
+                                post_data = dict(uid=file_id, hostid=hostid)  # 99 is for dropjify
+                                req_post = requests.post(page_url, data=post_data)
+                                page_source_code_text_post = req_post.text
+                                mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+                            except:
+                                report = Lines.general_lines("failed to open page") % page_url
+                                line_bot_api.push_message(address, TextSendMessage(text=report))
+                                raise
 
-                return result,success
+                            # Get the final download link from POST request
+                            final_download_link = mod_page.find("a", {"target": "_blank"})
+
+                            # If the final download link is available, append it to result
+                            if final_download_link is not None:
+                                result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+                                success = True
+                            else:
+                                result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
+
+                return result, success
 
             def send_header(cond="found"):
+                """ Function to send header """
                 report = []
 
+                # If search keyword is found, sending notification about search keyword and default settings
                 if cond == "found":
                     report.append(Lines.anime_download_link("header") % keyword)
+
+                    # If starting episode is not specified
                     if is_default_start:
                         report.append(" ")
                         report.append(Lines.anime_download_link("default start ep"))
+
+                    # If file-hosting is not specified
                     if is_default_host:
                         report.append(" ")
                         report.append(Lines.anime_download_link("default host"))
 
+                # If search keyword is not found
                 elif cond == "not_found":
                     report.append(Lines.anime_download_link("keyword not found"))
 
+                # Send the report
                 report = "\n".join(report)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            def send_final_result(result,success,is_send_animelist):
-                if success : # title is found and episode is found
-                    result.insert(0," ")
-                    result.insert(0,Lines.anime_download_link("header for result"))
+            def send_final_result(result, success, is_send_animelist):
+                """ Function to send the final result that contains final download links """
+
+                # If anime's title is found and starting episode is found, create header into report
+                if success:
+                    # nb : It's created backwardly, but it will show with the right sequence
+                    result.insert(0, " ")
+                    result.insert(0, Lines.anime_download_link("header for result"))
 
                 report = "\n".join(result)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-                if is_send_animelist :  # only send if title is not found
+                # Only send list of animes available if the title is not found
+                if is_send_animelist:
                     send_animelist()
 
             def send_animelist():
+                """ Function to send links of 2016 and 2017 anime list from cyber12 """
 
+                # Generate the button template and send it
                 title = "Cyber12 Anime"
                 button_text = Lines.anime_download_link("send animelist")
                 link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
                 link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
-
                 buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
                     URITemplateAction(label='2017 Anime Update', uri=link_2017),
                     URITemplateAction(label='2016 Anime Update', uri=link_2016)])
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
+            # General variable and it's default value
+            anime_pasted_link = " "
+            start_ep = 1
+            direct_pass = False  # If the keyword is already in form of mirror link or adf.ly, enable direct pass
 
+            # Get the keyword from text
             keyword = get_keyword()
-            if keyword != "not_found" :  # flag to check if keyword is available
+            cont = keyword != "not_found"
+
+            # If keyword is available, get the starting episode and file host, and pasted.co link
+            if cont:
                 start_ep, is_default_start = get_start_ep()
                 hostid, is_default_host = get_host_source()
                 send_header()
+                direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
 
-                anime_pasted_link = get_anime_pasted_link(keyword)
-                if anime_pasted_link != "title not found" :
-                    primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
-                    result,is_success = get_final_download_link(primary_download_link_list, start_ep)
-                    is_send_animelist = False
-
-                else : # the title is not found
-                    result = [Lines.anime_download_link("title not found") % keyword]
-                    is_success = False
-                    is_send_animelist = True
-
-                send_final_result(result, is_success,is_send_animelist)
-
+            # If the keyword is not found, send notification and end the process
             else:
                 send_header("not_found")
                 send_animelist()
+                cont = False
+
+            # If keyword is available and keyword is not mirror / adf.ly link, get the pasted.co link
+            if cont and not direct_pass:
+
+                anime_pasted_link = get_anime_pasted_link(keyword)
+                cont = anime_pasted_link != "title not found"
+
+            # If anime pasted.co link is available or it's direct pass
+            if cont:
+
+                # If the keyword is already in form of mirror link or adf.ly
+                if direct_pass:
+                    primary_download_link_list = [keyword]
+
+                # Continuation from previous process
+                else:
+                    primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+
+                result, is_success = get_final_download_link(primary_download_link_list, start_ep)
+                is_send_animelist = False
+
+            # If the title is not found, append notification and enable sending anime list
+            else:
+                result = [Lines.anime_download_link("title not found") % keyword]
+                is_success = False
+                is_send_animelist = True
+
+            # Send the final result to user
+            send_final_result(result, is_success, is_send_animelist)
 
         except Exception as exception_detail:
             function_name = "Anime Download Link"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def translate_text():

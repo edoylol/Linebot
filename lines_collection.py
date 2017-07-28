@@ -7,6 +7,31 @@ class Lines:  # class to store respond lines
     """=================== Main Function Lines Storage ======================="""
 
     @staticmethod
+    def general_lines(cond):
+        if cond == "failed to open page":  # Take 1 argument : web page
+            lines = ["Sorry, '%s' is currently unreachable...",
+                     "I think %s is down right now, it's unreachable...",
+                     "I can't open %s.. I wonder if it's down right now...",
+                     "Seems %s is unreachable right now...",
+                     "How about trying again later? %s is unreachable right now..."]
+        elif cond == "formatting error":  # Take 1 argument : what kind of data
+            lines = ["I'm sorry, I can get the %s data, but seems it's corrupted... :<",
+                     "I have the %s data, but somehow it's corrupted in a one another way... :<",
+                     "I kinda have the %s data somehow..,\nBut I can't gather the information you want right now.. ",
+                     "Ugh... %s data is somehow different from normal data,..\nI can't send it to you unless I know it's safe...",
+                     "It's weird...I can't prettify the %s data...\nI'm sure you don't want a messy data right? "]
+        elif cond == "search fail":  # Take 1 argument : where the process happen
+            lines = ["Try to put the %s, I need it ^^ ",
+                     "Seems there's no %s ._. ",
+                     "I don't see any %s ._. ",
+                     "How about try again with %s included ?",
+                     "Have you put in the %s already ? .-. "]
+        else:
+            lines = [""]
+
+        return random.choice(lines)
+
+    @staticmethod
     def rand_int(cond):
 
         if cond == "success":  # Take 1 argument : number

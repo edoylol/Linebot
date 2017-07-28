@@ -2,18 +2,32 @@
   <dictionary name="Dragonra">
     <words>
       <w>addr</w>
+      <w>adfly</w>
       <w>anime</w>
+      <w>animelist</w>
+      <w>animes</w>
+      <w>appid</w>
       <w>bdgbsm</w>
+      <w>citylink</w>
+      <w>cyber</w>
+      <w>datas</w>
+      <w>dropjify</w>
+      <w>epid</w>
+      <w>epis</w>
       <w>heroku</w>
+      <w>hostid</w>
+      <w>hostlist</w>
       <w>jessin</w>
       <w>kato</w>
       <w>konichiwa</w>
       <w>makassar</w>
       <w>mins</w>
+      <w>mirrorcreator</w>
       <w>moviedata</w>
       <w>movietitle</w>
       <w>notif</w>
       <w>notyetcreated</w>
+      <w>pastebox</w>
       <w>poastback</w>
       <w>postback</w>
       <w>schedulelist</w>
@@ -21,6 +35,7 @@
       <w>splitted</w>
       <w>sumimasen</w>
       <w>summonerswar</w>
+      <w>textarea</w>
       <w>upgtsm</w>
       <w>userid</w>
       <w>userlist</w>
