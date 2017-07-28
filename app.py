@@ -2662,6 +2662,15 @@ class Function:
                     report.append(" ")
                     report.append(Lines.anime_download_link("default host"))
 
+            # If direct pass is enabled
+            elif cond == "direct pass":
+                report.append(Lines.anime_download_link("header") % keyword)
+
+                # If file-hosting is not specified
+                if is_default_host:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default host"))
+
             # If search keyword is not found
             elif cond == "not_found":
                 report.append(Lines.anime_download_link("keyword not found"))
@@ -2711,11 +2720,14 @@ class Function:
 
         # If keyword is available, get the starting episode and file host, and pasted.co link
         if cont:
-            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+
             start_ep, is_default_start = get_start_ep()
             hostid, is_default_host = get_host_source()
-            send_header()
-
+            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+            if direct_pass:
+                send_header("direct pass")
+            else:
+                send_header()
 
         # If the keyword is not found, send notification and end the process
         else:
