@@ -3150,9 +3150,14 @@ class OtherUtil:
         return text
 
     @staticmethod
-    def random_error(function_name,exception_detail):
+    def random_error(function_name, exception_detail):
         """ Function to serve as last resort logger when unexpected error happened.
         It send the exception via line push to Dev """
+
+        # First, print out the exception
+        print("Error with :", function_name)
+        print("-------------------- EXCEPTION DETAIL ---------------------")
+        print(exception_detail)
 
         # Report to let group or other normal user know that something unexpected happened
         report = Lines.dev_mode_general_error("common")
