@@ -72,3 +72,10 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+primary_download_link = '02 - https://www.mirrorcreator.com/files/5OZEMHJV\r'
+index_start = primary_download_link.find("http")
+shortened_link = primary_download_link[index_start:].strip()
+download_link, status = unshortenit.unshorten_only(shortened_link)
+
+print(download_link)
