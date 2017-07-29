@@ -2605,6 +2605,7 @@ class Function:
                         index_start = primary_download_link.find("http")
                         shortened_link = primary_download_link[index_start:].strip()
                         download_link, status = unshortenit.unshorten_only(shortened_link)
+                        print("UNSHORTENED",download_link)
 
                     # If there's error when trying to get mirrorcreator link, just pass it and go to next one
                     except Exception:
@@ -2836,7 +2837,6 @@ class Function:
             # Continuation from previous process
             else:
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
-                print("PRIMARY:",primary_download_link_list)
 
             result, is_success = get_final_download_link(primary_download_link_list, start_ep)
             is_send_animelist = False
