@@ -2617,20 +2617,22 @@ class Function:
                         # POST the data to mirrorcreator to get the download link
                         page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
                         try:
-                            print("PAGE URL:", page_url)
                             post_data = dict(uid=file_id, hostid=hostid)
                             req_post = requests.post(page_url, data=post_data)
                             page_source_code_text_post = req_post.text
                             mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-                            print(mod_page)
+
                         except:
                             report = Lines.general_lines("failed to open page") % page_url
                             line_bot_api.push_message(address, TextSendMessage(text=report))
                             raise
 
                         # Get the final download link from POST request
-                        final_download_link = mod_page.find("a", {"target": "_blank"})
-                        print(final_download_link)
+                        final_download_links = mod_page.find_all("a", {"target": "_blank"})
+                        for final_download_link in final_download_links:
+                            temp_word = str(final_download_link.get("href"))
+                            if any(word in temp_word for word in list(Database.anime_hostlist.keys())):
+                                final_download_link = temp_word
 
                         # If the final download link is available, append it to result
                         if final_download_link is not None:
