@@ -2727,7 +2727,6 @@ class Function:
             < warning > This function is really unstable """
 
             direct_download_raw_data = ""
-            print("PAGE URL ZIPPY :",page_url)
 
             # Open the zippy link to get the raw data
             try:
@@ -2837,6 +2836,7 @@ class Function:
             # Continuation from previous process
             else:
                 primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+                print("PRIMARY:",primary_download_link_list)
 
             result, is_success = get_final_download_link(primary_download_link_list, start_ep)
             is_send_animelist = False
