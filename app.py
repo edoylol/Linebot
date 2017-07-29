@@ -2727,6 +2727,7 @@ class Function:
             < warning > This function is really unstable """
 
             direct_download_raw_data = ""
+            print("PAGE URL ZIPPY :",page_url)
 
             # Open the zippy link to get the raw data
             try:
