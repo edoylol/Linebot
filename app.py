@@ -2412,446 +2412,446 @@ class Function:
         """ Function to return anime download link list according to text.
         Usage example : Meg, show me anime download link 'title' <ep 2> <from zippy> """
 
-        try:
+        #try:
 
-            def get_keyword(cond="default"):
-                """ Function to return search keyword (either anime title, or link) """
+        def get_keyword(cond="default"):
+            """ Function to return search keyword (either anime title, or link) """
 
-                # Some feature need keyword match case (ex : adf.ly)
-                if cond == "original":
-                    # Find the keyword in original text
-                    try:
-                        index_start = original_text.find("'") + 1
-                        index_stop = original_text.rfind("'")
-                        keyword = original_text[index_start:index_stop]
-                        return keyword
-                    except:
-                        return "not_found"
-
-                # If keyword doesn't need to match case
-                else:
-                    # Find the keyword in text
-                    try:
-                        index_start = text.find("'") + 1
-                        index_stop = text.rfind("'")
-                        keyword = text[index_start:index_stop]
-                        return keyword
-                    except:
-                        return "not_found"
-
-            def get_start_ep():
-                """ Function to return starting episode from text """
-
-                is_default_start = True
-                start_ep = 1  # Default starting episode
-
-                # Simple text filtering
-                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
-                           'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
-                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
-                           'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-                filtered_text = OtherUtil.filter_words(text)
-                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-                # Find the starting episode using 'next-text after the found-keyword' scheme
-                keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
-                for i in range(0, len(filtered_text)):
-                    if any(word in filtered_text[i] for word in keyword):
-
-                        # Make sure the starting episode is in form of number
-                        try:
-                            start_ep = int(filtered_text[i + 1])
-                            is_default_start = False
-                        except:
-                            pass
-
-                return start_ep, is_default_start
-
-            def get_host_source():
-                """ Function to return chosen file-hosting's id """
-
-                # General variable
-                is_default_host = True
-                host_id = 15  # Default file-hosting is zippyshare
-                anime_hostlist = Database.anime_hostlist
-
-                # Simple text filtering
-                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
-                           'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
-                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
-                           'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-                filtered_text = OtherUtil.filter_words(text)
-                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-                # Find the file-hosting id using 'next-text after the found-keyword' scheme
-                keyword = ["from", "fr", "source", "src", "frm", "sou"]
-                for i in range(0, len(filtered_text)):
-                    if any(word in filtered_text[i] for word in keyword):
-
-                        # If file-hosting-candidate's name is found
-                        try:
-                            host_name = filtered_text[i + 1]
-
-                            # Try to find the host id in the database
-                            for host in anime_hostlist:
-                                if host_name in host:
-                                    host_id = anime_hostlist[host]
-                                    is_default_host = False
-
-                        except:
-                            pass
-
-                return host_id, is_default_host
-
-            def get_process_starting_point(keyword):
-                """ Function to enable direct pass if mirrorcreator or adf.ly link is already stated explicitly """
-
-                direct_pass = any(word in keyword for word in ["mirrorcreator", "adf.ly"])
-                return direct_pass
-
-            def get_anime_pasted_link(keyword):
-                """ Function to get pasted.co link """
-
-                # If the 'pasted.co' is explicitly writen, enable direct process
-                if "pasted.co" in keyword:
+            # Some feature need keyword match case (ex : adf.ly)
+            if cond == "original":
+                # Find the keyword in original text
+                try:
+                    index_start = original_text.find("'") + 1
+                    index_stop = original_text.rfind("'")
+                    keyword = original_text[index_start:index_stop]
                     return keyword
-
-                # Search database using anime's title to get the pasted.co link
-                animelist = Database.animelist
-                try:
-                    for anime in animelist:
-                        if keyword in anime.lower():
-                            return animelist[anime]
                 except:
-                    pass
+                    return "not_found"
 
-                # If the pasted.co link is not found
-                return "title not found"
-
-            def get_primary_download_link_list(anime_pasted_link):
-                """ Extract links (adfly or mirrorcreator) from pasted.co """
-
-                # If the 'adfly or mirrorcreator' is explicitly writen, enable direct process
-                if any(word in text for word in ["mirrorcreator", "adf.ly"]):
-                    return [keyword]
-
-                page_url = anime_pasted_link + "/new.php"
-
-                # Open the page (pasted.co)
-                try:
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                except:
-                    report = Lines.general_lines("failed to open page") % page_url
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    raise
-
-                # Parse the web to get raw data (list of links)
-                datas = mod_page.find("textarea", {"class": "pastebox rounded"})
-                download_link_list = datas.text.split("\n")
-
-                # Append found link to list
-                download_link_list_filtered = []
-                for link in download_link_list:
-                    if "http" in link:
-                        download_link_list_filtered.append(link)
-
-                return download_link_list_filtered
-
-            def get_file_id(link):
-                """ Function to return file id from mirrorcreator link """
-
-                # General variable
-                file_id = " "
-                mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
-                file_id_found = link.find(mirror_creator_keyword) != -1
-
-                # If the keyword is found, try to get the file_id
-                if file_id_found:
-                    index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
-                    index_stop = index_start + 8
-                    file_id = str(link[index_start:index_stop])
-
-                return file_id, file_id_found
-
-            def get_final_download_link(primary_download_link_list, start_ep=1):
-                """ Function to return final download link from file-hosting """
-
-                # General variable
-                result = []
-                success = False
-                cont = True
-                enable_dev_mode_extension = dev_mode_extension_check()
-
-                # Check if the starting episode is available, if not, send notification
-                latest_episode_count = len(primary_download_link_list)
-                if start_ep > latest_episode_count:
-                    result.append(Lines.anime_download_link("starting episode not aired"))
-                    result.append(Lines.anime_download_link("send latest episode count") % str(latest_episode_count))
-                    cont = False
-
-                # If the starting episode is available
-                if cont:
-
-                    # Iterate from start episode to the last one
-                    for i in range(start_ep - 1, (len(primary_download_link_list))):
-                        current_ep = i + 1
-                        primary_download_link = primary_download_link_list[i]
-
-                        # Extract the mirror creator link / adfly link from every lines in pasted.co
-                        try:
-                            index_start = primary_download_link.find("http")
-                            shortened_link = primary_download_link[index_start:].strip()
-                            download_link, status = unshortenit.unshorten_only(shortened_link)
-
-                        # If there's error when trying to get mirrorcreator link, just pass it and go to next one
-                        except Exception:
-                            break
-
-                        # Get the file id from the mirrorcreator link found before
-                        file_id, file_id_found = get_file_id(download_link)
-                        if file_id_found:
-
-                            # POST the data to mirrorcreator to get the download link
-                            page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
-                            try:
-                                post_data = dict(uid=file_id, hostid=hostid)
-                                req_post = requests.post(page_url, data=post_data)
-                                page_source_code_text_post = req_post.text
-                                mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-                            except:
-                                report = Lines.general_lines("failed to open page") % page_url
-                                line_bot_api.push_message(address, TextSendMessage(text=report))
-                                raise
-
-                            # Get the final download link from POST request
-                            final_download_link = mod_page.find("a", {"target": "_blank"})
-
-                            # If the final download link is available, append it to result
-                            if final_download_link is not None:
-
-                                # Formatting : Do not show current episode if there's only one link
-                                if len(primary_download_link_list) < 2:
-                                    result.append(final_download_link.get("href"))
-
-                                # Formatting : Show current episode if there're more than one links
-                                else:
-                                    result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
-                                success = True
-
-                                # DEV MODE : enable direct link only for zippyshare and dev
-                                if enable_dev_mode_extension:
-                                    direct_link = dev_mode_zippy_extension(final_download_link.get("href"))
-                                    result.append("[" + direct_link + "]")
-                                    result.append(" ")
-
-                            else:
-                                result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
-
-                return result, success
-
-            def send_header(cond="found", dev_mode_enable=False):
-                """ Function to send header """
-                report = []
-
-                # If dev mode is enabled, execute it in dev mode style
-                if dev_mode_enable:
-                    report.append("[Executing in Dev Mode]\n")
-
-                # If search keyword is found, sending notification about search keyword and default settings
-                if cond == "found":
-                    report.append(Lines.anime_download_link("header") % keyword)
-
-                    # If starting episode is not specified
-                    if is_default_start:
-                        report.append(" ")
-                        report.append(Lines.anime_download_link("default start ep"))
-
-                    # If file-hosting is not specified
-                    if is_default_host:
-                        report.append(" ")
-                        report.append(Lines.anime_download_link("default host"))
-
-                # If direct pass is enabled
-                elif cond == "direct pass":
-                    report.append(Lines.anime_download_link("header") % keyword)
-
-                    # If file-hosting is not specified
-                    if is_default_host:
-                        report.append(" ")
-                        report.append(Lines.anime_download_link("default host"))
-
-                # If search keyword is not found
-                elif cond == "not_found":
-                    report.append(Lines.anime_download_link("keyword not found"))
-
-                # Send the report
-                report = "\n".join(report)
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-
-            def send_final_result(result, success, is_send_animelist):
-                """ Function to send the final result that contains final download links """
-
-                # If anime's title is found and starting episode is found, create header into report
-                if success:
-                    # nb : It's created backwardly, but it will show with the right sequence
-                    result.insert(0, " ")
-                    result.insert(0, Lines.anime_download_link("header for result"))
-
-                report = "\n".join(result)
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-
-                # Only send list of animes available if the title is not found
-                if is_send_animelist:
-                    send_animelist()
-
-            def send_animelist():
-                """ Function to send links of 2016 and 2017 anime list from cyber12 """
-
-                # Generate the button template and send it
-                title = "Cyber12 Anime"
-                button_text = Lines.anime_download_link("send animelist")
-                link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
-                link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
-                buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
-                    URITemplateAction(label='2017 Anime Update', uri=link_2017),
-                    URITemplateAction(label='2016 Anime Update', uri=link_2016)])
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
-
-            def dev_mode_zippy_extension(page_url):
-                """ Function to return direct download link from zippyshare.
-                < warning > DO NOT USE IF EXCEPTION OCCUR, limit to dev only.
-                < warning > This function is really unstable """
-
-                direct_download_raw_data = ""
-
-                # Open the zippy link to get the raw data
-                try:
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-
-                except:
-                    return Lines.general_lines("dev mode extension failed") % "open page"
-
-                # Parse the raw data to find complete-direct-link's parts
-                try:
-                    raw_datas = mod_page.find_all("script", {"type": "text/javascript"})
-                    download_button_keyword = "document.getElementById('dlbutton').href"
-
-                    # Search for download button keyword in the raw data
-                    for raw_data in raw_datas:
-                        if download_button_keyword in raw_data.text.strip():
-                            direct_download_raw_data = raw_data.text.strip()
-
-                except:
-                    return Lines.general_lines("dev mode extension failed") % "parsing data"
-
-                # Re-construct the complete link and re-format the data
-                try:
-                    # Get the complete-direct-link's header (ex: http://www69.zippyshare.com)
-                    index_stop = page_url.find(".com/v/") + 4
-                    link_header = page_url[:index_stop]
-
-                    # Get the complete-direct-link's file id (ex: /d/DuGHrENZ/ )
-                    index_start = page_url.find(".com/v/") + 7
-                    index_stop = page_url.find('/file.html') + 1
-                    link_fileid = "/d/" + page_url[index_start:index_stop]
-
-                    # Get the complete-direct-link's token (ex: 49899) < WARNING : It use eval() >
-                    index_start = direct_download_raw_data.find('/" + (') + 6
-                    index_stop = direct_download_raw_data.find(') + "/')
-                    link_token = direct_download_raw_data[index_start:index_stop]
-                    link_token = str(eval(link_token))
-
-                    # Get the complete-direct-link's file name (ex: /%5bCCM%5d_Kakegurui_-_04.mp4)
-                    index_start = direct_download_raw_data.find(') + "/') + 5
-                    index_stop = direct_download_raw_data.find('.mp4";') + 4
-                    link_filename = direct_download_raw_data[index_start:index_stop]
-
-                    # Re-construct the complete direct link
-                    complete_direct_link = (link_header + link_fileid + link_token + link_filename)
-                    return complete_direct_link
-
-                except:
-                    return Lines.general_lines("dev mode extension failed") % "re construct complete link"
-
-            def dev_mode_extension_check():
-                """ Function to check whether dev mode extension is enabled """
-
-                dev_extension_command = all(word in text for word in ["dev", "mode"])
-                dev_extension_user_check = Function.dev_authority_check(address, cond="address")
-                dev_extension_zippy = hostid == 15  # Only available for zippyshare
-
-                return dev_extension_command and dev_extension_user_check and dev_extension_zippy
-
-            # General variable and it's default value
-            anime_pasted_link = " "
-            start_ep = 1
-            direct_pass = False  # If the keyword is already in form of mirror link or adf.ly, enable direct pass
-
-            # Get the keyword from text
-            keyword = get_keyword()
-            cont = keyword != "not_found"
-
-            # If keyword is available, get the starting episode and file host, and pasted.co link
-            if cont:
-
-                start_ep, is_default_start = get_start_ep()
-                hostid, is_default_host = get_host_source()
-                direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
-                enable_dev_mode_extension = dev_mode_extension_check()  # Determine whether dev mode extension is available
-
-                # Send header according to condition
-                if direct_pass:
-                    send_header(cond="direct pass", dev_mode_enable=enable_dev_mode_extension)
-                else:
-                    send_header(dev_mode_enable=enable_dev_mode_extension)
-
-            # If the keyword is not found, send notification and end the process
+            # If keyword doesn't need to match case
             else:
-                send_header("not_found")
-                send_animelist()
+                # Find the keyword in text
+                try:
+                    index_start = text.find("'") + 1
+                    index_stop = text.rfind("'")
+                    keyword = text[index_start:index_stop]
+                    return keyword
+                except:
+                    return "not_found"
+
+        def get_start_ep():
+            """ Function to return starting episode from text """
+
+            is_default_start = True
+            start_ep = 1  # Default starting episode
+
+            # Simple text filtering
+            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+            filtered_text = OtherUtil.filter_words(text)
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+            # Find the starting episode using 'next-text after the found-keyword' scheme
+            keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
+            for i in range(0, len(filtered_text)):
+                if any(word in filtered_text[i] for word in keyword):
+
+                    # Make sure the starting episode is in form of number
+                    try:
+                        start_ep = int(filtered_text[i + 1])
+                        is_default_start = False
+                    except:
+                        pass
+
+            return start_ep, is_default_start
+
+        def get_host_source():
+            """ Function to return chosen file-hosting's id """
+
+            # General variable
+            is_default_host = True
+            host_id = 15  # Default file-hosting is zippyshare
+            anime_hostlist = Database.anime_hostlist
+
+            # Simple text filtering
+            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+            filtered_text = OtherUtil.filter_words(text)
+            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+            # Find the file-hosting id using 'next-text after the found-keyword' scheme
+            keyword = ["from", "fr", "source", "src", "frm", "sou"]
+            for i in range(0, len(filtered_text)):
+                if any(word in filtered_text[i] for word in keyword):
+
+                    # If file-hosting-candidate's name is found
+                    try:
+                        host_name = filtered_text[i + 1]
+
+                        # Try to find the host id in the database
+                        for host in anime_hostlist:
+                            if host_name in host:
+                                host_id = anime_hostlist[host]
+                                is_default_host = False
+
+                    except:
+                        pass
+
+            return host_id, is_default_host
+
+        def get_process_starting_point(keyword):
+            """ Function to enable direct pass if mirrorcreator or adf.ly link is already stated explicitly """
+
+            direct_pass = any(word in keyword for word in ["mirrorcreator", "adf.ly"])
+            return direct_pass
+
+        def get_anime_pasted_link(keyword):
+            """ Function to get pasted.co link """
+
+            # If the 'pasted.co' is explicitly writen, enable direct process
+            if "pasted.co" in keyword:
+                return keyword
+
+            # Search database using anime's title to get the pasted.co link
+            animelist = Database.animelist
+            try:
+                for anime in animelist:
+                    if keyword in anime.lower():
+                        return animelist[anime]
+            except:
+                pass
+
+            # If the pasted.co link is not found
+            return "title not found"
+
+        def get_primary_download_link_list(anime_pasted_link):
+            """ Extract links (adfly or mirrorcreator) from pasted.co """
+
+            # If the 'adfly or mirrorcreator' is explicitly writen, enable direct process
+            if any(word in text for word in ["mirrorcreator", "adf.ly"]):
+                return [keyword]
+
+            page_url = anime_pasted_link + "/new.php"
+
+            # Open the page (pasted.co)
+            try:
+                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                con = urllib.request.urlopen(req)
+                page_source_code_text = con.read()
+                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+            except:
+                report = Lines.general_lines("failed to open page") % page_url
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+                raise
+
+            # Parse the web to get raw data (list of links)
+            datas = mod_page.find("textarea", {"class": "pastebox rounded"})
+            download_link_list = datas.text.split("\n")
+
+            # Append found link to list
+            download_link_list_filtered = []
+            for link in download_link_list:
+                if "http" in link:
+                    download_link_list_filtered.append(link)
+
+            return download_link_list_filtered
+
+        def get_file_id(link):
+            """ Function to return file id from mirrorcreator link """
+
+            # General variable
+            file_id = " "
+            mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
+            file_id_found = link.find(mirror_creator_keyword) != -1
+
+            # If the keyword is found, try to get the file_id
+            if file_id_found:
+                index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
+                index_stop = index_start + 8
+                file_id = str(link[index_start:index_stop])
+
+            return file_id, file_id_found
+
+        def get_final_download_link(primary_download_link_list, start_ep=1):
+            """ Function to return final download link from file-hosting """
+
+            # General variable
+            result = []
+            success = False
+            cont = True
+            enable_dev_mode_extension = dev_mode_extension_check()
+
+            # Check if the starting episode is available, if not, send notification
+            latest_episode_count = len(primary_download_link_list)
+            if start_ep > latest_episode_count:
+                result.append(Lines.anime_download_link("starting episode not aired"))
+                result.append(Lines.anime_download_link("send latest episode count") % str(latest_episode_count))
                 cont = False
 
-            # If keyword is available and keyword is not mirror / adf.ly link, get the pasted.co link
-            if cont and not direct_pass:
-
-                anime_pasted_link = get_anime_pasted_link(keyword)
-                cont = anime_pasted_link != "title not found"
-
-            # If anime pasted.co link is available or it's direct pass
+            # If the starting episode is available
             if cont:
 
-                # If the keyword is already in form of mirror link or adf.ly
-                if direct_pass:
-                    # Re- assign keyword with original match case keyword (before lowered)
-                    keyword = get_keyword("original")
-                    primary_download_link_list = [keyword]
+                # Iterate from start episode to the last one
+                for i in range(start_ep - 1, (len(primary_download_link_list))):
+                    current_ep = i + 1
+                    primary_download_link = primary_download_link_list[i]
 
-                # Continuation from previous process
-                else:
-                    primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+                    # Extract the mirror creator link / adfly link from every lines in pasted.co
+                    try:
+                        index_start = primary_download_link.find("http")
+                        shortened_link = primary_download_link[index_start:].strip()
+                        download_link, status = unshortenit.unshorten_only(shortened_link)
 
-                result, is_success = get_final_download_link(primary_download_link_list, start_ep)
-                is_send_animelist = False
+                    # If there's error when trying to get mirrorcreator link, just pass it and go to next one
+                    except Exception:
+                        break
 
-            # If the title is not found, append notification and enable sending anime list
+                    # Get the file id from the mirrorcreator link found before
+                    file_id, file_id_found = get_file_id(download_link)
+                    if file_id_found:
+
+                        # POST the data to mirrorcreator to get the download link
+                        page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
+                        try:
+                            post_data = dict(uid=file_id, hostid=hostid)
+                            req_post = requests.post(page_url, data=post_data)
+                            page_source_code_text_post = req_post.text
+                            mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+                        except:
+                            report = Lines.general_lines("failed to open page") % page_url
+                            line_bot_api.push_message(address, TextSendMessage(text=report))
+                            raise
+
+                        # Get the final download link from POST request
+                        final_download_link = mod_page.find("a", {"target": "_blank"})
+
+                        # If the final download link is available, append it to result
+                        if final_download_link is not None:
+
+                            # Formatting : Do not show current episode if there's only one link
+                            if len(primary_download_link_list) < 2:
+                                result.append(final_download_link.get("href"))
+
+                            # Formatting : Show current episode if there're more than one links
+                            else:
+                                result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+                            success = True
+
+                            # DEV MODE : enable direct link only for zippyshare and dev
+                            if enable_dev_mode_extension:
+                                direct_link = str(dev_mode_zippy_extension(final_download_link.get("href")))
+                                result.append("[" + direct_link + "]")
+                                result.append(" ")
+
+                        else:
+                            result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
+
+            return result, success
+
+        def send_header(cond="found", dev_mode_enable=False):
+            """ Function to send header """
+            report = []
+
+            # If dev mode is enabled, execute it in dev mode style
+            if dev_mode_enable:
+                report.append("[Executing in Dev Mode]\n")
+
+            # If search keyword is found, sending notification about search keyword and default settings
+            if cond == "found":
+                report.append(Lines.anime_download_link("header") % keyword)
+
+                # If starting episode is not specified
+                if is_default_start:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default start ep"))
+
+                # If file-hosting is not specified
+                if is_default_host:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default host"))
+
+            # If direct pass is enabled
+            elif cond == "direct pass":
+                report.append(Lines.anime_download_link("header") % keyword)
+
+                # If file-hosting is not specified
+                if is_default_host:
+                    report.append(" ")
+                    report.append(Lines.anime_download_link("default host"))
+
+            # If search keyword is not found
+            elif cond == "not_found":
+                report.append(Lines.anime_download_link("keyword not found"))
+
+            # Send the report
+            report = "\n".join(report)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        def send_final_result(result, success, is_send_animelist):
+            """ Function to send the final result that contains final download links """
+
+            # If anime's title is found and starting episode is found, create header into report
+            if success:
+                # nb : It's created backwardly, but it will show with the right sequence
+                result.insert(0, " ")
+                result.insert(0, Lines.anime_download_link("header for result"))
+
+            report = "\n".join(result)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            # Only send list of animes available if the title is not found
+            if is_send_animelist:
+                send_animelist()
+
+        def send_animelist():
+            """ Function to send links of 2016 and 2017 anime list from cyber12 """
+
+            # Generate the button template and send it
+            title = "Cyber12 Anime"
+            button_text = Lines.anime_download_link("send animelist")
+            link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
+            link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
+            buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
+                URITemplateAction(label='2017 Anime Update', uri=link_2017),
+                URITemplateAction(label='2016 Anime Update', uri=link_2016)])
+            template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+        def dev_mode_zippy_extension(page_url):
+            """ Function to return direct download link from zippyshare.
+            < warning > DO NOT USE IF EXCEPTION OCCUR, limit to dev only.
+            < warning > This function is really unstable """
+
+            direct_download_raw_data = ""
+
+            # Open the zippy link to get the raw data
+            try:
+                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                con = urllib.request.urlopen(req)
+                page_source_code_text = con.read()
+                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+            except:
+                return Lines.general_lines("dev mode extension failed") % "open page"
+
+            # Parse the raw data to find complete-direct-link's parts
+            try:
+                raw_datas = mod_page.find_all("script", {"type": "text/javascript"})
+                download_button_keyword = "document.getElementById('dlbutton').href"
+
+                # Search for download button keyword in the raw data
+                for raw_data in raw_datas:
+                    if download_button_keyword in raw_data.text.strip():
+                        direct_download_raw_data = raw_data.text.strip()
+
+            except:
+                return Lines.general_lines("dev mode extension failed") % "parsing data"
+
+            # Re-construct the complete link and re-format the data
+            try:
+                # Get the complete-direct-link's header (ex: http://www69.zippyshare.com)
+                index_stop = page_url.find(".com/v/") + 4
+                link_header = page_url[:index_stop]
+
+                # Get the complete-direct-link's file id (ex: /d/DuGHrENZ/ )
+                index_start = page_url.find(".com/v/") + 7
+                index_stop = page_url.find('/file.html') + 1
+                link_fileid = "/d/" + page_url[index_start:index_stop]
+
+                # Get the complete-direct-link's token (ex: 49899) < WARNING : It use eval() >
+                index_start = direct_download_raw_data.find('/" + (') + 6
+                index_stop = direct_download_raw_data.find(') + "/')
+                link_token = direct_download_raw_data[index_start:index_stop]
+                link_token = str(eval(link_token))
+
+                # Get the complete-direct-link's file name (ex: /%5bCCM%5d_Kakegurui_-_04.mp4)
+                index_start = direct_download_raw_data.find(') + "/') + 5
+                index_stop = direct_download_raw_data.find('.mp4";') + 4
+                link_filename = direct_download_raw_data[index_start:index_stop]
+
+                # Re-construct the complete direct link
+                complete_direct_link = (link_header + link_fileid + link_token + link_filename)
+                return complete_direct_link
+
+            except:
+                return Lines.general_lines("dev mode extension failed") % "re construct complete link"
+
+        def dev_mode_extension_check():
+            """ Function to check whether dev mode extension is enabled """
+
+            dev_extension_command = all(word in text for word in ["dev", "mode"])
+            dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+            dev_extension_zippy = hostid == 15  # Only available for zippyshare
+
+            return dev_extension_command and dev_extension_user_check and dev_extension_zippy
+
+        # General variable and it's default value
+        anime_pasted_link = " "
+        start_ep = 1
+        direct_pass = False  # If the keyword is already in form of mirror link or adf.ly, enable direct pass
+
+        # Get the keyword from text
+        keyword = get_keyword()
+        cont = keyword != "not_found"
+
+        # If keyword is available, get the starting episode and file host, and pasted.co link
+        if cont:
+
+            start_ep, is_default_start = get_start_ep()
+            hostid, is_default_host = get_host_source()
+            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+            enable_dev_mode_extension = dev_mode_extension_check()  # Determine whether dev mode extension is available
+
+            # Send header according to condition
+            if direct_pass:
+                send_header(cond="direct pass", dev_mode_enable=enable_dev_mode_extension)
             else:
-                result = [Lines.anime_download_link("title not found") % keyword]
-                is_success = False
-                is_send_animelist = True
+                send_header(dev_mode_enable=enable_dev_mode_extension)
 
-            # Send the final result to user
-            send_final_result(result, is_success, is_send_animelist)
+        # If the keyword is not found, send notification and end the process
+        else:
+            send_header("not_found")
+            send_animelist()
+            cont = False
 
+        # If keyword is available and keyword is not mirror / adf.ly link, get the pasted.co link
+        if cont and not direct_pass:
+
+            anime_pasted_link = get_anime_pasted_link(keyword)
+            cont = anime_pasted_link != "title not found"
+
+        # If anime pasted.co link is available or it's direct pass
+        if cont:
+
+            # If the keyword is already in form of mirror link or adf.ly
+            if direct_pass:
+                # Re- assign keyword with original match case keyword (before lowered)
+                keyword = get_keyword("original")
+                primary_download_link_list = [keyword]
+
+            # Continuation from previous process
+            else:
+                primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+
+            result, is_success = get_final_download_link(primary_download_link_list, start_ep)
+            is_send_animelist = False
+
+        # If the title is not found, append notification and enable sending anime list
+        else:
+            result = [Lines.anime_download_link("title not found") % keyword]
+            is_success = False
+            is_send_animelist = True
+
+        # Send the final result to user
+        send_final_result(result, is_success, is_send_animelist)
+"""
         except Exception as exception_detail:
             function_name = "Anime Download Link"
-            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)"""
 
     @staticmethod
     def translate_text():
