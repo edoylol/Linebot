@@ -10,7 +10,6 @@ from datetime import datetime
 from xml.etree import ElementTree
 
 
-
 class OtherUtil:
 
     @staticmethod
@@ -59,9 +58,14 @@ class OtherUtil:
         return text
 
     @staticmethod
-    def random_error(function_name,exception_detail):
+    def random_error(function_name, exception_detail):
         """ Function to serve as last resort logger when unexpected error happened.
         It send the exception via line push to Dev """
+
+        # First, print out the exception
+        print("Error with :", function_name)
+        print("-------------------- EXCEPTION DETAIL ---------------------")
+        print(exception_detail)
 
         # Report to let group or other normal user know that something unexpected happened
         report = Lines.dev_mode_general_error("common")
@@ -69,5 +73,5 @@ class OtherUtil:
 
         # Send back up notification to Dev, to let Dev know that something unexpected happened
         if address != jessin_userid:
-            report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
+            report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))

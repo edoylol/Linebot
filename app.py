@@ -2583,6 +2583,7 @@ class Function:
                 result = []
                 success = False
                 cont = True
+                enable_dev_mode_extension = dev_mode_extension_check()
 
                 # Check if the starting episode is available, if not, send notification
                 latest_episode_count = len(primary_download_link_list)
@@ -2640,14 +2641,24 @@ class Function:
                                     result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
                                 success = True
 
+                                # DEV MODE : enable direct link only for zippyshare and dev
+                                if enable_dev_mode_extension:
+                                    direct_link = dev_mode_zippy_extension(final_download_link.get("href"))
+                                    result.append("[" + direct_link + "]")
+                                    result.append(" ")
+
                             else:
                                 result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
 
                 return result, success
 
-            def send_header(cond="found"):
+            def send_header(cond="found", dev_mode_enable=False):
                 """ Function to send header """
                 report = []
+
+                # If dev mode is enabled, execute it in dev mode style
+                if dev_mode_enable:
+                    report.append("[Executing in Dev Mode]\n")
 
                 # If search keyword is found, sending notification about search keyword and default settings
                 if cond == "found":
@@ -2710,6 +2721,74 @@ class Function:
                 template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
+            def dev_mode_zippy_extension(page_url):
+                """ Function to return direct download link from zippyshare.
+                < warning > DO NOT USE IF EXCEPTION OCCUR, limit to dev only.
+                < warning > This function is really unstable """
+
+                direct_download_raw_data = ""
+
+                # Open the zippy link to get the raw data
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    return Lines.general_lines("dev mode extension failed") % "open page"
+
+                # Parse the raw data to find complete-direct-link's parts
+                try:
+                    raw_datas = mod_page.find_all("script", {"type": "text/javascript"})
+                    download_button_keyword = "document.getElementById('dlbutton').href"
+
+                    # Search for download button keyword in the raw data
+                    for raw_data in raw_datas:
+                        if download_button_keyword in raw_data.text.strip():
+                            direct_download_raw_data = raw_data.text.strip()
+
+                except:
+                    return Lines.general_lines("dev mode extension failed") % "parsing data"
+
+                # Re-construct the complete link and re-format the data
+                try:
+                    # Get the complete-direct-link's header (ex: http://www69.zippyshare.com)
+                    index_stop = page_url.find(".com/v/") + 4
+                    link_header = page_url[:index_stop]
+
+                    # Get the complete-direct-link's file id (ex: /d/DuGHrENZ/ )
+                    index_start = page_url.find(".com/v/") + 7
+                    index_stop = page_url.find('/file.html') + 1
+                    link_fileid = "/d/" + page_url[index_start:index_stop]
+
+                    # Get the complete-direct-link's token (ex: 49899) < WARNING : It use eval() >
+                    index_start = direct_download_raw_data.find('/" + (') + 6
+                    index_stop = direct_download_raw_data.find(') + "/')
+                    link_token = direct_download_raw_data[index_start:index_stop]
+                    link_token = str(eval(link_token))
+
+                    # Get the complete-direct-link's file name (ex: /%5bCCM%5d_Kakegurui_-_04.mp4)
+                    index_start = direct_download_raw_data.find(') + "/') + 5
+                    index_stop = direct_download_raw_data.find('.mp4";') + 4
+                    link_filename = direct_download_raw_data[index_start:index_stop]
+
+                    # Re-construct the complete direct link
+                    complete_direct_link = (link_header + link_fileid + link_token + link_filename)
+                    return complete_direct_link
+
+                except:
+                    return Lines.general_lines("dev mode extension failed") % "re construct complete link"
+
+            def dev_mode_extension_check():
+                """ Function to check whether dev mode extension is enabled """
+
+                dev_extension_command = all(word in text for word in ["dev", "mode"])
+                dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                dev_extension_zippy = hostid == 15  # Only available for zippyshare
+
+                return dev_extension_command and dev_extension_user_check and dev_extension_zippy
+
             # General variable and it's default value
             anime_pasted_link = " "
             start_ep = 1
@@ -2725,10 +2804,13 @@ class Function:
                 start_ep, is_default_start = get_start_ep()
                 hostid, is_default_host = get_host_source()
                 direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+                enable_dev_mode_extension = dev_mode_extension_check()  # Determine whether dev mode extension is available
+
+                # Send header according to condition
                 if direct_pass:
-                    send_header("direct pass")
+                    send_header(cond="direct pass", dev_mode_enable=enable_dev_mode_extension)
                 else:
-                    send_header()
+                    send_header(dev_mode_enable=enable_dev_mode_extension)
 
             # If the keyword is not found, send notification and end the process
             else:
@@ -3109,30 +3191,42 @@ class Function:
             reply = Lines.dev_mode_userlist("userlist not updated yet")
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    @staticmethod
-    def dev_authority_check(event):
+    @staticmethod  # THIS ONE CHECKED
+    def dev_authority_check(event, cond="default"):
+        """ Function to check whether the user is dev.
+        If dev mode is tried to be accessed in group or by non-dev, it will send report to dev.
+         default = use event as parameter
+         address = use address as parameter """
+
         try:
-            user_id = event.source.user_id
+
+            # Get the user id and user name
+            if cond == "address":
+                user_id = event
+            else:
+                user_id = event.source.user_id
             user = userlist[user_id]
 
-            if (user_id == jessin_userid):
-                granted = True
+            # If the user is listed in Dev list
+            if user_id in Database.devlist:
+                return True
+
+            # If the user is not listed, send rejection
             else:
                 reply = Lines.dev_mode_authority_check("reject")
                 line_bot_api.reply_message(token, TextSendMessage(text=reply))
-                report = Lines.dev_mode_authority_check("notify report") % (user)
+                report = Lines.dev_mode_authority_check("notify report") % user
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-                granted = False
+                return False
 
-        except : #accessed in group / room / failed
+        # If Dev Mode tried to be accessed in group / room / failed
+        except:
             user = "someone"
             reply = Lines.dev_mode_authority_check("failed")
             line_bot_api.reply_message(token, TextSendMessage(text=reply))
-            report = Lines.dev_mode_authority_check("notify report") % (user)
+            report = Lines.dev_mode_authority_check("notify report") % user
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-            granted = False
-
-        return granted
+            return False
 
     @staticmethod
     def TEST():
@@ -3202,7 +3296,7 @@ class OtherUtil:
 
         # Send back up notification to Dev, to let Dev know that something unexpected happened
         if address != jessin_userid:
-            report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
+            report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 """========================================== End of Function List ================================================"""
@@ -3215,6 +3309,4 @@ if __name__ == "__main__":
     arg_parser.add_argument('-d', '--debug', default=False, help='debug')
     options = arg_parser.parse_args()
 
-
     app.run(debug=options.debug, port=options.port)
-

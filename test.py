@@ -60,9 +60,14 @@ class OtherUtil:
         return text
 
     @staticmethod
-    def random_error(function_name,exception_detail):
+    def random_error(function_name, exception_detail):
         """ Function to serve as last resort logger when unexpected error happened.
         It send the exception via line push to Dev """
+
+        # First, print out the exception
+        print("Error with :", function_name)
+        print("-------------------- EXCEPTION DETAIL ---------------------")
+        print(exception_detail)
 
         # Report to let group or other normal user know that something unexpected happened
         report = Lines.dev_mode_general_error("common")
@@ -70,23 +75,5 @@ class OtherUtil:
 
         # Send back up notification to Dev, to let Dev know that something unexpected happened
         if address != jessin_userid:
-            report = (Lines.dev_mode_general_error("dev") % (function_name,exception_detail))
+            report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
-
-page_url = "http://www69.zippyshare.com/v/DuGHrENZ/file.html"
-try:
-    req = urllib.request.Request(page_url, headers={'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"})
-    con = urllib.request.urlopen(req)
-    page_source_code_text = con.read()
-    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-except:
-    report = Lines.general_lines("failed to open page") % page_url
-
-text = page_url
-index_stop = text.rfind(".com/")+4
-keyword = text[:index_stop]
-
-download_link = mod_page.find("a", {"id": "dlbutton"})
-print(download_link)
-print("/d/DuGHrENZ/6263/%5bCCM%5d_Kakegurui_-_04.mp4" in mod_page)

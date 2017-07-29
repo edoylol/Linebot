@@ -657,10 +657,10 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    @staticmethod
+    @staticmethod  # THIS ONE IS CHECKED
     def anime_download_link(cond):
 
-        if cond == "header": # take 1 argument (title)
+        if cond == "header":  # Take 1 argument : title
             lines = ["Sure...be right back, getting %s download links from cyber12...",
                      "%s right? Let me check first for the download links... ",
                      "Sure, wait a second,.. searching cyber12 for %s links...",
@@ -697,7 +697,7 @@ class Lines:  # class to store respond lines
                      "Seems that episode is not encoded yet...",
                      "Did you say the wrong episode?\nI can't find that episode though..."]
 
-        elif cond == "send latest episode count": # take 1 argument (last episode)
+        elif cond == "send latest episode count":  # Take 1 argument : last episode
             lines = ["I think the latest episode is ep. %s",
                      "The database only shows %s episode...",
                      "Seems ep. %s is the latest until now... ",
@@ -711,14 +711,14 @@ class Lines:  # class to store respond lines
                      "Here you go ~ :> ",
                      "Sorry for the delay,.. here's the list.."]
 
-        elif cond == "title not found": # take 1 argument (title)
-            lines = ["I dont's see any '%s' titled anime..\nMaybe you spelled it wrong ?",
+        elif cond == "title not found":  # Take 1 argument : title
+            lines = ["I don't see any '%s' titled anime..\nMaybe you spelled it wrong ?",
                      "The database doesn't have %s titled anime..\nHow about request it personally?",
                      "Please double check the title.. I can't find %s at the database...",
                      "Seems there's no anime with that title...you sure it's '%s'? ",
                      "How about trying other title ? Seems %s is not in the database yet.. "]
 
-        elif cond == "host not available": # take 1 argument (episode)
+        elif cond == "host not available":  # Take 1 argument : episode
             lines = ["Seems ep. %s is not available on this host",
                      "Failed to get the link of ep.%s",
                      "Seems the ep. %s is not properly uploaded on this host",
@@ -727,10 +727,17 @@ class Lines:  # class to store respond lines
 
         elif cond == "send animelist":
             lines = ["Here's the 2017 and 2016 anime list,..\nMaybe you need it..",
-                 "I can only grab the links if the title is listed here..",
-                 "Please check first whether your anime is listed or not",
-                 "How about take a look at those list first?",
-                 "Here's the list of all animes which has download links.."]
+                     "I can only grab the links if the title is listed here..",
+                     "Please check first whether your anime is listed or not",
+                     "How about take a look at those list first?",
+                     "Here's the list of all animes which has download links.."]
+
+        elif cond == "dev mode extension failed":  # Take 1 argument : kind of error
+            lines = ["Extension error : %s\n"
+                     "Dev mode extension error : %s\n"]
+
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
@@ -766,7 +773,8 @@ class Lines:  # class to store respond lines
                      "Seems it's already in %s... isn't it ?",
                      "I think it's already in %s,.. right ? ",
                      "Seems it doesn't need any translation,\nI'm pretty sure it's already in %s..."]
-
+        else:
+            lines = [""]
         return random.choice(lines)
 
     @staticmethod
@@ -1016,7 +1024,7 @@ class Lines:  # class to store respond lines
 
     @staticmethod
     def dev_mode_authority_check(cond):
-        if cond == "failed" :
+        if cond == "failed":
             lines = ["Megumi can't enter Dev Mode now, try again later..",
                      "Megumi can't verify your id, so I can't grant you access..",
                      "Seems Megumi can't grant you access now..",
@@ -1024,7 +1032,7 @@ class Lines:  # class to store respond lines
                      "Megumi can't verify your id, please try again later..",
                      ]
 
-        elif cond == "reject" :
+        elif cond == "reject":
             lines = ["Gomenne,,Megumi can't grant you access for that..",
                      "Do not try to access dev mode.. you are not allowed to !",
                      "Gomen,, you are not allowed to do that..",
@@ -1035,7 +1043,7 @@ class Lines:  # class to store respond lines
                      "Gomen,,Megumi does not recognize you as developer..."
                      ]
 
-        elif cond == "notify report" :
+        elif cond == "notify report":
             lines = ["Master, %s is trying to enter dev mode...",
                      "Be careful master, %s is trying to enter dev mode... ",
                      "Be careful master, %s has tried to enter dev mode just now.",
