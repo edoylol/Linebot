@@ -733,7 +733,7 @@ class Lines:  # class to store respond lines
                      "Here's the list of all animes which has download links.."]
 
         elif cond == "dev mode extension failed":  # Take 1 argument : kind of error
-            lines = ["Extension error : %s\n"
+            lines = ["Extension error : %s\n",
                      "Dev mode extension error : %s\n"]
 
         else:

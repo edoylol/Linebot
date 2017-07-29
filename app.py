@@ -2736,8 +2736,7 @@ class Function:
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
             except:
-                report = Lines.anime_download_link("dev mode extension failed") % "open page"
-                return report
+                return Lines.anime_download_link("dev mode extension failed") % "open page"
 
             # Parse the raw data to find complete-direct-link's parts
             try:
