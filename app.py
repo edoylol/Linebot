@@ -2736,7 +2736,7 @@ class Function:
                 mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
             except:
-                return Lines.general_lines("dev mode extension failed") % "open page"
+                return Lines.anime_download_link("dev mode extension failed") % "open page"
 
             # Parse the raw data to find complete-direct-link's parts
             try:
@@ -2749,7 +2749,7 @@ class Function:
                         direct_download_raw_data = raw_data.text.strip()
 
             except:
-                return Lines.general_lines("dev mode extension failed") % "parsing data"
+                return Lines.anime_download_link("dev mode extension failed") % "parsing data"
 
             # Re-construct the complete link and re-format the data
             try:
@@ -2778,7 +2778,7 @@ class Function:
                 return complete_direct_link
 
             except:
-                return Lines.general_lines("dev mode extension failed") % "re construct complete link"
+                return Lines.anime_download_link("dev mode extension failed") % "re construct complete link"
 
         def dev_mode_extension_check():
             """ Function to check whether dev mode extension is enabled """
