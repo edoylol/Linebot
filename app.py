@@ -2613,6 +2613,7 @@ class Function:
 
                     # Get the file id from the mirrorcreator link found before
                     file_id, file_id_found = get_file_id(download_link)
+                    print("FILE ID :",file_id)
                     if file_id_found:
 
                         # POST the data to mirrorcreator to get the download link
@@ -2629,6 +2630,7 @@ class Function:
 
                         # Get the final download link from POST request
                         final_download_link = mod_page.find("a", {"target": "_blank"})
+                        print("FINAL DOWNLOADLINK:",final_download_link)
 
                         # If the final download link is available, append it to result
                         if final_download_link is not None:
