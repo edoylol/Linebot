@@ -2639,16 +2639,16 @@ class Function:
 
                             # Formatting : Do not show current episode if there's only one link
                             if len(primary_download_link_list) < 2:
-                                result.append(final_download_link.get("href"))
+                                result.append(final_download_link)
 
                             # Formatting : Show current episode if there're more than one links
                             else:
-                                result.append("Ep. " + str(current_ep) + " : " + final_download_link.get("href"))
+                                result.append("Ep. " + str(current_ep) + " : " + final_download_link)
                             success = True
 
                             # DEV MODE : enable direct link only for zippyshare and dev
                             if enable_dev_mode_extension:
-                                direct_link = str(dev_mode_zippy_extension(final_download_link.get("href")))
+                                direct_link = str(dev_mode_zippy_extension(final_download_link))
                                 result.append("[" + direct_link + "]")
                                 result.append(" ")
 
