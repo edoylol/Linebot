@@ -2848,10 +2848,11 @@ class Function:
 
         # Send the final result to user
         send_final_result(result, is_success, is_send_animelist)
-"""
+        """
         except Exception as exception_detail:
             function_name = "Anime Download Link"
-            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)"""
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+        """
 
     @staticmethod
     def translate_text():
