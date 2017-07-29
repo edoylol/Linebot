@@ -75,21 +75,3 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
-page_url = "https://www.mirrorcreator.com/downlink.php?uid=1ORJQKM3"
-try:
-    post_data = dict(uid="1ORJQKM3", hostid=15)
-    req_post = requests.post(page_url, data=post_data)
-    page_source_code_text_post = req_post.text
-    mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-except:
-    report = Lines.general_lines("failed to open page") % page_url
-
-final_download_links = mod_page.find_all("a", {"target": "_blank"})
-for final_download_link in final_download_links:
-    final_download_link = str(final_download_link.get("href"))
-    if any(word in final_download_link for word in list(Database.anime_hostlist.keys())) :
-        print(final_download_link)
-
-
-print(list(Database.anime_hostlist.keys()))

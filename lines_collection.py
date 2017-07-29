@@ -1,6 +1,4 @@
 import random
-import time
-import math
 
 
 class Lines:  # class to store respond lines
@@ -307,11 +305,10 @@ class Lines:  # class to store respond lines
 
         return random.choice(lines)
 
-    """ ==========  27 July 2017 last update ============== """
-
     @staticmethod
     def wiki_search(cond):
-        if cond == "page not found" : # takes 2 % (language, keyword)
+
+        if cond == "page not found":  # Takes 2 argument : language, keyword
             lines = ["I think %s wikipedia does not have an article about '%s' ... ",
                      "Gomen, I tried to search %s wikipedia, but I can't find '%s' ",
                      "%s wikipedia doesn't have '%s' titled page I think...",
@@ -325,7 +322,7 @@ class Lines:  # class to store respond lines
                      "Maybe try other keyword / language ? \n\nJust in case you need it btw,.. ",
                      "\nJust in case you need wiki list... ",
                      ]
-        elif cond == "no keyword found" :
+        elif cond == "no keyword found":
             lines = ["What do you want me to search for ? ",
                      "Gomen, what was that ? ",
                      "Gomen, say it again please ? what was that ? ",
@@ -334,7 +331,7 @@ class Lines:  # class to store respond lines
                      "Sorry, I missed the thing you asked just now.. ",
                      "Please say it again what I should be looking for...",
                      "Pardon, what do you want me to look for ? "]
-        elif cond == "has disambiguation" :
+        elif cond == "has disambiguation":
             lines = ["FYI, this keyword has other uses...\n",
                      "Just saying, this keyword has other uses..\n",
                      "This keyword has other uses\n",
@@ -343,100 +340,107 @@ class Lines:  # class to store respond lines
                      "FYI, there are other disambiguation available...\n",
                      "Just saying, this keyword has other meaning as well..\n",
                      "FYI, this keyword has other meaning as well.. \n"]
-        elif cond == "not specific page - header" :
+        elif cond == "not specific page - header":
             lines = ["Seems '%s' is not a specific keyword,..",
                      "I think there are a lot different uses of '%s'..",
                      "I can't determine which '%s' you are looking for...",
                      "I'm not sure which is the appropriate answer for '%s' ",
                      "There are a lot of '%s' ,,"
                      ]
-        elif cond == "not specific page - content" :
+        elif cond == "not specific page - content":
             lines = ["Here's the list of '%s' people usually search for : \n",
                      "These are some common uses of '%s'...\n",
                      "How about pick one from the list of '%s' below ? \n",
                      "I found some common uses of '%s', how about pick one ? \n",
                      "I wonder if '%s' you looking for is listed below... \n"
                      ]
-        elif cond == "ask detail info" :
+        elif cond == "ask detail info":
             lines = ["Wanna see more detailed info ?",
                      "Nee,, wanna see the detailed page ?",
                      "Do you want to see the full page ?  ",
                      "Take a look at the original page ? ",
                      "I also have the full page, wanna see ?",
                      ]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def download_youtube(cond):
-        if cond == "page not found" :
+
+        if cond == "page not found":
             lines = ["Are you sure you include the youtube link correctly ?",
                      "I can't find the link you want to download...",
                      "Seems the page is unavailable...",
                      "I can't find the youtube page you requested..",
                      "The youtube page is unavailable, I think..."]
-        elif cond == "no video found" :
+        elif cond == "no video found":
             lines = ["There's no video with that format...",
                      "I don't see any video available to download...",
                      "Seems this video doesn't meet the requested format..",
                      "Seems this video is not available in that format..",
                      "I can't find any video to download...try other format(?) "]
-        elif cond == "gathering video data failed" :
+        elif cond == "gathering video data failed":
             lines = ["The page is so slow, I can't gather any data...",
                      "Gomen, seems the video download data corrupted..",
                      "Gomen, the video data is so unresponsive...",
                      "Seems something missing from the video download data, making it's unavailable",
                      "I can't gather the data you requested, seems something wrong..."]
-        elif cond == "pick one to download" :
+        elif cond == "pick one to download":
             lines = ["Here's the list of available video(s) ",
                      "Pick one form the list below ,kay ? ^^",
                      "Here you go :> ",
                      "Choose one to download...",
                      "Which one do you want ? .."]
-        elif cond == "send option header" :
+        elif cond == "send option header":
             lines = ["I found some videos with %s",
                      "Here are some videos with %s",
                      "Those videos passed %s as filter",
                      "I tried to filter with %s and these are the result..",
                      "I tried to use %s as filter, and found those..."]
-        elif cond == "header" :
+        elif cond == "header":
             lines = ["This is the list of available formats...\n",
                      "Try to include one of the format next time...\n",
                      "These are the available formats... \n",
                      "Why did you make such a wide filtering ? Try to narrow it down..\n",
                      "I wonder which one do you want...\n"]
-        elif cond == "footer" :
+        elif cond == "footer":
             lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
                      "\n Hope you find the one you want ~",
                      "\n (=^ ◡ ^=) end 	(=^ ◡ ^=)",
                      "\n \(＾• ω •＾) found it ?  ",
                      "\n      ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
     @staticmethod
     def summonerswar_wiki(cond):
-        if cond == "send button header" :
+
+        if cond == "send button header":
             lines = ["Just tap the information you need...",
                      "I have several info about this monster..",
                      "Which one do you want to know ?",
                      "Here you go...",
                      "Hope this is what you looking for.."]
-        elif cond == "ask detailed page" :
+        elif cond == "ask detailed page":
             lines = ["Wanna see more detailed info ?",
                      "Nee,, wanna see the detailed review ?",
                      "Do you want to see the full page ?  ",
                      "Need more detailed info ? ",
                      "I also have the full page, wanna see ?",
                      ]
-        elif cond == "page not found" :
+        elif cond == "page not found":
             lines = ["I think sw wiki does not have information about that ... ",
                      "Gomen, I tried to search in sw wiki, but I can't find it.. ",
                      "Sw wiki doesn't have that monster info I think...",
                      "I don't see any monster with that name...",
                      "Are you sure you spelled the name correctly ?"
                      ]
-        elif cond == "no keyword found" :
+        elif cond == "no keyword found":
             lines = ["What monster do you want me to search for ? ",
                      "Gomen, what monster was that ? ",
                      "Gomen, say the name again please ? what was that ? ",
@@ -445,46 +449,56 @@ class Lines:  # class to store respond lines
                      "Sorry, I missed the name you asked just now.. ",
                      "Please say it again which monster I should be looking for...",
                      ]
-        elif cond == "overview header" : # take 2 % (mons type, usage)
+        elif cond == "overview header":  # Take 2 arguments : monster type, usage
             lines = ["This is a/an %s type monsters, which excels for %s",
                      "Typically %s type monster, people usually use it for %s",
                      "Simply %s type monster, you should use it for %s ...",
                      "This monster is kind of %s type monsters..\nEspecially good for %s",
                      "Most users said that this %s type monster is good for %s"]
-        elif cond == "good points" :
+        elif cond == "good points":
             lines = ["Good things about this monster :",
                      "Some good points of this monster :",
                      "This monster is good because of :",
                      "Some reason to use this monster :",
                      "Some good features of this monster : "]
-        elif cond == "bad points" :
+        elif cond == "bad points":
             lines = ["Weak points you should take care :",
                      "Some Cons of using this monster :",
                      "Some people don't use it because of :",
                      "Things that this monster lacks : ",
                      "Some users avoid using this monster because of : "]
-        elif cond == "stats header" :
+        elif cond == "stats header":
             lines = ["Here's the Lv40 (Awakened) stats :",
                      "Here's the stats when it hit Lv40 and awakened",
                      "When it's at Lv40, the stats look like : ",
                      "Detail stats of Lv40 (Awakened) monster : ",
                      "Lv 40 (Awakened) monster stats : "]
-        elif cond == "skills header" :
+        elif cond == "skills header":
             lines = ["SKILLS :",
                      "Some usable skills :",
                      "Here's the list of it's skills :",
                      "Here you go...",
                      "Take a look at the skills carefully.."]
-        elif cond == "random errors" :
-            lines = ["I'm really sorry, but me and mastah have tried our best..\nBut you know,, this wiki page is super inconsistent in terms of syntax..\nWe're sorry if some of the feature is not working properly...",
-                     "I'm really sorry if some of the features is not working properly,, \nBut you know,, this wiki page is super inconsistent in terms of syntax..\nWe're sorry since we can't do anything about that..",
-                     "I'm really sorry if some of the features is not working properly,,\nMe and mastah have tried our best..\nBut the wiki is super inconsistent in terms of syntax.."
+        elif cond == "random errors":
+            lines = ["I'm really sorry, but me and mastah have tried our best..\n"
+                     "But you know,, this wiki page is super inconsistent in terms of syntax..\n"
+                     "We're sorry if some of the feature is not working properly...",
+                     "I'm really sorry if some of the features is not working properly,,\n "
+                     "But you know,, this wiki page is super inconsistent in terms of syntax..\n"
+                     "We're sorry since we can't do anything about that..",
+                     "I'm really sorry if some of the features is not working properly,,\n"
+                     "Me and mastah have tried our best..\n"
+                     "But the wiki is super inconsistent in terms of syntax.."
                      ]
+        else:
+            lines = [""]
+
         return random.choice(lines)
 
     @staticmethod
     def weatherforecast(cond):
-        if cond == "header" :
+
+        if cond == "header":
             lines = ["I found the information you requested :>",
                      "Here's the information you asked for..",
                      "Here you go...",
@@ -492,14 +506,14 @@ class Lines:  # class to store respond lines
                      "Let me check first... ",
                      "Wait a second.. hmm...."
                      ]
-        elif cond == "city search : 3 or more cities" :
+        elif cond == "city search : 3 or more cities":
             lines = ["btw, there are some cities which name similar to the one you ask for,..",
                      "anyway, I picked one to show you, but just let you know,\nThere are some cities with similar name : ",
                      "I randomly picked one from the list below :",
                      "There are a lot of cities with similar name you know...\nI chose one from the list below :",
                      "I'm not sure which one is the legit one.., \nthere are a lot of cities similar to the one you ask for.. like :"
                      ]
-        elif cond == "city search : 2 cities" : #take 1 argument
+        elif cond == "city search : 2 cities":  # Take 1 argument : city name
             lines = ["There is another city which it's name similar to the one you search for : %s ",
                      "Try to ask for %s if this is not the correct one",
                      "There is another alternative : %s",
@@ -507,7 +521,7 @@ class Lines:  # class to store respond lines
                      "I'm not sure if this is what you want, if I'm wrong, try %s instead ^^ ",
                      "I don't know which one is the correct one, but try to look at %s instead.."
                      ]
-        elif cond == "default location" : #take 1 argument
+        elif cond == "default location":  # Take 1 argument : default location
             lines = ["Since you did't ask for specific location, \nI assume you are at %s now... ",
                      "I'll give you weather information at %s since you didn't ask for specific location...",
                      "Did you ask for weather around %s ? I assume so...",
@@ -515,13 +529,16 @@ class Lines:  # class to store respond lines
                      "Since you did't ask for specific location, \nI assume you ask for weather forecast around %s... ",
                      "I think you asked for weather forecast around %s, right? "
                      ]
-
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def weatherforecast_tips(cond):
-        if cond == "clouds" : # USE LOWER AS COND
+        # USE LOWER AS COND
+
+        if cond == "clouds":
             lines = ["The sky seems a bit cloudy today...\nI wonder if it will rain soon...",
                      "Don't forget to bring umbrella if you are going out.. \nIt's kinda cloudy right now..",
                      "Do you have any outdoor activity ?\n If you do, probably you should bring an umbrella just in case..",
@@ -531,7 +548,7 @@ class Lines:  # class to store respond lines
                      "I think it will be a gloomy and windy day.. \ntry not to catch the 'gloominess' ,kay?.. xD ",
                      "Best day to curl up in blanket and just do nothing..."
                      ]
-        elif cond == "clear" : # USE LOWER AS COND
+        elif cond == "clear":
             lines = ["It's a nice weather.. what a waste to do nothing ! ",
                      "Such a nice weather outside... Thanks God :> ",
                      "Such a perfect day... ^^ ",
@@ -540,7 +557,7 @@ class Lines:  # class to store respond lines
                      "Look at the sky, look at the earth... \nwhat a blessing to be alive ~ "
                      "This is a nice weather right ? don't you think so too ? :) "
                      ]
-        elif cond == "rain" : # USE LOWER AS COND
+        elif cond == "rain":
             lines = ["Rain rain rain... pouring into my feeling...",
                      "Make sure you stay dry ,kay ? :)",
                      "I wish I could stay at home, curling inside blanket and.. zzz",
@@ -550,59 +567,58 @@ class Lines:  # class to store respond lines
                      "Stay silent... \nthe sound of the rain is so soothing isn't it ? ",
                      "Just don't go outside when it's pouring..."
                      ]
-        elif cond == "snow" : # USE LOWER AS COND
+        elif cond == "snow":
             lines = ["Make sure you stay warm :>",
                      "Don't go outside when it's pouring..",
                      "I wonder if it will piled up or not...",
                      "SO COLD...",
                      "Imagine sitting in front of a fireplace with hot chocolate on a snowy day..."
                      ]
-        elif cond == "extreme" : # USE LOWER AS COND
+        elif cond == "extreme":
             lines = ["I'm not sure about this weather.. try to stay at home..",
                      "I think it's better to stay at home...",
                      "The weather is not very good to go outside... how bout stay at home ?",
                      "It's not very recommended to go outside right now.."
                      "Hope this weather passed quickly... "
                      ]
-        elif cond == "mist":  # USE LOWER AS COND
+        elif cond == "mist":
             lines = ["Woa... what a rare sight...",
                      "It's been a while since the last time isn't it ?",
                      "No wonder it's kinda cold right now...",
                      "Drive slowly if you have to ... safety first !",
                      "Feels like kinda magical or mysterious feeling..."
                      ]
-        elif cond == "drizzle" : # USE LOWER AS COND
+        elif cond == "drizzle":
             lines = ["Make sure you stay dry ,kay ? :)",
                      "I wonder if it will keep goes on..",
                      "Drop more pleasee... :> ",
                      ]
-        else :
+        else:
             lines = ["I'm not sure about this weather.. never seen it before..",
                      "I'm not sure, but I think it's better to stay at home...",
                      "I'm not sure about the weather to be honest..",
                      "I'm not sure if you want to go outside right now.."
                      "I'm not sure how long this will be..."
                      ]
+
         return random.choice(lines)
 
     @staticmethod
     def itb_arc_database(cond):
 
-        if cond == "header":  # take 1 argument itb_keyword
+        if cond == "header":  # Take 1 argument itb_keyword
             lines = ["Wait, I'm trying to find information about %s in the ARC-ITB database...",
                      "%s right? Let me check first... ",
                      "Sure, wait a second,.. looking for %s in the ARC-ITB database...",
                      "Okay, please wait... searching for %s in the ARC-ITB database...",
                      "%s?? Wait... let me check..."
                      ]
-
         elif cond == "database unreachable":
             lines = ["I think there's some problem with the database right now...",
                      "Seems ARC-ITB database is down or unreachable...",
                      "I can't access the database right now...",
                      "I wonder if the ARC-ITB database is down or under maintenance...",
                      "Seems the database is offline right now.."]
-
         elif cond == "default category":
             lines = ["I'm searching under 'students' category, since you didn't specify the category..",
                      "Btw, I'm searching for the keyword under 'students' category..",
@@ -610,54 +626,50 @@ class Lines:  # class to store respond lines
                      "I assume it is listed under 'students', since it's the most common category...",
                      "I assume you want me to search under 'students', since you didn't specify it"
                      ]
-
-        elif cond == "count result plural":  # take 1 argument result count
+        elif cond == "count result plural":  # Take 1 argument result count
             lines = ["I've found %s data after doing a quick search...",
                      "There are %s listed data that fulfil the keyword",
                      "The database has %s data under that keyword",
                      "I've found %s data by searching through the database",
                      "Seems these %s are the one you search for",
                      "I'm not sure which one of these %s, is the one you looking for.."]
-
         elif cond == "count result one":
             lines = ["I only found one detail which fulfils the keyword...",
                      "Seems there is only one... ",
                      "I tried to search in ARC - ITB database, and found this one..",
                      "I'm pretty sure that this one is the correct one :> ",
                      "Is this one the right one? "]
-
         elif cond == "not found":
             lines = ["Are you sure that keyword listed? I can't find it...",
                      "There are no data under that tag..",
                      "Nothing found... try another key word maybe? ",
                      "Hmm... I didn't see anything that fulfils the keyword...",
                      "Please re-check the keyword.. I found nothing here..."]
-
         elif cond == "only send top 5":
             lines = ["Since there are too much information to send,...\nI will send only the first-five",
                      "Are the first-five results enough ??",
                      "There are too much information to send,..can't send them all..",
                      "I will pick and send the first-five ,kay ? ",
                      "I can't send them all in a batch, how bout the first-five only ?"]
-
-        elif cond == "footer" :
+        elif cond == "footer":
             lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
                      "\n   (✿◠‿◠)     (◠‿◠✿)    ",
                      "\n (=^ ◡ ^=) end 	(=^ ◡ ^=)",
                      "\n \(＾• ω •＾) (＾• ω •＾)/   ",
                      "\n     ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
-
         elif cond == "data formatting failed":
             lines = ["I have the raw data, but I shouldn't send it without formatting it right?",
                      "I have problems when tried to format the data that I've gathered",
                      "Call Ra to fix the formatting.. It has been changed recently..",
                      "I have the data, but can't format it... \nSeems they changed the layout(?)",
                      "The data is kinda messy... \nI don't think I should give it to you in this state.. :<"]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
-    @staticmethod  # THIS ONE IS CHECKED
+    @staticmethod
     def anime_download_link(cond):
 
         if cond == "header":  # Take 1 argument : title
@@ -743,6 +755,7 @@ class Lines:  # class to store respond lines
 
     @staticmethod
     def translate_text(cond):
+
         if cond == "text to translate not found":
             lines = ["Which should I translate?",
                      "Which sentence do you want me to translate?",
@@ -755,19 +768,19 @@ class Lines:  # class to store respond lines
                      "I'm translating it to english then..\n",
                      "To what language? English? .-.\n",
                      "Since you didn't specify, I guess English is fine for you?\n"]
-        elif cond == "destination language not available":  # take 1 argument : language
+        elif cond == "destination language not available":  # Take 1 argument : language
             lines = ["I'm not confident about my %s skill, how about other language?",
                      "Sorry... I haven't learned %s yet,.. Maybe another language?",
                      "My %s is pretty bad, how about another language?",
                      "I don't know the suitable translation in %s,...\nI'm sorry...",
                      "I'm not sure what it is in %s, \nhow about other general language like English?"]
-        elif cond == "send translated":  # take 3 argument : 0.text 1.to 2.translated
+        elif cond == "send translated":  # Take 3 argument : 0.text 1.to 2.translated
             lines = ["I think in {1},'{0}' is '{2}'",
                      "'{0}' can be translated into {1} as '{2}'",
                      "'{2}' means '{0}' in {1}",
                      "Mostly people say '{2}' for '{0}' in {1}",
                      "T think '{2}' is common trasnlation for '{0}' in {1}"]
-        elif cond == "already in that language":  # take 1 argument : to language
+        elif cond == "already in that language":  # Take 1 argument : to language
             lines = ["Wait..isn't it already in %s ?",
                      "Wait..I think it's already in %s...isn't it ?",
                      "Seems it's already in %s... isn't it ?",
@@ -778,19 +791,8 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     @staticmethod
-    def notyetcreated():
-        lines = ["Gomen,, this function is not ready..",
-                 "Gomen,, please try again later :)",
-                 "Gomen,, I can't do that yet :\">",
-                 "Gomen,, this function is under maintenance :< ",
-                 "Gomen,, please try ask me others",
-                 "Gomen,, I'm still learning this..",
-                 "Gomen,, He hasn't taught me about this yet",
-                 "Gomen,, I don't understand this yet.., but I wish I could help :)"]
-        return random.choice(lines)
-
-    @staticmethod
     def report_bug(cond):
+
         if cond == "success":
             lines = ["Thank you for your report :>",
                      "Arigatoo... wish me luck to fix this problem :\")",
@@ -817,13 +819,15 @@ class Lines:  # class to store respond lines
                      'Master, please fix this :3 \n\n"%s" \n\nSubmitted by : %s',
                      'Master, try to fix this owkay ?? :3 \n\n"%s" \n\nSubmitted by : %s',
                      'Master, seems something is not working properly.. : \n\n"%s" \n\nSubmitted by : %s']
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def join(cond):
 
-        if cond == "join" :
+        if cond == "join":
             lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend!",
                      " Thanks for inviting Megumi :3 ",
                      " Yoroshiku onegaishimasu~ ^^ ",
@@ -832,53 +836,65 @@ class Lines:  # class to store respond lines
                      " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
                      " Konichiwa... Megumi desu ! ehehehe",
                      " Supp xD .. Megumi desu :3 ,, \nyoroshiku nee~  #teehee"]
-
-        elif cond == "report" :
-            lines = ["Master, Megumi joined a group ~ :> " ,
+        elif cond == "report":
+            lines = ["Master, Megumi joined a group ~ :> ",
                      "Master, I'm leaving for a while ,kay? ^^ ",
                      "Master, I got invitation to join a group..",
                      "Master, I'm going to a group ,kay? :3 ",
                      "Master, Wish me luck ,, Megumi joined a group #teehee ^^ ",
                      ]
-
+        else:
+            lines = [""]
         return random.choice(lines)
 
     @staticmethod
     def leave(cond):
-        if cond == "leave" :
+
+        if cond == "leave":
             lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
-                     '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
+
+                     '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\n'
+                     'I will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n'
+                     '― Arthur Golden',
+
                      'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
                      '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
-                     'Even if we walk on different paths, one must always live on as you are able! You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! Let bloom the flowers of light within your hearts.',
-                     'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
-                     'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
-                     'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
-                     ]
 
-        elif cond == "regards" :
+                     'Even if we walk on different paths, one must always live on as you are able! '
+                     'You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! '
+                     'Let bloom the flowers of light within your hearts.',
+
+                     'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
+
+                     'No matter what painful things happens, even when it looks like you\'ll lose... '
+                     'when no one else in the world believes in you... '
+                     'when you don\'t even believe in yourself... I will believe in you!',
+
+                     'I\'ll always be by your side. You\'ll never be alone. '
+                     'You have as many hopes as there are stars that light up the sky.'
+                     ]
+        elif cond == "regards":
             lines = ["See you later my friend.., bye~ \n\n              ~ Megumi ~",
                      'Wish you guys very best in everything.., bye~ \n\n              ~ Megumi ~',
                      'I hope this is not the end of us :> , bye~ \n\n              ~ Megumi ~',
                      'Try adding me sometimes okay ? :> I will wait for it.. bye for now !\n\n              ~ Megumi ~',
                      'Hope can see you again in the future ^^ .. , bye ~\n\n              ~ Megumi ~'
                      ]
-
-        elif cond == "report" :
+        elif cond == "report":
             lines = ['Master, I\'m done with a group :> \n\n%s : %s',
                      'Master, I have left a group... xD \n\n%s : %s',
                      'Master, Megumi has returned from a group :3 \n\n%s : %s',
                      'Master, I think I\'ve been kick out from a group :"> \n\n%s : %s',
                      'Master, Can you invite me into the group again ? \n\n%s : %s',
                      ]
-
-        else :
+        else:
             lines = ["I can't leave... it's not a group or room .-. ",
                      'I think you mistaken this for group (?) xD',
                      'C\'mon, this is private chat xD',
                      'This is not group lol.. xD',
                      'I can only leave group and room, even though I don\'t want to TBH'
                      ]
+
         return random.choice(lines)
 
     @staticmethod
@@ -905,18 +921,18 @@ class Lines:  # class to store respond lines
 
     @staticmethod
     def added(cond):
-        if cond == "added" :
-            lines = [" Nyaann~ Thanks for adding me %s ^^ \nhope we can be friend !",
-                     " Thanks for adding Megumi :3 \nHope we can be friend, %s ^^",
-                     " Konichiwa %s,.. Megumi desu~ \nYoroshiku onegaishimasu \(^.^)/ ",
-                     " Megumi desu ! \nyoroshiku nee %s ~ ^^",
-                     " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends %s ~ :> ",
-                     " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee %s ~ ",
-                     " Konichiwa %s... Megumi desu ! ehehehe",
-                     " Megumi desu :3 ,, \nyoroshiku nee %s-chan ~  #teehee"
-                     ]
 
-        elif cond == "report" :
+        if cond == "added":
+            lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend !",
+                     " Thanks for adding Megumi :3 \nHope we can be friend ^^",
+                     " Konichiwa ,.. Megumi desu~ \nYoroshiku onegaishimasu \(^.^)/ ",
+                     " Megumi desu ! \nyoroshiku nee ~ ^^",
+                     " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends ~ :> ",
+                     " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
+                     " Konichiwa... Megumi desu ! ehehehe",
+                     " Megumi desu :3 ,, \nyoroshiku nee ~  #teehee"
+                     ]
+        elif cond == "report":
             lines = ["Master, Megumi got a new friend named %s ~ ^^",
                      "Master, %s added Megumi as a friend ~ YAY ^^",
                      "Master, do you know %s ? he/she added me.. ",
@@ -924,86 +940,103 @@ class Lines:  # class to store respond lines
                      "Look master, Megumi got a new friend : %s",
                      "Nee mastah,, %s added me o(>ω<)o ",
                      ]
+        else:
+            lines = [""]
         return random.choice(lines)
 
     @staticmethod
     def removed(cond):
-        if cond == "removed" :
-            lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
-                     '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\nI will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n― Arthur Golden',
-                     'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, For you and I will meet again',
-                     '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
-                     'Even if we walk on different paths, one must always live on as you are able! You must never treat your own life as something insignificant! You must never forget the friends you love for as long as you live! Let bloom the flowers of light within your hearts.',
-                     'Smile. Not for anyone else, but for yourself. Show yourself your own smile. You\'ll feel better then.',
-                     'No matter what painful things happens, even when it looks like you\'ll lose... when no one else in the world believes in you... when you don\'t even believe in yourself... I will believe in you!',
-                     'I\'ll always be by your side. You\'ll never be alone. You have as many hopes as there are stars that light up the sky.'
-                     ]
 
-        elif cond == "regards" :
+        if cond == "removed":
+            lines = ['“To say goodbye is to die a little.” \n― Raymond Chandler',
+                     '“I don\'t know when we\'ll see each other again or what the world will be like when we do.\n'
+                     'I will think of you every time I need to be reminded that there is beauty and goodness in the world.” \n'
+                     '― Arthur Golden',
+
+                     'One day in some far off place, I will recognize your face, I won\'t say goodbye my friend, '
+                     'For you and I will meet again',
+
+                     '“Something or someone is always waving goodbye.”\n― Marty Rubin ',
+
+                     'Even if we walk on different paths, one must always live on as you are able! '
+                     'You must never treat your own life as something insignificant! '
+                     'You must never forget the friends you love for as long as you live! '
+                     'Let bloom the flowers of light within your hearts.',
+
+                     'Smile. Not for anyone else, but for yourself. Show yourself your own smile. '
+                     'You\'ll feel better then.',
+
+                     'No matter what painful things happens, even when it looks like you\'ll lose... '
+                     'When no one else in the world believes in you... When you don\'t even believe in yourself... '
+                     'I will believe in you!',
+
+                     'I\'ll always be by your side. You\'ll never be alone. '
+                     'You have as many hopes as there are stars that light up the sky.'
+                     ]
+        elif cond == "regards":
             lines = ["See you later %s.., bye~ \n\n              ~ Megumi ~",
                      'Wish you very best in everything.., bye %s ... \n\n              ~ Megumi ~',
                      'I hope this is not the end of us :> , bye %s ... \n\n              ~ Megumi ~',
                      'Nee %s, play with me again OK ? :> I will wait for you.. \n\n              ~ Megumi ~',
                      'Thanks for playing with me until now %s... , bye ~\n\n              ~ Megumi ~'
                      ]
-
-        elif cond == "report" :
+        elif cond == "report":
             lines = ["Master, seems %s blocked me ...",
                      "Megumi just lost a friend... %s - chan left me...",
                      "Gomenne master,, seems %s don't want to play with me anymore...",
                      "Nee mastah,, can you ask %s to add me again ? ",
                      "Master, gomenne.. %s blocked me I guess...Megumi wasn't a very good girl"
                      ]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def dev_mode_set_tag_notifier(cond):
-        if cond == "on" :
+
+        if cond == "on":
             lines = ["OK, I will tell you if someone tag you master ~",
                      "Tag notifier is on active mode :> ",
                      "Sure, I will notify you",
                      "Roger..",
                      "Done.., itterasai :3 ~"]
-
-        elif cond == "off" :
+        elif cond == "off":
             lines = ["Okaeri.. :3",
                      "OK, welcome back ~",
                      "Roger.. :3 ",
                      "Done,, Tag notifier is off now..",
                      "Sure,, glad to see you again.."]
-
-        elif cond == "same" :
+        elif cond == "same":
             lines = ["Hmm.. seems nothing changed...",
                      "Hmm.. try to do it one more time.. ^^ \nsometimes it takes more than once",
                      "I don't see any difference though...",
                      "Please try again until it's changed ^^,,\nsometimes it takes more than once "]
-
-        else :
+        else:
             lines = ["Gomen, I don't catch that.. :/",
                      "Hmm.. try to do it one more time.. ^^",
                      "Gomen, seems notifier setting is failed...",
                      "I think you gave wrong instruction (?) xD"]
+
         return random.choice(lines)
 
     @staticmethod
     def dev_mode_userlist(cond):
-        if cond == "print userlist success" :
+
+        if cond == "print userlist success":
             lines = ["Print success, %d new entries recorded.\nDon't forget to print until 0 updates ^^ ~ ",
                      "Roger master,, %d new entries has been recorded.",
                      "Done..., don't forget to copy these %d new entries",
                      "Ryokai ^^.,,, just don't forget to copy these %d new entries later, kay ? ",
                      "Sure master.., there are %d new entries recorded FYI..."
                      ]
-
-        elif cond == "print userlist failed" :
+        elif cond == "print userlist failed":
             lines = ["Gomenne master, seems Megumi can't access the userlist... ",
                      "Gomen master, there's some errors Megumi can't handle when printing the userlist",
                      "Gomenne master, I don't know why but Megumi can't do that...",
                      "Gomen master, the userlist seems can't be printed out in the logs.. I wonder why...",
                      "Hmm... seems Megumi can't do that now.. how about try again ?"
                      ]
-
         elif cond == "userlist not updated yet":
             lines = ["Gomenne master, I think the userlist hasn't changed yet... ",
                      "Gomen master, Megumi just printed the same userlist before...",
@@ -1011,19 +1044,21 @@ class Lines:  # class to store respond lines
                      "Gomen master, the userlist seems same as before...",
                      "Hmm... are you sure want to print the same list ? \nHow about try again later ?"
                      ]
-
-        elif cond == "notify update userlist" :
+        elif cond == "notify update userlist":
             lines = ["Master, I think there're %s updates on userlist,,",
                      "Master, userlist has %s updates, how about updating now ?",
                      "The userlist has %s updates, wanna update now ?",
                      "%s entries on userlist, should I update now?",
                      "Let's update the userlist master.. %s new entries"
                      ]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def dev_mode_authority_check(cond):
+
         if cond == "failed":
             lines = ["Megumi can't enter Dev Mode now, try again later..",
                      "Megumi can't verify your id, so I can't grant you access..",
@@ -1031,7 +1066,6 @@ class Lines:  # class to store respond lines
                      "Try calling dev mode once again.. seems some error occurred...",
                      "Megumi can't verify your id, please try again later..",
                      ]
-
         elif cond == "reject":
             lines = ["Gomenne,,Megumi can't grant you access for that..",
                      "Do not try to access dev mode.. you are not allowed to !",
@@ -1042,7 +1076,6 @@ class Lines:  # class to store respond lines
                      "Gomenne,,Megumi is told not to give you access..",
                      "Gomen,,Megumi does not recognize you as developer..."
                      ]
-
         elif cond == "notify report":
             lines = ["Master, %s is trying to enter dev mode...",
                      "Be careful master, %s is trying to enter dev mode... ",
@@ -1050,23 +1083,28 @@ class Lines:  # class to store respond lines
                      "Master, just now %s tried to enter dev mode.",
                      "Nee mastah, %s tried to enter dev mode. ",
                      ]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
     @staticmethod
     def dev_mode_general_error(cond):
-        if cond == "common" :
+
+        if cond == "common":
             lines = ["Seems some unexpected error happened...",
                      "Gommen, I tried to do it but I can't...",
                      "Ugh,, there's some unexpected errors...\nI can't do it now... ",
                      "Sorry, I can't do that now, seems something wrong happened...",
                      "Something bad happened...\nI can't do that now.."]
-        elif cond == "dev": # take 2 argument : func name , exception detail
+        elif cond == "dev":  # Take 2 argument : func name , exception detail
             lines = ["Mastah, seems some unexpected error happened with %s :\n\nHere's the detail : \n%s",
                      "Mastah, check this out...\nError with : %s\n\nHere's the detail : \n%s",
                      "I think you should take a look at this..\nError with : %s\n\nHere's the detail : \n%s",
                      "Mastah, seems you need to check this out..\nError with : %s\n\nHere's the detail : \n%s",
                      "Mastah, help me with this...\nError with : %s\n\nHere's the detail : \n%s"]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
@@ -1104,41 +1142,41 @@ class Lines:  # class to store respond lines
 
     @staticmethod
     def jessin():
-        return ['jessin','jes','@jessin d','jess','jssin',]
+        return ['jessin', 'jes', '@jessin d', 'jess', 'jssin']
 
     @staticmethod
     def day():
-        return {'Mon' : 'Monday' ,
-                "Tue" : "Tuesday" ,
-                "Wed" : "Wednesday",
-                "Thu" : "Thursday",
-                "Fri" : "Friday",
-                "Sat" : "Saturday",
-                "Sun" : "Sunday"}
+        return {'Mon': 'Monday',
+                "Tue": "Tuesday",
+                "Wed": "Wednesday",
+                "Thu": "Thursday",
+                "Fri": "Friday",
+                "Sat": "Saturday",
+                "Sun": "Sunday"}
 
     @staticmethod
     def month():
-        return {'jan' : 'January',
-                'feb' : 'February',
-                'mar' : 'March',
-                'apr' : 'April',
-                'may' : 'May',
-                'jun' : 'June',
-                'jul' : 'July',
-                'aug' : 'August',
-                'sep' : 'September',
-                'oct' : 'October',
-                'nov' : 'November',
-                'dec' : 'December'}
+        return {'jan': 'January',
+                'feb': 'February',
+                'mar': 'March',
+                'apr': 'April',
+                'may': 'May',
+                'jun': 'June',
+                'jul': 'July',
+                'aug': 'August',
+                'sep': 'September',
+                'oct': 'October',
+                'nov': 'November',
+                'dec': 'December'}
 
 
-class Labels: # more like my response template
+class Labels:  # Responses template
     """=================== Main Labels Storage ======================="""
 
     @staticmethod
     def confirmation(cond):
 
-        if cond == "yes" :
+        if cond == "yes":
             lines = ["Sure,,",
                      "Yes please..",
                      "Ok..",
@@ -1146,8 +1184,7 @@ class Labels: # more like my response template
                      "Why not...",
                      "Sure Kato..",
                      ]
-
-        elif cond == "no" :
+        elif cond == "no":
             lines = ["Nope..",
                      "Not now..",
                      "Don't do it..",
@@ -1155,6 +1192,8 @@ class Labels: # more like my response template
                      "No..",
                      "Later..",
                      ]
+        else:
+            lines = [""]
 
         return random.choice(lines)
 
@@ -1177,42 +1216,35 @@ class Labels: # more like my response template
                  "",
                  "",
                  "",
-                 "",
-                 "",
-                 "",
                  ""]
         return random.choice(lines)
 
     @staticmethod
     def template_cond(cond):
-        if cond == "a" :
+
+        if cond == "a":
             lines = ["",
                      "",
                      "",
                      "",
+                     ""]
+        else:
+            lines = ["",
                      "",
                      "",
                      "",
                      ""]
 
-        else :
-            lines = ["",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     "",
-                     ""]
         return random.choice(lines)
 
 
-class Picture :
+class Picture:
     """=================== Main Picture URL Storage ======================="""
 
     @staticmethod
     def header(cond):
-        if cond == "background" :
+
+        if cond == "background":
             pic = ["https://il2.picdn.net/shutterstock/videos/1974016/thumb/1.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/005/037/small/Abstract_Blur_4K_Motion_Background_Loop.jpg",
                    "https://static.videezy.com/system/resources/thumbnails/000/004/941/small/jellyfish-4k-living-background.jpg",
@@ -1228,27 +1260,30 @@ class Picture :
                    "https://image.prntscr.com/image/ZLb5kK1URSmuAS4h26tzdg.png",
                    "https://image.prntscr.com/image/zf5HTDIrSbebNcNqJS_t7g.png"
                    ]
-        elif cond == "ask" : # pic of question mark
+        elif cond == "ask":  # Picture of question mark
             pic = ["https://image.prntscr.com/image/t2BFLWxiRf2OJq_G4kKKtw.png",
                    "https://image.prntscr.com/image/nSJazwxBSxeClYngG-TJRA.png",
                    "https://image.prntscr.com/image/cOcP56B-TZmMB1JPyHr6jA.png",
                    "https://image.prntscr.com/image/GZM3QV4ARKqd-2yrYJiMlA.png",
                    "https://image.prntscr.com/image/CpdR3MrwRP2vpvNBQvRe-w.png"
                    ]
+        else:
+            pic = [""]
 
         return random.choice(pic)
 
     @staticmethod
     def weatherforecast(cond):
-        if cond == "clouds" : # USE LOWER AS COND
-            pic = ["https://image.prntscr.com/image/PGZ4Gs3tTYWr9qFJVfxIpQ.png",
-                    "https://image.prntscr.com/image/gUspo5phTG6Zaak1ZIgUIQ.png",
-                    "https://image.prntscr.com/image/vG5496PTQhCDsNUR2DPW9Q.png",
-                    "https://image.prntscr.com/image/_rcPb1dfQ52rtgrckc1ylw.png",
-                    "https://image.prntscr.com/image/q9GM5yHxQ4qZDqwMOHpthg.png"
-                   ]
+        # USE LOWER AS COND
 
-        elif cond == "clear" : # USE LOWER AS COND
+        if cond == "clouds":
+            pic = ["https://image.prntscr.com/image/PGZ4Gs3tTYWr9qFJVfxIpQ.png",
+                   "https://image.prntscr.com/image/gUspo5phTG6Zaak1ZIgUIQ.png",
+                   "https://image.prntscr.com/image/vG5496PTQhCDsNUR2DPW9Q.png",
+                   "https://image.prntscr.com/image/_rcPb1dfQ52rtgrckc1ylw.png",
+                   "https://image.prntscr.com/image/q9GM5yHxQ4qZDqwMOHpthg.png"
+                   ]
+        elif cond == "clear":
             pic = ["https://image.prntscr.com/image/J_axWG2PQIiLhffxLSz4hg.png",
                    "https://image.prntscr.com/image/8C3uy2XhT1_Z2iTogruoRg.png",
                    "https://image.prntscr.com/image/CoMxClunSnSUkUR9ICxXTA.png",
@@ -1257,8 +1292,7 @@ class Picture :
                    "https://image.prntscr.com/image/Bh3wW9k7SDevz5hhJcFirg.png",
                    "https://image.prntscr.com/image/0SO5lsxvQUCP6BiLSyRNbg.png"
                    ]
-
-        elif (cond == "rain") or (cond == "drizzle") : # USE LOWER AS COND
+        elif (cond == "rain") or (cond == "drizzle"):
             pic = ["https://image.prntscr.com/image/5WT8CDGzRJiwmB4LWiruqQ.png",
                    "https://image.prntscr.com/image/e9_Nsew_SQuheBN4igjwhQ.png",
                    "https://image.prntscr.com/image/cn7TJRnCSlizpt8LZY5o5A.png",
@@ -1268,32 +1302,28 @@ class Picture :
                    "https://image.prntscr.com/image/2ZC8qpGkTxGPmLONeVfQWA.png",
                    "https://image.prntscr.com/image/OXYCQVeKQrWJg7a6QQW7Xw.png"
                    ]
-
-        elif cond == "snow" : # USE LOWER AS COND
+        elif cond == "snow":
             pic = ["https://image.prntscr.com/image/LDEYpPsWRLK-Ir7pxDddAw.png",
                    "https://image.prntscr.com/image/cgpt7PqgRQaQ93bpz8rlkw.png",
                    "https://image.prntscr.com/image/ETEH05euQVWOMBKk1_d5yw.png",
                    "https://image.prntscr.com/image/F1kazAtERguXiHHNQE6ZLA.png",
                    "https://image.prntscr.com/image/v7_tw7goTCKWjRnMm3kfZg.png"
                    ]
-
-        elif cond == "extreme" : # USE LOWER AS COND
+        elif cond == "extreme":
             pic = ["https://image.prntscr.com/image/_v2Sl2sWQlyiSv-Q77Namw.png",
                    "https://image.prntscr.com/image/_N8jIhjESsSObPC2t-mxHA.png",
                    "https://image.prntscr.com/image/dWJnXtkDSW_FgHZpwZXbUA.png",
                    "https://image.prntscr.com/image/wNkCAYQFTECGU2JPYxuTgw.png",
                    "https://image.prntscr.com/image/LY4H7k31QQaWilsIx_ySfQ.png"
                    ]
-
-        elif cond == "mist" : # USE LOWER AS COND
+        elif cond == "mist":
             pic = ["https://image.prntscr.com/image/KQsc4A9jSF2e55otWrE3Bw.png",
                    "https://image.prntscr.com/image/vV0IeYeyROCPsZFyldQmNA.png",
                    "https://image.prntscr.com/image/orjbuhdWRRS83ENUMIuXjg.png",
                    "https://image.prntscr.com/image/fE6WH_NqR9GD6Sw6XEBa1Q.png",
                    "https://image.prntscr.com/image/ixc6IBMERZyedENAsuV-Ww.png"
                    ]
-
-        else :
+        else:
             pic = ["https://image.prntscr.com/image/t2BFLWxiRf2OJq_G4kKKtw.png",
                    "https://image.prntscr.com/image/nSJazwxBSxeClYngG-TJRA.png",
                    "https://image.prntscr.com/image/cOcP56B-TZmMB1JPyHr6jA.png",
@@ -1302,5 +1332,3 @@ class Picture :
                    ]
 
         return random.choice(pic)
-
-

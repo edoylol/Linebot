@@ -62,9 +62,6 @@ channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HW
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
-Lines = Lines()
-Labels = Labels()
-Picture = Picture()
 userlist = Database.userlist
 
 userlist_update_count = 0
@@ -223,10 +220,9 @@ def message_text(event):
                 if all(word in text for word in ["print", "userlist"])      : Function.dev_print_userlist()
                 elif any(word in text for word in ["turn ", "able"])        :
                     if any(word in text for word in ["tag notifier",
-                                                     "notif", "mention"])       : Function.dev_mode_set_tag_notifier("set")
+                                                     "notif", "mention"])       : Function.dev_mode_set_tag_notifier()
                     else                                                        : Function.false()
 
-        elif all(word in text for word in ["test new feature"])     : Function.TEST()
         else                                                        : Function.false()
 
     # Special tag / mention function
@@ -1289,7 +1285,463 @@ class Function:
             function_name = "Show cinema list"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    """ ==========  26 July 2017 last update ============== """
+    @staticmethod
+    def anime_download_link():
+        """ Function to return anime download link list according to text.
+        Usage example : Meg, show me anime download link 'title' <ep 2> <from zippy> """
+
+        try:
+
+            def get_keyword(cond="default"):
+                """ Function to return search keyword (either anime title, or link) """
+
+                # Some feature need keyword match case (ex : adf.ly)
+                if cond == "original":
+                    # Find the keyword in original text
+                    try:
+                        index_start = original_text.find("'") + 1
+                        index_stop = original_text.rfind("'")
+                        keyword = original_text[index_start:index_stop]
+                        return keyword
+                    except:
+                        return "not_found"
+
+                # If keyword doesn't need to match case
+                else:
+                    # Find the keyword in text
+                    try:
+                        index_start = text.find("'") + 1
+                        index_stop = text.rfind("'")
+                        keyword = text[index_start:index_stop]
+                        return keyword
+                    except:
+                        return "not_found"
+
+            def get_start_ep():
+                """ Function to return starting episode from text """
+
+                is_default_start = True
+                start_ep = 1  # Default starting episode
+
+                # Simple text filtering
+                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                           'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                           'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+                filtered_text = OtherUtil.filter_words(text)
+                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+                # Find the starting episode using 'next-text after the found-keyword' scheme
+                keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
+                for i in range(0, len(filtered_text)):
+                    if any(word in filtered_text[i] for word in keyword):
+
+                        # Make sure the starting episode is in form of number
+                        try:
+                            start_ep = int(filtered_text[i + 1])
+                            is_default_start = False
+                        except:
+                            pass
+
+                return start_ep, is_default_start
+
+            def get_host_source():
+                """ Function to return chosen file-hosting's id """
+
+                # General variable
+                is_default_host = True
+                host_id = 15  # Default file-hosting is zippyshare
+                anime_hostlist = Database.anime_hostlist
+
+                # Simple text filtering
+                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                           'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                           'this', 'to', 'what', "what's", 'whats', 'will', 'you']
+                filtered_text = OtherUtil.filter_words(text)
+                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+                # Find the file-hosting id using 'next-text after the found-keyword' scheme
+                keyword = ["from", "fr", "source", "src", "frm", "sou"]
+                for i in range(0, len(filtered_text)):
+                    if any(word in filtered_text[i] for word in keyword):
+
+                        # If file-hosting-candidate's name is found
+                        try:
+                            host_name = filtered_text[i + 1]
+
+                            # Try to find the host id in the database
+                            for host in anime_hostlist:
+                                if host_name in host:
+                                    host_id = anime_hostlist[host]
+                                    is_default_host = False
+
+                        except:
+                            pass
+
+                return host_id, is_default_host
+
+            def get_process_starting_point(keyword):
+                """ Function to enable direct pass if mirrorcreator or adf.ly link is already stated explicitly """
+
+                direct_pass = any(word in keyword for word in ["mirrorcreator", "adf.ly"])
+                return direct_pass
+
+            def get_anime_pasted_link(keyword):
+                """ Function to get pasted.co link """
+
+                # If the 'pasted.co' is explicitly writen, enable direct process
+                if "pasted.co" in keyword:
+                    return keyword
+
+                # Search database using anime's title to get the pasted.co link
+                animelist = Database.animelist
+                try:
+                    for anime in animelist:
+                        if keyword in anime.lower():
+                            return animelist[anime]
+                except:
+                    pass
+
+                # If the pasted.co link is not found
+                return "title not found"
+
+            def get_primary_download_link_list(anime_pasted_link):
+                """ Extract links (adfly or mirrorcreator) from pasted.co """
+
+                # If the 'adfly or mirrorcreator' is explicitly writen, enable direct process
+                if any(word in text for word in ["mirrorcreator", "adf.ly"]):
+                    return [keyword]
+
+                page_url = anime_pasted_link + "/new.php"
+
+                # Open the page (pasted.co)
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Parse the web to get raw data (list of links)
+                datas = mod_page.find("textarea", {"class": "pastebox rounded"})
+                download_link_list = datas.text.split("\n")
+
+                # Append found link to list
+                download_link_list_filtered = []
+                for link in download_link_list:
+                    if "http" in link:
+                        download_link_list_filtered.append(link)
+
+                return download_link_list_filtered
+
+            def get_file_id(link):
+                """ Function to return file id from mirrorcreator link """
+
+                # General variable
+                file_id = " "
+                mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
+                file_id_found = link.find(mirror_creator_keyword) != -1
+
+                # If the keyword is found, try to get the file_id
+                if file_id_found:
+                    index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
+                    index_stop = index_start + 8
+                    file_id = str(link[index_start:index_stop])
+
+                return file_id, file_id_found
+
+            def get_final_download_link(primary_download_link_list, start_ep=1):
+                """ Function to return final download link from file-hosting """
+
+                # General variable
+                result = []
+                success = False
+                cont = True
+                enable_dev_mode_extension = dev_mode_extension_check()
+
+                # Check if the starting episode is available, if not, send notification
+                latest_episode_count = len(primary_download_link_list)
+                if start_ep > latest_episode_count:
+                    result.append(Lines.anime_download_link("starting episode not aired"))
+                    result.append(Lines.anime_download_link("send latest episode count") % str(latest_episode_count))
+                    cont = False
+
+                # If the starting episode is available
+                if cont:
+
+                    # Iterate from start episode to the last one
+                    for i in range(start_ep - 1, (len(primary_download_link_list))):
+                        current_ep = i + 1
+                        primary_download_link = primary_download_link_list[i]
+
+                        # Extract the mirror creator link / adfly link from every lines in pasted.co
+                        try:
+                            index_start = primary_download_link.find("http")
+                            shortened_link = primary_download_link[index_start:].strip()
+                            download_link, status = unshortenit.unshorten_only(shortened_link)
+
+                        # If there's error when trying to get mirrorcreator link, just pass it and go to next one
+                        except Exception:
+                            break
+
+                        # Get the file id from the mirrorcreator link found before
+                        file_id, file_id_found = get_file_id(download_link)
+                        if file_id_found:
+
+                            # POST the data to mirrorcreator to get the download link
+                            page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
+                            try:
+                                post_data = dict(uid=file_id, hostid=hostid)
+                                req_post = requests.post(page_url, data=post_data)
+                                page_source_code_text_post = req_post.text
+                                mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+
+                            except:
+                                report = Lines.general_lines("failed to open page") % page_url
+                                line_bot_api.push_message(address, TextSendMessage(text=report))
+                                raise
+
+                            # Get the final download link from POST request
+                            final_download_links = mod_page.find_all("a", {"target": "_blank"})
+                            final_download_link = None
+                            for final_download_links_candidate in final_download_links:
+
+                                # Avoid the ADS (It wasn't there first time)
+                                temp_word = str(final_download_links_candidate.get("href"))
+
+                                # If the link is listed in anime host list, set it to final download link
+                                if any(word in temp_word for word in list(Database.anime_hostlist.keys())):
+                                    final_download_link = temp_word
+
+                            # If the final download link is available, append it to result
+                            if final_download_link is not None:
+
+                                # Formatting : Do not show current episode if there's only one link
+                                if len(primary_download_link_list) < 2:
+                                    result.append(final_download_link)
+
+                                # Formatting : Show current episode if there're more than one links
+                                else:
+                                    result.append("Ep. " + str(current_ep) + " : " + final_download_link)
+                                success = True
+
+                                # DEV MODE : enable direct link only for zippyshare and dev
+                                if enable_dev_mode_extension:
+                                    direct_link = str(dev_mode_zippy_extension(final_download_link))
+                                    result.append("[" + direct_link + "]")
+                                    result.append(" ")
+
+                            else:
+                                result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
+
+                return result, success
+
+            def send_header(cond="found", dev_mode_enable=False):
+                """ Function to send header """
+                report = []
+
+                # If dev mode is enabled, execute it in dev mode style
+                if dev_mode_enable:
+                    report.append("[Executing in Dev Mode]\n")
+
+                # If search keyword is found, sending notification about search keyword and default settings
+                if cond == "found":
+                    report.append(Lines.anime_download_link("header") % keyword)
+
+                    # If starting episode is not specified
+                    if is_default_start:
+                        report.append(" ")
+                        report.append(Lines.anime_download_link("default start ep"))
+
+                    # If file-hosting is not specified
+                    if is_default_host:
+                        report.append(" ")
+                        report.append(Lines.anime_download_link("default host"))
+
+                # If direct pass is enabled
+                elif cond == "direct pass":
+                    report.append(Lines.anime_download_link("header") % keyword)
+
+                    # If file-hosting is not specified
+                    if is_default_host:
+                        report.append(" ")
+                        report.append(Lines.anime_download_link("default host"))
+
+                # If search keyword is not found
+                elif cond == "not_found":
+                    report.append(Lines.anime_download_link("keyword not found"))
+
+                # Send the report
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            def send_final_result(result, success, is_send_animelist):
+                """ Function to send the final result that contains final download links """
+
+                # If anime's title is found and starting episode is found, create header into report
+                if success:
+                    # nb : It's created backwardly, but it will show with the right sequence
+                    result.insert(0, " ")
+                    result.insert(0, Lines.anime_download_link("header for result"))
+
+                report = "\n".join(result)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                # Only send list of animes available if the title is not found
+                if is_send_animelist:
+                    send_animelist()
+
+            def send_animelist():
+                """ Function to send links of 2016 and 2017 anime list from cyber12 """
+
+                # Generate the button template and send it
+                title = "Cyber12 Anime"
+                button_text = Lines.anime_download_link("send animelist")
+                link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
+                link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
+                buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
+                    URITemplateAction(label='2017 Anime Update', uri=link_2017),
+                    URITemplateAction(label='2016 Anime Update', uri=link_2016)])
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
+
+            def dev_mode_zippy_extension(page_url):
+                """ Function to return direct download link from zippyshare.
+                < warning > DO NOT USE IF EXCEPTION OCCUR, limit to dev only.
+                < warning > This function is really unstable """
+
+                direct_download_raw_data = ""
+
+                # Open the zippy link to get the raw data
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    return Lines.anime_download_link("dev mode extension failed") % "open page"
+
+                # Parse the raw data to find complete-direct-link's parts
+                try:
+                    raw_datas = mod_page.find_all("script", {"type": "text/javascript"})
+                    download_button_keyword = "document.getElementById('dlbutton').href"
+
+                    # Search for download button keyword in the raw data
+                    for raw_data in raw_datas:
+                        if download_button_keyword in raw_data.text.strip():
+                            direct_download_raw_data = raw_data.text.strip()
+
+                except:
+                    return Lines.anime_download_link("dev mode extension failed") % "parsing data"
+
+                # Re-construct the complete link and re-format the data
+                try:
+                    # Get the complete-direct-link's header (ex: http://www69.zippyshare.com)
+                    index_stop = page_url.find(".com/v/") + 4
+                    link_header = page_url[:index_stop]
+
+                    # Get the complete-direct-link's file id (ex: /d/DuGHrENZ/ )
+                    index_start = page_url.find(".com/v/") + 7
+                    index_stop = page_url.find('/file.html') + 1
+                    link_fileid = "/d/" + page_url[index_start:index_stop]
+
+                    # Get the complete-direct-link's token (ex: 49899) < WARNING : It use eval() >
+                    index_start = direct_download_raw_data.find('/" + (') + 6
+                    index_stop = direct_download_raw_data.find(') + "/')
+                    link_token = direct_download_raw_data[index_start:index_stop]
+                    link_token = str(eval(link_token))
+
+                    # Get the complete-direct-link's file name (ex: /%5bCCM%5d_Kakegurui_-_04.mp4)
+                    index_start = direct_download_raw_data.find(') + "/') + 5
+                    index_stop = direct_download_raw_data.find('.mp4";') + 4
+                    link_filename = direct_download_raw_data[index_start:index_stop]
+
+                    # Re-construct the complete direct link
+                    complete_direct_link = (link_header + link_fileid + link_token + link_filename)
+                    return complete_direct_link
+
+                except:
+                    return Lines.anime_download_link("dev mode extension failed") % "re construct complete link"
+
+            def dev_mode_extension_check():
+                """ Function to check whether dev mode extension is enabled """
+
+                dev_extension_command = all(word in text for word in ["dev", "mode"])
+                dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                dev_extension_zippy = hostid == 15  # Only available for zippyshare
+
+                return dev_extension_command and dev_extension_user_check and dev_extension_zippy
+
+            # General variable and it's default value
+            anime_pasted_link = " "
+            start_ep = 1
+            direct_pass = False  # If the keyword is already in form of mirror link or adf.ly, enable direct pass
+
+            # Get the keyword from text
+            keyword = get_keyword()
+            cont = keyword != "not_found"
+
+            # If keyword is available, get the starting episode and file host, and pasted.co link
+            if cont:
+
+                start_ep, is_default_start = get_start_ep()
+                hostid, is_default_host = get_host_source()
+                direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
+                enable_dev_mode_extension = dev_mode_extension_check()  # Determine whether dev mode extension is available
+
+                # Send header according to condition
+                if direct_pass:
+                    send_header(cond="direct pass", dev_mode_enable=enable_dev_mode_extension)
+                else:
+                    send_header(dev_mode_enable=enable_dev_mode_extension)
+
+            # If the keyword is not found, send notification and end the process
+            else:
+                send_header("not_found")
+                send_animelist()
+                cont = False
+
+            # If keyword is available and keyword is not mirror / adf.ly link, get the pasted.co link
+            if cont and not direct_pass:
+
+                anime_pasted_link = get_anime_pasted_link(keyword)
+                cont = anime_pasted_link != "title not found"
+
+            # If anime pasted.co link is available or it's direct pass
+            if cont:
+
+                # If the keyword is already in form of mirror link or adf.ly
+                if direct_pass:
+                    # Re- assign keyword with original match case keyword (before lowered)
+                    keyword = get_keyword("original")
+                    primary_download_link_list = [keyword]
+
+                # Continuation from previous process
+                else:
+                    primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
+
+                result, is_success = get_final_download_link(primary_download_link_list, start_ep)
+                is_send_animelist = False
+
+            # If the title is not found, append notification and enable sending anime list
+            else:
+                result = [Lines.anime_download_link("title not found") % keyword]
+                is_success = False
+                is_send_animelist = True
+
+            # Send the final result to user
+            send_final_result(result, is_success, is_send_animelist)
+
+        except Exception as exception_detail:
+            function_name = "Anime Download Link"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    """ ==========  29 July 2017 last update ============== """
 
     @staticmethod
     def wiki_search():
@@ -2407,458 +2859,6 @@ class Function:
             function_name = "ITB ARC database"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
-    @staticmethod  # THIS ONE IS FIXED :>
-    def anime_download_link():
-        """ Function to return anime download link list according to text.
-        Usage example : Meg, show me anime download link 'title' <ep 2> <from zippy> """
-
-        #try:
-
-        def get_keyword(cond="default"):
-            """ Function to return search keyword (either anime title, or link) """
-
-            # Some feature need keyword match case (ex : adf.ly)
-            if cond == "original":
-                # Find the keyword in original text
-                try:
-                    index_start = original_text.find("'") + 1
-                    index_stop = original_text.rfind("'")
-                    keyword = original_text[index_start:index_stop]
-                    return keyword
-                except:
-                    return "not_found"
-
-            # If keyword doesn't need to match case
-            else:
-                # Find the keyword in text
-                try:
-                    index_start = text.find("'") + 1
-                    index_stop = text.rfind("'")
-                    keyword = text[index_start:index_stop]
-                    return keyword
-                except:
-                    return "not_found"
-
-        def get_start_ep():
-            """ Function to return starting episode from text """
-
-            is_default_start = True
-            start_ep = 1  # Default starting episode
-
-            # Simple text filtering
-            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
-                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
-                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
-                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-            filtered_text = OtherUtil.filter_words(text)
-            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-            # Find the starting episode using 'next-text after the found-keyword' scheme
-            keyword = ["ep", "epi", "epis", "ep.", "episode", "chap", "ch", "chapter", "epid"]
-            for i in range(0, len(filtered_text)):
-                if any(word in filtered_text[i] for word in keyword):
-
-                    # Make sure the starting episode is in form of number
-                    try:
-                        start_ep = int(filtered_text[i + 1])
-                        is_default_start = False
-                    except:
-                        pass
-
-            return start_ep, is_default_start
-
-        def get_host_source():
-            """ Function to return chosen file-hosting's id """
-
-            # General variable
-            is_default_host = True
-            host_id = 15  # Default file-hosting is zippyshare
-            anime_hostlist = Database.anime_hostlist
-
-            # Simple text filtering
-            keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
-                       'how', "how's", 'in', 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
-                       'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
-                       'this', 'to', 'what', "what's", 'whats', 'will', 'you']
-            filtered_text = OtherUtil.filter_words(text)
-            filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-            # Find the file-hosting id using 'next-text after the found-keyword' scheme
-            keyword = ["from", "fr", "source", "src", "frm", "sou"]
-            for i in range(0, len(filtered_text)):
-                if any(word in filtered_text[i] for word in keyword):
-
-                    # If file-hosting-candidate's name is found
-                    try:
-                        host_name = filtered_text[i + 1]
-
-                        # Try to find the host id in the database
-                        for host in anime_hostlist:
-                            if host_name in host:
-                                host_id = anime_hostlist[host]
-                                is_default_host = False
-
-                    except:
-                        pass
-
-            return host_id, is_default_host
-
-        def get_process_starting_point(keyword):
-            """ Function to enable direct pass if mirrorcreator or adf.ly link is already stated explicitly """
-
-            direct_pass = any(word in keyword for word in ["mirrorcreator", "adf.ly"])
-            return direct_pass
-
-        def get_anime_pasted_link(keyword):
-            """ Function to get pasted.co link """
-
-            # If the 'pasted.co' is explicitly writen, enable direct process
-            if "pasted.co" in keyword:
-                return keyword
-
-            # Search database using anime's title to get the pasted.co link
-            animelist = Database.animelist
-            try:
-                for anime in animelist:
-                    if keyword in anime.lower():
-                        return animelist[anime]
-            except:
-                pass
-
-            # If the pasted.co link is not found
-            return "title not found"
-
-        def get_primary_download_link_list(anime_pasted_link):
-            """ Extract links (adfly or mirrorcreator) from pasted.co """
-
-            # If the 'adfly or mirrorcreator' is explicitly writen, enable direct process
-            if any(word in text for word in ["mirrorcreator", "adf.ly"]):
-                return [keyword]
-
-            page_url = anime_pasted_link + "/new.php"
-
-            # Open the page (pasted.co)
-            try:
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-            except:
-                report = Lines.general_lines("failed to open page") % page_url
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
-
-            # Parse the web to get raw data (list of links)
-            datas = mod_page.find("textarea", {"class": "pastebox rounded"})
-            download_link_list = datas.text.split("\n")
-
-            # Append found link to list
-            download_link_list_filtered = []
-            for link in download_link_list:
-                if "http" in link:
-                    download_link_list_filtered.append(link)
-
-            return download_link_list_filtered
-
-        def get_file_id(link):
-            """ Function to return file id from mirrorcreator link """
-
-            # General variable
-            file_id = " "
-            mirror_creator_keyword = "https://www.mirrorcreator.com/files/"
-            file_id_found = link.find(mirror_creator_keyword) != -1
-
-            # If the keyword is found, try to get the file_id
-            if file_id_found:
-                index_start = link.find(mirror_creator_keyword) + len(mirror_creator_keyword)
-                index_stop = index_start + 8
-                file_id = str(link[index_start:index_stop])
-
-            return file_id, file_id_found
-
-        def get_final_download_link(primary_download_link_list, start_ep=1):
-            """ Function to return final download link from file-hosting """
-
-            # General variable
-            result = []
-            success = False
-            cont = True
-            enable_dev_mode_extension = dev_mode_extension_check()
-
-            # Check if the starting episode is available, if not, send notification
-            latest_episode_count = len(primary_download_link_list)
-            if start_ep > latest_episode_count:
-                result.append(Lines.anime_download_link("starting episode not aired"))
-                result.append(Lines.anime_download_link("send latest episode count") % str(latest_episode_count))
-                cont = False
-
-            # If the starting episode is available
-            if cont:
-
-                # Iterate from start episode to the last one
-                for i in range(start_ep - 1, (len(primary_download_link_list))):
-                    current_ep = i + 1
-                    primary_download_link = primary_download_link_list[i]
-
-                    # Extract the mirror creator link / adfly link from every lines in pasted.co
-                    try:
-                        index_start = primary_download_link.find("http")
-                        shortened_link = primary_download_link[index_start:].strip()
-                        download_link, status = unshortenit.unshorten_only(shortened_link)
-
-                    # If there's error when trying to get mirrorcreator link, just pass it and go to next one
-                    except Exception:
-                        break
-
-                    # Get the file id from the mirrorcreator link found before
-                    file_id, file_id_found = get_file_id(download_link)
-                    if file_id_found:
-
-                        # POST the data to mirrorcreator to get the download link
-                        page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
-                        try:
-                            post_data = dict(uid=file_id, hostid=hostid)
-                            req_post = requests.post(page_url, data=post_data)
-                            page_source_code_text_post = req_post.text
-                            mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
-
-                        except:
-                            report = Lines.general_lines("failed to open page") % page_url
-                            line_bot_api.push_message(address, TextSendMessage(text=report))
-                            raise
-
-                        # Get the final download link from POST request
-                        final_download_links = mod_page.find_all("a", {"target": "_blank"})
-                        for final_download_link in final_download_links:
-                            temp_word = str(final_download_link.get("href"))
-                            if any(word in temp_word for word in list(Database.anime_hostlist.keys())):
-                                final_download_link = temp_word
-
-                        # If the final download link is available, append it to result
-                        if final_download_link is not None:
-
-                            # Formatting : Do not show current episode if there's only one link
-                            if len(primary_download_link_list) < 2:
-                                result.append(final_download_link)
-
-                            # Formatting : Show current episode if there're more than one links
-                            else:
-                                result.append("Ep. " + str(current_ep) + " : " + final_download_link)
-                            success = True
-
-                            # DEV MODE : enable direct link only for zippyshare and dev
-                            if enable_dev_mode_extension:
-                                direct_link = str(dev_mode_zippy_extension(final_download_link))
-                                result.append("[" + direct_link + "]")
-                                result.append(" ")
-
-                        else:
-                            result.append(Lines.anime_download_link("host not available") % (str(current_ep)))
-
-            return result, success
-
-        def send_header(cond="found", dev_mode_enable=False):
-            """ Function to send header """
-            report = []
-
-            # If dev mode is enabled, execute it in dev mode style
-            if dev_mode_enable:
-                report.append("[Executing in Dev Mode]\n")
-
-            # If search keyword is found, sending notification about search keyword and default settings
-            if cond == "found":
-                report.append(Lines.anime_download_link("header") % keyword)
-
-                # If starting episode is not specified
-                if is_default_start:
-                    report.append(" ")
-                    report.append(Lines.anime_download_link("default start ep"))
-
-                # If file-hosting is not specified
-                if is_default_host:
-                    report.append(" ")
-                    report.append(Lines.anime_download_link("default host"))
-
-            # If direct pass is enabled
-            elif cond == "direct pass":
-                report.append(Lines.anime_download_link("header") % keyword)
-
-                # If file-hosting is not specified
-                if is_default_host:
-                    report.append(" ")
-                    report.append(Lines.anime_download_link("default host"))
-
-            # If search keyword is not found
-            elif cond == "not_found":
-                report.append(Lines.anime_download_link("keyword not found"))
-
-            # Send the report
-            report = "\n".join(report)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-        def send_final_result(result, success, is_send_animelist):
-            """ Function to send the final result that contains final download links """
-
-            # If anime's title is found and starting episode is found, create header into report
-            if success:
-                # nb : It's created backwardly, but it will show with the right sequence
-                result.insert(0, " ")
-                result.insert(0, Lines.anime_download_link("header for result"))
-
-            report = "\n".join(result)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-            # Only send list of animes available if the title is not found
-            if is_send_animelist:
-                send_animelist()
-
-        def send_animelist():
-            """ Function to send links of 2016 and 2017 anime list from cyber12 """
-
-            # Generate the button template and send it
-            title = "Cyber12 Anime"
-            button_text = Lines.anime_download_link("send animelist")
-            link_2017 = "https://www.facebook.com/notes/cyber12-official-group/2017-on-going-anime-update/1222138241226544"
-            link_2016 = "https://www.facebook.com/notes/cyber12-official-group/on-going-anime-update/976234155816955"
-            buttons_template = ButtonsTemplate(title=title, text=button_text, actions=[
-                URITemplateAction(label='2017 Anime Update', uri=link_2017),
-                URITemplateAction(label='2016 Anime Update', uri=link_2016)])
-            template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-            line_bot_api.push_message(address, template_message)
-
-        def dev_mode_zippy_extension(page_url):
-            """ Function to return direct download link from zippyshare.
-            < warning > DO NOT USE IF EXCEPTION OCCUR, limit to dev only.
-            < warning > This function is really unstable """
-
-            direct_download_raw_data = ""
-
-            # Open the zippy link to get the raw data
-            try:
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-
-            except:
-                return Lines.anime_download_link("dev mode extension failed") % "open page"
-
-            # Parse the raw data to find complete-direct-link's parts
-            try:
-                raw_datas = mod_page.find_all("script", {"type": "text/javascript"})
-                download_button_keyword = "document.getElementById('dlbutton').href"
-
-                # Search for download button keyword in the raw data
-                for raw_data in raw_datas:
-                    if download_button_keyword in raw_data.text.strip():
-                        direct_download_raw_data = raw_data.text.strip()
-
-            except:
-                return Lines.anime_download_link("dev mode extension failed") % "parsing data"
-
-            # Re-construct the complete link and re-format the data
-            try:
-                # Get the complete-direct-link's header (ex: http://www69.zippyshare.com)
-                index_stop = page_url.find(".com/v/") + 4
-                link_header = page_url[:index_stop]
-
-                # Get the complete-direct-link's file id (ex: /d/DuGHrENZ/ )
-                index_start = page_url.find(".com/v/") + 7
-                index_stop = page_url.find('/file.html') + 1
-                link_fileid = "/d/" + page_url[index_start:index_stop]
-
-                # Get the complete-direct-link's token (ex: 49899) < WARNING : It use eval() >
-                index_start = direct_download_raw_data.find('/" + (') + 6
-                index_stop = direct_download_raw_data.find(') + "/')
-                link_token = direct_download_raw_data[index_start:index_stop]
-                link_token = str(eval(link_token))
-
-                # Get the complete-direct-link's file name (ex: /%5bCCM%5d_Kakegurui_-_04.mp4)
-                index_start = direct_download_raw_data.find(') + "/') + 5
-                index_stop = direct_download_raw_data.find('.mp4";') + 4
-                link_filename = direct_download_raw_data[index_start:index_stop]
-
-                # Re-construct the complete direct link
-                complete_direct_link = (link_header + link_fileid + link_token + link_filename)
-                return complete_direct_link
-
-            except:
-                return Lines.anime_download_link("dev mode extension failed") % "re construct complete link"
-
-        def dev_mode_extension_check():
-            """ Function to check whether dev mode extension is enabled """
-
-            dev_extension_command = all(word in text for word in ["dev", "mode"])
-            dev_extension_user_check = Function.dev_authority_check(address, cond="address")
-            dev_extension_zippy = hostid == 15  # Only available for zippyshare
-
-            return dev_extension_command and dev_extension_user_check and dev_extension_zippy
-
-        # General variable and it's default value
-        anime_pasted_link = " "
-        start_ep = 1
-        direct_pass = False  # If the keyword is already in form of mirror link or adf.ly, enable direct pass
-
-        # Get the keyword from text
-        keyword = get_keyword()
-        cont = keyword != "not_found"
-
-        # If keyword is available, get the starting episode and file host, and pasted.co link
-        if cont:
-
-            start_ep, is_default_start = get_start_ep()
-            hostid, is_default_host = get_host_source()
-            direct_pass = get_process_starting_point(keyword)  # Determine whether direct processing is available
-            enable_dev_mode_extension = dev_mode_extension_check()  # Determine whether dev mode extension is available
-
-            # Send header according to condition
-            if direct_pass:
-                send_header(cond="direct pass", dev_mode_enable=enable_dev_mode_extension)
-            else:
-                send_header(dev_mode_enable=enable_dev_mode_extension)
-
-        # If the keyword is not found, send notification and end the process
-        else:
-            send_header("not_found")
-            send_animelist()
-            cont = False
-
-        # If keyword is available and keyword is not mirror / adf.ly link, get the pasted.co link
-        if cont and not direct_pass:
-
-            anime_pasted_link = get_anime_pasted_link(keyword)
-            cont = anime_pasted_link != "title not found"
-
-        # If anime pasted.co link is available or it's direct pass
-        if cont:
-
-            # If the keyword is already in form of mirror link or adf.ly
-            if direct_pass:
-                # Re- assign keyword with original match case keyword (before lowered)
-                keyword = get_keyword("original")
-                primary_download_link_list = [keyword]
-
-            # Continuation from previous process
-            else:
-                primary_download_link_list = get_primary_download_link_list(anime_pasted_link)
-
-            result, is_success = get_final_download_link(primary_download_link_list, start_ep)
-            is_send_animelist = False
-
-        # If the title is not found, append notification and enable sending anime list
-        else:
-            result = [Lines.anime_download_link("title not found") % keyword]
-            is_success = False
-            is_send_animelist = True
-
-        # Send the final result to user
-        send_final_result(result, is_success, is_send_animelist)
-        """
-        except Exception as exception_detail:
-            function_name = "Anime Download Link"
-            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
-        """
-
     @staticmethod
     def translate_text():
 
@@ -3053,151 +3053,192 @@ class Function:
 
     @staticmethod
     def report_bug(event):
+        """ Function to enable bugs report. Original text will be sent to Devs """
+
+        # Get the user's id and user's name if possible
         try:
             user_id = event.source.user_id
             user = userlist[user_id]
         except:
             user = "Anonymous"
+
+        # Send the report to Devs
         try:
-            report = Lines.report_bug("report") % (original_text,user)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-            reply = Lines.report_bug("success")
+            report = Lines.report_bug("report") % (original_text, user)
+            for dev_user in Database.devlist:
+                line_bot_api.push_message(dev_user, TextSendMessage(text=report))
+            report = Lines.report_bug("success")
 
         except:
-            reply = Lines.report_bug("fail")
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            report = Lines.report_bug("fail")
+
+        line_bot_api.push_message(address, TextSendMessage(text=report))
 
     @staticmethod
     def join():
+        """ Function that send first greeting when joined a chat room or group.
+            Also send notification to devs """
 
-        reply = Lines.join("join")
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        # Send greetings to group / room
+        report = Lines.join("join")
+        line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        # Send report to devs
         report = Lines.join("report")
-        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        for dev_user in Database.devlist:
+            line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
     @staticmethod
     def leave(event):
+        """ Function that send last greeting when leaving a chat room or group.
+            Also send notification to devs """
 
+        # If it's leaving a group
         if isinstance(event.source, SourceGroup):
-            group_id = event.source.group_id
 
-            reply = Lines.leave("leave")
-            line_bot_api.push_message(group_id, TextSendMessage(text=reply))
+            # Send last regards to group
+            report = Lines.leave("leave")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+            report = Lines.leave("regards")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            reply = Lines.leave("regards")
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            # Send notice to devs
+            report = Lines.leave("report") % ('Group', address)
+            for dev_user in Database.devlist:
+                line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
-            report = Lines.leave("report") % ('Group', group_id)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            line_bot_api.leave_group(address)
 
-            line_bot_api.leave_group(group_id)
-
+        # If it's leaving a room
         elif isinstance(event.source, SourceRoom):
-            room_id = event.source.room_id
 
-            reply = Lines.leave("leave")
-            line_bot_api.push_message(room_id, TextSendMessage(text=reply))
+            # Send last regards to room
+            report = Lines.leave("leave")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+            report = Lines.leave("regards")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            reply = Lines.leave("regards")
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            # Send notice to devs
+            report = Lines.leave("report") % ('Chat room', address)
+            for dev_user in Database.devlist:
+                line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
-            report = Lines.leave("report") % ('Chatroom', room_id)
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
-            line_bot_api.leave_room(room_id)
+            line_bot_api.leave_room(address)
 
         else:
-            reply = Lines.leave("fail")
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            report = Lines.leave("fail")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
     @staticmethod
     def tag_notifier(event):
+        """ Function to send notice to certain user if their name is called """
+
+        # Check if a message contain specific user determined keyword
         if any(word in text for word in Lines.jessin()):
-            try :
+            try:
                 sender = line_bot_api.get_profile(event.source.user_id).display_name
-            except :
+            except:
                 sender = "someone"
-            report = Lines.tag_notifier() % (sender,original_text)
+
+            report = Lines.tag_notifier() % (sender, original_text)
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
     @staticmethod
-    def notyetcreated():
-        reply = Lines.notyetcreated()
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
-
-    @staticmethod
     def false():
+        """ Function to reply when the input text doesn't fall into any function category """
         reply = Lines.false()
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     @staticmethod
     def added(event):
-        try :
+        """ Function to send first greeting when added.
+            Send notice to devs """
+
+        # Get the user's id and user's name
+        try:
             user_id = event.source.user_id
             user = userlist[user_id]
-        except :
+        except:
             user = "someone"
 
-        reply = Lines.added("added") % (user)
-        line_bot_api.reply_message(token, TextSendMessage(text=reply))
-        report = Lines.added("report") % (user)
-        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        # Send greetings when added
+        report = Lines.added("added")
+        line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        # Send notice when someone added
+        report = Lines.added("report") % user
+        for dev_user in Database.devlist:
+            line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
     @staticmethod
     def removed(event):
-        try :
+        """ Function to send send notice to devs when someone block / un-follow """
+
+        # Get the user's id and user's name
+        try:
             user_id = event.source.user_id
             user = userlist[user_id]
-        except :
+        except:
             user = "someone"
 
-        report = Lines.removed("report") % (user)
-        line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        # Send notice to devs
+        report = Lines.removed("report") % user
+        for dev_user in Database.devlist:
+            line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
     @staticmethod
-    def dev_mode_set_tag_notifier(cond="pass"):
+    def dev_mode_set_tag_notifier():
+        """ Function to set whether tag notifier is on or off """
         global tag_notifier_on
-        if cond == "set":
-            if any(word in text for word in ["on ", "enable "]):
-                if tag_notifier_on is not True :
-                    tag_notifier_on = True
-                    reply = Lines.dev_mode_set_tag_notifier("on")
-                else:  # already True
-                    reply = Lines.dev_mode_set_tag_notifier("same")
 
-            elif any(word in text for word in ["off ", "disable "]):
-                if tag_notifier_on is True :
-                    tag_notifier_on = False
-                    reply = Lines.dev_mode_set_tag_notifier("off")
-                else:  # already False
-                    reply = Lines.dev_mode_set_tag_notifier("same")
+        # Turn on the notifier
+        if any(word in text for word in ["on ", "enable "]):
+            if tag_notifier_on is not True:
+                tag_notifier_on = True
+                reply = Lines.dev_mode_set_tag_notifier("on")
 
+            # If the notifier already on
             else:
-                reply = Lines.dev_mode_set_tag_notifier("fail")
-                pass
+                reply = Lines.dev_mode_set_tag_notifier("same")
 
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+        # Turn on the notifier
+        elif any(word in text for word in ["off ", "disable "]):
+            if tag_notifier_on is True:
+                tag_notifier_on = False
+                reply = Lines.dev_mode_set_tag_notifier("off")
 
-        elif cond == "pass":
-            pass
+            # If the notifier already off
+            else:
+                reply = Lines.dev_mode_set_tag_notifier("same")
+
+        else:
+            reply = Lines.dev_mode_set_tag_notifier("fail")
+
+        line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     @staticmethod
     def dev_print_userlist():
+        """ Function to print out userlist. Dev mode purpose only """
         global userlist_update_count
-        if userlist_update_count != 0 :
-            try :
-                print("=================================== new user list ===================================\n")
-                print(userlist)
-                print("\n================================= end of  user list =================================")
-                reply = Lines.dev_mode_userlist("print userlist success") % (userlist_update_count)
-                userlist_update_count = 0
-            except :
-                reply = Lines.dev_mode_userlist("print userlist failed")
-        elif userlist_update_count == 0 :
+
+        # If there's no update yet
+        if userlist_update_count == 0:
             reply = Lines.dev_mode_userlist("userlist not updated yet")
+
+        # If there's an update
+        else:
+            try:
+                print("=================================== NEW USER LIST ===================================\n")
+                print(userlist)
+                print("\n================================= END OF USER LIST =================================")
+                reply = Lines.dev_mode_userlist("print userlist success") % userlist_update_count
+                userlist_update_count = 0
+            except:
+                reply = Lines.dev_mode_userlist("print userlist failed")
+
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
-    @staticmethod  # THIS ONE CHECKED
+    @staticmethod
     def dev_authority_check(event, cond="default"):
         """ Function to check whether the user is dev.
         If dev mode is tried to be accessed in group or by non-dev, it will send report to dev.
@@ -3205,7 +3246,6 @@ class Function:
          address = use address as parameter """
 
         try:
-
             # Get the user id and user name
             if cond == "address":
                 user_id = event
@@ -3233,10 +3273,6 @@ class Function:
             report = Lines.dev_mode_authority_check("notify report") % user
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             return False
-
-    @staticmethod
-    def TEST():
-        return
 
 
 class OtherUtil:
