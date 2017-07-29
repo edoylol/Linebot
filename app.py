@@ -2605,7 +2605,6 @@ class Function:
                         index_start = primary_download_link.find("http")
                         shortened_link = primary_download_link[index_start:].strip()
                         download_link, status = unshortenit.unshorten_only(shortened_link)
-                        print("UNSHORTENED",download_link)
 
                     # If there's error when trying to get mirrorcreator link, just pass it and go to next one
                     except Exception:
@@ -2613,16 +2612,17 @@ class Function:
 
                     # Get the file id from the mirrorcreator link found before
                     file_id, file_id_found = get_file_id(download_link)
-                    print("FILE ID :",file_id)
                     if file_id_found:
 
                         # POST the data to mirrorcreator to get the download link
                         page_url = "https://www.mirrorcreator.com/downlink.php?uid=" + file_id
                         try:
+                            print("PAGE URL:", page_url)
                             post_data = dict(uid=file_id, hostid=hostid)
                             req_post = requests.post(page_url, data=post_data)
                             page_source_code_text_post = req_post.text
                             mod_page = BeautifulSoup(page_source_code_text_post, "html.parser")
+                            print(mod_page)
                         except:
                             report = Lines.general_lines("failed to open page") % page_url
                             line_bot_api.push_message(address, TextSendMessage(text=report))
@@ -2630,7 +2630,7 @@ class Function:
 
                         # Get the final download link from POST request
                         final_download_link = mod_page.find("a", {"target": "_blank"})
-                        print("FINAL DOWNLOADLINK:",final_download_link)
+                        print(final_download_link)
 
                         # If the final download link is available, append it to result
                         if final_download_link is not None:
