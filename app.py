@@ -797,6 +797,7 @@ class Function:
                         """ Function to return available cinema list """
 
                         # If the cinema keyword is unspecified
+                        print("SEARCH KEYWORD",search_keyword)
                         if search_keyword == [] or search_keyword == [""]:
                             report = Lines.show_cinema_movie_schedule("No keyword found")
                             line_bot_api.push_message(address, TextSendMessage(text=report))
