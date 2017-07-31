@@ -189,9 +189,9 @@ def message_text(event):
         elif megumi_action == "Function_leave"                  : Function.leave(event)
 
         elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check(event)
-        elif megumi_action == "Dev_mode_set_tag_notifier"       :
-            if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
         elif megumi_action == "Dev_mode_print_userlist"         :
+            if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
+        elif megumi_action == "Dev_mode_set_tag_notifier"       :
             if Function.dev_authority_check(event)                  : Function.dev_mode_set_tag_notifier()
 
         elif megumi_action == "Function_false"                  : Function.false()
