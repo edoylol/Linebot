@@ -160,33 +160,18 @@ def message_text(event):
     get_receiver_addr(event)
     update_user_list(event)
 
-    # Send the input text to API.AI for further natural language processing
-    def api_ai(api_ai_access_token, text):
-        """ Function to send text to API.AI and receive JSON data of processed text """
-
-        ai = apiai.ApiAI(api_ai_access_token)
-
-        # Sending the information to API.AI
-        request = ai.text_request()
-        request.lang = 'en'  # optional, default value equal 'en'
-        request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
-        request.query = text
-
-        # Receive the processed information in form of JSON file
-        response = request.getresponse()
-        response = str(BeautifulSoup(response, "html.parser"))
-        end_json = response.rfind("}") + 1
-        json_response = json.loads(response[:end_json])
-        return json_response
-    api_ai_response = api_ai(api_ai_access_token, text)
-    try:
-        megumi_action = api_ai_response["result"]["action"]
-    except:
-        megumi_action = "Function_false"
-
-    # List of command available by sending text message
+    # If the text contain calling
     if any(word in text for word in Lines.megumi()):
 
+        # Send the input text to API.AI for further natural language processing
+        api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
+        try:
+            megumi_action = api_ai_response["result"]["action"]
+            print("ACTION :", megumi_action)
+        except:
+            megumi_action = "Function_false"
+
+        # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
         elif megumi_action == "Function_choose_one"             : Function.choose_one_simple()
         elif megumi_action == "Function_date_time"              : Function.time_date()
@@ -3272,6 +3257,25 @@ class Function:
 
 
 class OtherUtil:
+
+    @staticmethod
+    def api_ai(api_ai_access_token, text):
+        """ Function to send text to API.AI and receive JSON data of processed text """
+
+        ai = apiai.ApiAI(api_ai_access_token)
+
+        # Sending the information to API.AI
+        request = ai.text_request()
+        request.lang = 'en'  # optional, default value equal 'en'
+        request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
+        request.query = text
+
+        # Receive the processed information in form of JSON file
+        response = request.getresponse()
+        response = str(BeautifulSoup(response, "html.parser"))
+        end_json = response.rfind("}") + 1
+        json_response = json.loads(response[:end_json])
+        return json_response
 
     @staticmethod
     def remove_symbols(word, cond="default"):
