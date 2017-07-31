@@ -2,13 +2,13 @@ import urllib,requests,random,time,os,urllib.request,io
 import json
 import unshortenit
 import Database
+import apiai
 from bs4 import BeautifulSoup
 from lines_collection import Lines, Labels, Picture
 
 from datetime import timedelta
 from datetime import datetime
 from xml.etree import ElementTree
-import math
 
 
 class OtherUtil:

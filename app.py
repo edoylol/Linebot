@@ -26,6 +26,7 @@ import urllib.request
 import Database
 import unshortenit
 import json
+import apiai
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -59,6 +60,7 @@ app = Flask(__name__)
 
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
+api_ai_access_token = '345a68d18548429a9a69f9b0b7a7c857'
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
@@ -146,7 +148,7 @@ def update_user_list(event):
 def message_text(event):
     """ Function to handle event that is a text message """
 
-    global token, original_text, text, jessin_userid, user, tag_notifier_on
+    global token, original_text, text, jessin_userid, user, tag_notifier_on, api_ai_response
 
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
@@ -158,72 +160,56 @@ def message_text(event):
     get_receiver_addr(event)
     update_user_list(event)
 
+    # Send the input text to API.AI for further natural language processing
+    def api_ai(api_ai_access_token, text):
+        """ Function to send text to API.AI and receive JSON data of processed text """
+
+        ai = apiai.ApiAI(api_ai_access_token)
+
+        # Sending the information to API.AI
+        request = ai.text_request()
+        request.lang = 'en'  # optional, default value equal 'en'
+        request.session_id = "<SESSION ID, UNIQUE FOR EACH USER>"
+        request.query = text
+
+        # Receive the processed information in form of JSON file
+        response = request.getresponse()
+        response = str(BeautifulSoup(response, "html.parser"))
+        end_json = response.rfind("}") + 1
+        json_response = json.loads(response[:end_json])
+        return json_response
+    api_ai_response = api_ai(api_ai_access_token, text)
+    try:
+        megumi_action = api_ai_response["result"]["action"]
+    except:
+        megumi_action = "Function_false"
+
     # List of command available by sending text message
     if any(word in text for word in Lines.megumi()):
 
-        if all(word in text for word in ["pick ", "num"])            : Function.rand_int()
-        elif any(word in text for word in ["choose ", "which one"])  : Function.choose_one_simple()
+        if megumi_action == "Function_random_integer"           : Function.rand_int()
+        elif megumi_action == "Function_choose_one"             : Function.choose_one_simple()
+        elif megumi_action == "Function_date_time"              : Function.time_date()
+        elif megumi_action == "Function_weather_forecast"       : Function.weather_forecast()
+        elif megumi_action == "Function_show_cinema_schedule"   : Function.show_cinema_movie_schedule()
+        elif megumi_action == "Function_anime_download_link"    : Function.anime_download_link()
+        elif megumi_action == "Function_summoners_war_wiki"     : Function.summonerswar_wiki()
+        elif megumi_action == "Function_itb_arc_database"       : Function.itb_arc_database()
+        elif megumi_action == "Function_translate"              : Function.translate_text()
+        elif megumi_action == "Function_wiki_search"            : Function.wiki_search()
+        elif megumi_action == "Function_download_youtube"       : Function.download_youtube()
+        elif megumi_action == "Function_echo"                   : Function.echo()
+        elif megumi_action == "Function_send_invite"            : Function.send_invite(event)
+        elif megumi_action == "Function_report_bug"             : Function.report_bug(event)
+        elif megumi_action == "Function_leave"                  : Function.leave(event)
 
-        elif any(word in text for word in ["what ", "show "])        :
-            if any(word in text for word in ["date", "time", "day "])   : Function.time_date()
-            elif any(word in text for word in ["weather", "forecast"])  : Function.weather_forecast()
-            elif any(word in text for word in ["movie ", "movies",
-                                               "film ", "films"])       :
-                if any(word in text for word in ["showing", "list",
-                                                 "playing", "schedule"])    : Function.show_cinema_movie_schedule()
-                else                                                        : Function.false()
+        elif megumi_action == "Enable_dev_mode"                 :
+            if Function.dev_authority_check(event)                    :
+                if megumi_action == "Function_dev_mode_set_tag_notifier"    : Function.dev_print_userlist()
+                elif megumi_action == "Function_dev_mode_print_userlist"    : Function.dev_mode_set_tag_notifier()
 
-            elif all(word in text for word in ["anime"])                :
-                if any(word in text for word in ["download", "link"])       : Function.anime_download_link()
-                else                                                        : Function.false()
-
-            elif any(word in text for word in ["is", "are", "info",
-                                               "information", "?"])     :
-                if any(word in text for word in ["sw", "summonerswar",
-                                                 "summoner"])               : Function.summonerswar_wiki()
-                elif all(word in text for word in ["itb"])                  :
-                    if "'" in text                                              : Function.itb_arc_database()
-                    else                                                        : Function.false()
-                elif any(word in text for word in ["in"])                       : Function.translate_text()
-                elif any(word in text for word in ["mean", "wiki"])         :
-                    if "'" in text                                              : Function.wiki_search()
-                    else                                                        : Function.false()
-
-                else                                                        : Function.false()
-            else                                                        : Function.false()
-
-        elif any(word in text for word in ["how"])                  :
-            if any(word in text for word in ["weather", "forecast"])    : Function.weather_forecast()
-            elif any(word in text for word in ["say"])                  : Function.translate_text()
-            else                                                        : Function.false()
-
-        elif all(word in text for word in ["who"])                  :
-            if all(word in text for word in ["itb"])                    :
-                if "'" in text                                              : Function.itb_arc_database()
-                else                                                        : Function.false()
-            else                                                        : Function.false()
-
-        elif any(word in text for word in ["download ", "save "])   :
-            if any(word in text for word in ["youtube", "video"])       : Function.download_youtube()
-            elif any(word in text for word in ["anime"])                : Function.anime_download_link()
-            else                                                        : Function.false()
-
-        elif any(word in text for word in ["translate"])            : Function.translate_text()
-        elif any(word in text for word in ["say "])                 : Function.echo()
-        elif all(word in text for word in ["send ", "invite"])      : Function.send_invite(event)
-
-        elif all(word in text for word in ["report", "bug"])        : Function.report_bug(event)
-        elif any(word in text for word in ["please leave, megumi"]) : Function.leave(event)
-        elif all(word in text for word in ["dev", "mode"])          :
-
-            if Function.dev_authority_check(event)                      :
-                if all(word in text for word in ["print", "userlist"])      : Function.dev_print_userlist()
-                elif any(word in text for word in ["turn ", "able"])        :
-                    if any(word in text for word in ["tag notifier",
-                                                     "notif", "mention"])       : Function.dev_mode_set_tag_notifier()
-                    else                                                        : Function.false()
-
-        else                                                        : Function.false()
+        elif megumi_action == "Function_false"                  : Function.false()
+        else                                                    : Function.send_default_reply()
 
     # Special tag / mention function
     if tag_notifier_on:
@@ -3276,6 +3262,13 @@ class Function:
             report = Lines.dev_mode_authority_check("notify report") % user
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             return False
+
+    @staticmethod
+    def send_default_reply():
+        """ Function to send default API.AI response for general chat """
+
+        report = api_ai_response["result"]["fulfillment"]["speech"]
+        line_bot_api.push_message(address, TextSendMessage(text=report))
 
 
 class OtherUtil:
