@@ -1653,11 +1653,13 @@ class Function:
             def dev_mode_extension_check():
                 """ Function to check whether dev mode extension is enabled """
 
-                dev_extension_command = all(word in text for word in ["dev", "mode"])
-                dev_extension_user_check = Function.dev_authority_check(address, cond="address")
-                dev_extension_zippy = hostid == 15  # Only available for zippyshare
+                if all(word in text for word in ["dev", "mode"]):
+                    if hostid == 15:  # Only available for zippyshare
+                        dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                        if dev_extension_user_check:
+                            return True
 
-                return dev_extension_command and dev_extension_user_check and dev_extension_zippy
+                return False
 
             # General variable and it's default value
             anime_pasted_link = " "
