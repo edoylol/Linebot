@@ -12,3 +12,4 @@ Werkzeug==0.11.15
 beautifulsoup4==4.6.0
 unshortenit==0.3.0
 apiai==1.2.3
+wikipedia==1.4.0
