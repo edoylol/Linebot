@@ -5,17 +5,16 @@
 
 userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori',
             'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
-aloy_goes_to_afaid = {'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
+
+aloy_goes_to_afaid = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
 family = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori'}
 devlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D'}
-
-list_dictionary = {"userlist":userlist,"aloy_afaid" : aloy_goes_to_afaid,"family" : family,"dev" : devlist }
+list_dictionary = {"userlist": userlist, "aloy_afaid": aloy_goes_to_afaid, "family": family, "dev": devlist}
 
 
 
 
 """ DICTIONARY TO STORE ANIME DOWNLOAD DICTIONARY """
-
 # Last updated (21 July 2017 : 328 listed anime's title ) be careful of pasted.co... sometimes not parsed perfectly
 animelist = {
             "18if":"http://pasted.co/c0669a9a",
@@ -351,3 +350,217 @@ animelist = {
 anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupload": 93, "openload": 94,
                   "datafilehost": 84, "uptobox": 42, "katfile": 100}
 
+""" DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
+
+functionlist = {
+  "Anime download link": {
+    "description": "Anime download link\n\nI can help you gather the anime download links if you know it's pasted. co link, mirror creator link, or simply the title as long it's listed in the cyber12 2016-2017 database\nI use cyber12 simply because of their great-quality encoding :3\nanyway, I use zippyshare as default, but you can request your favourite host like solidfiles, dropjify, etc.\nYou can also specify which episode to start with :>\n\nDon't worry, I will try my best to help you out ~ ",
+    "example": [
+      "Meg, show me this 'https://www.mirrorcreator.com/files/1ORJQKM3' anime download link",
+      "Please show me download link for 'kakegurui' anime ep 3 meg",
+      "Meg, download link for 'eromanga' ep 11 from solidfiles please... ",
+      "Meg, request 'apocrypha' anime download link ep 23 from dropjify",
+      "Show me 'Love Live Sunshine' anime download link ep 12 meg.."
+    ]
+  },
+  "Choose one": {
+    "description": "Choose on\n\nI can help you choose if you can't make up your mind :>\nJust put a '#' before the options :)\n\nDon't worry, I will be as fair as possible :3",
+    "example": [
+      "meg, choose between #han or #toto",
+      "meg, which one do you like ? #spagetty or #pasta ?",
+      "#romance #comedy or #pyscho ? which one meg ?",
+      "meg, do you prefer to #take-a-bath first or #eat-first ?",
+      "meg, do you like Han? #yes #no"
+    ]
+  },
+  "Cinema's schedule": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Convert": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Default reply": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Dev : Print userlist": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Dev : Set notifier": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Echo": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Fact or Hoax": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "ITB-ARC Database": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Manuals": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "News": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Random number": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Report Bug": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "SW wiki": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Send Invite": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Time & Date": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Translate": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Weather forecast": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Wiki search": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  },
+  "Youtube download": {
+    "description": "lalala",
+    "example": [
+      "a",
+      "b",
+      "c",
+      "d",
+      "e"
+    ]
+  }
+}

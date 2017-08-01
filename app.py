@@ -138,7 +138,13 @@ def update_user_list(event):
                         PostbackTemplateAction(label=Labels.print_userlist(), data=command)
                     ])
                     template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
-                    line_bot_api.push_message(jessin_userid, template_message)
+                    for dev_user in Database.devlist:
+                        line_bot_api.push_message(dev_user, template_message)
+
+                    # Send report contain new user only
+                    report = str("New user : \n'"+user_id+"': '"+user+"'")
+                    for dev_user in Database.devlist:
+                        line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
         except Exception as exception_detail:
             function_name = "Sending Userlist notification"
@@ -766,7 +772,7 @@ class Function:
 
                         keyword = ['are', 'at', 'can', 'film', 'help', 'is', 'kato', 'list', 'me', 'meg', 'megumi',
                                    'movie', 'movies', 'playing', 'please', 'pls', 'schedule', 'show',
-                                   'showing', 'xxi', 'what']
+                                   'showing', 'you', 'xxi', 'what']
                         search_keyword = OtherUtil.filter_words(text)
                         search_keyword = OtherUtil.filter_keywords(search_keyword, keyword)
 
@@ -2495,9 +2501,9 @@ class Function:
         try :
             def get_search_keyword():
 
-                keyword = [' ', 'about', 'are', 'bad', 'build', 'good', 'how', 'hows', 'i', 'idea', 'info', 'infos', 'is',
+                keyword = [' ', 'about', 'are', 'bad', 'build', 'good', 'how', 'hows', 'i', 'idea', 'info', 'infos', 'information', 'is',
                            'kato', 'me', 'meg', 'megumi', 'people', 'rating', 'ratings', 's', 'should', 'show', 'shows',
-                           'skill', 'skills', 'stat', 'stats', 'summoner', 'summoners', 'summonerswar', 'sw', 'think',
+                           'skill', 'skills', 'stat', 'stats', 'summoner', 'summoners', 'summonerswar', 'sw', 'think', 'the'
                            'thought', 'to', 'use', 'uses', 'war', 'what', 'whats', 'worth', 'worthed', 'you', 'your'
                            ]
 
@@ -3276,7 +3282,7 @@ class Function:
         line_bot_api.push_message(address, TextSendMessage(text=report))
 
         # Send report to devs
-        report = Lines.join("report")
+        report = Lines.join("report") % str(address)
         for dev_user in Database.devlist:
             line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
@@ -3358,7 +3364,7 @@ class Function:
         line_bot_api.push_message(address, TextSendMessage(text=report))
 
         # Send notice when someone added
-        report = Lines.added("report") % user
+        report = Lines.added("report") % (user, user_id)
         for dev_user in Database.devlist:
             line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
@@ -3451,8 +3457,8 @@ class Function:
 
             # If the user is not listed, send rejection
             else:
-                reply = Lines.dev_mode_authority_check("reject")
-                line_bot_api.reply_message(token, TextSendMessage(text=reply))
+                report = Lines.dev_mode_authority_check("reject")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
                 report = Lines.dev_mode_authority_check("notify report") % user
                 line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
                 return False
@@ -3460,8 +3466,8 @@ class Function:
         # If Dev Mode tried to be accessed in group / room / failed
         except:
             user = "someone"
-            reply = Lines.dev_mode_authority_check("failed")
-            line_bot_api.reply_message(token, TextSendMessage(text=reply))
+            report = Lines.dev_mode_authority_check("failed")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
             report = Lines.dev_mode_authority_check("notify report") % user
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
             return False
@@ -3472,6 +3478,50 @@ class Function:
 
         report = api_ai_response["result"]["fulfillment"]["speech"]
         line_bot_api.push_message(address, TextSendMessage(text=report))
+
+    @staticmethod
+    def show_manual():
+        """ Function to send other function manuals """
+
+        title = []
+        carousel_text = ["teste"]
+        function_list = ["tesst"]
+        command = " sfds "
+        carousel_template = CarouselTemplate(columns=[
+            CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command)]),
+            CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command)]),
+            CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command)]),
+            CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command)]),
+            CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command),
+                PostbackTemplateAction(label=function_list[0], data=command)])
+            ])
+
+        template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
+        line_bot_api.push_message(address, template_message)
 
 
 class OtherUtil:

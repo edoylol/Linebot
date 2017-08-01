@@ -842,12 +842,12 @@ class Lines:  # class to store respond lines
                      " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
                      " Konichiwa... Megumi desu ! ehehehe",
                      " Supp xD .. Megumi desu :3 ,, \nyoroshiku nee~  #teehee"]
-        elif cond == "report":
-            lines = ["Master, Megumi joined a group ~ :> ",
-                     "Master, I'm leaving for a while ,kay? ^^ ",
-                     "Master, I got invitation to join a group..",
-                     "Master, I'm going to a group ,kay? :3 ",
-                     "Master, Wish me luck ,, Megumi joined a group #teehee ^^ ",
+        elif cond == "report":  # Take 1 argument : group id
+            lines = ["Master, Megumi joined a group ~ :> \n\nGroup id : %s",
+                     "Master, I'm leaving for a while ,kay? ^^ \n\nGroup id : %s",
+                     "Master, I got invitation to join a group..\n\nGroup id : %s",
+                     "Master, I'm going to a group ,kay? :3 \n\nGroup id : %s",
+                     "Master, Wish me luck ,, Megumi joined a group #teehee ^^ \n\nGroup id : %s",
                      ]
         else:
             lines = [""]
@@ -938,13 +938,13 @@ class Lines:  # class to store respond lines
                      " Konichiwa... Megumi desu ! ehehehe",
                      " Megumi desu :3 ,, \nyoroshiku nee ~  #teehee"
                      ]
-        elif cond == "report":
-            lines = ["Master, Megumi got a new friend named %s ~ ^^",
-                     "Master, %s added Megumi as a friend ~ YAY ^^",
-                     "Master, do you know %s ? he/she added me.. ",
-                     "Master, %s just added me ^^ ",
-                     "Look master, Megumi got a new friend : %s",
-                     "Nee mastah,, %s added me o(>ω<)o ",
+        elif cond == "report":  # Takes 2 argument : username , userid
+            lines = ["Master, Megumi got a new friend named %s ~ ^^\n\nUser id : %s",
+                     "Master, %s added Megumi as a friend ~ YAY ^^\n\nUser id : %s",
+                     "Master, do you know %s ? he/she added me.. \n\nUser id : %s",
+                     "Master, %s just added me ^^ \n\nUser id : %s",
+                     "Look master, Megumi got a new friend : %s\n\nUser id : %s",
+                     "Nee mastah,, %s added me o(>ω<)o \n\nUser id : %s",
                      ]
         else:
             lines = [""]
