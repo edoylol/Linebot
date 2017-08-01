@@ -703,6 +703,12 @@ class Function:
         try:
             global invitation_sender
 
+            # Check whether invitation sender is available, if not set invitation sender as 'someone'
+            try:
+                sender_known = (invitation_sender != "someone") and (invitation_sender is not None)
+            except:
+                sender_known = False
+
             # Get the responder data
             try:
                 responder_id = event.source.user_id
@@ -712,7 +718,7 @@ class Function:
                 responder = "someone"
 
             # Send report to responder if their respond is recorded
-            report = Lines.invite_report("respond recorded") % responder
+            report = Lines.invite_report("respond recorded")
             line_bot_api.push_message(responder_id, TextSendMessage(text=report))
 
             # Send report to sender about the response
@@ -720,7 +726,7 @@ class Function:
                 report = Lines.invite_report(cond) % responder
 
                 # If the sender is known, send the report
-                if (invitation_sender != "someone") and (invitation_sender is not None):
+                if sender_known:
                     line_bot_api.push_message(invitation_sender_id, TextSendMessage(text=report))
 
                 # If the sender is unknown / group / room, send the report to default userid instead

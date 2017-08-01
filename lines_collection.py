@@ -164,12 +164,12 @@ class Lines:  # class to store respond lines
     @staticmethod
     def invite_report(cond):
 
-        if cond == "respond recorded":  # Take 1 argument : responder
-            lines = ["Thanks for your response %s, Megumi will pass it right now ~",
-                     "OK %s..Megumi will let (him/her) know...",
-                     "I see.. thanks for your response %s ..",
-                     "Thanks %s,, Megumi will tell (him/her) ASAP ^^",
-                     "Kay %s, I will let (him/her) know.."
+        if cond == "respond recorded":
+            lines = ["Thanks for your response, Megumi will pass it right now ~",
+                     "OK..Megumi will let (him/her) know...",
+                     "I see.. thanks for your response ..",
+                     "Thanks,, Megumi will tell (him/her) ASAP ^^",
+                     "Kay, I will let (him/her) know.."
                      ]
         elif cond == "desc missing":
             lines = ["I think the description is missing...",
@@ -480,14 +480,14 @@ class Lines:  # class to store respond lines
                      "Here you go...",
                      "Take a look at the skills carefully.."]
         elif cond == "random errors":
-            lines = ["I'm really sorry, but me and mastah have tried our best..\n"
+            lines = ["I'm really sorry, but me and Dev have tried our best..\n"
                      "But you know,, this wiki page is super inconsistent in terms of syntax..\n"
                      "We're sorry if some of the feature is not working properly...",
                      "I'm really sorry if some of the features is not working properly,,\n "
                      "But you know,, this wiki page is super inconsistent in terms of syntax..\n"
                      "We're sorry since we can't do anything about that..",
                      "I'm really sorry if some of the features is not working properly,,\n"
-                     "Me and mastah have tried our best..\n"
+                     "Me and Dev have tried our best..\n"
                      "But the wiki is super inconsistent in terms of syntax.."
                      ]
         else:
@@ -802,17 +802,17 @@ class Lines:  # class to store respond lines
         if cond == "success":
             lines = ["Thank you for your report :>",
                      "Arigatoo... wish me luck to fix this problem :\")",
-                     "Arigatoo, I'll let master know about this",
-                     "Arigatoo, I'll tell master later ~",
+                     "Arigatoo, I'll let dev know about this",
+                     "Arigatoo, I'll tell dev later ~",
                      "Sankyu for your feedback :)",
                      "Gomenne, hope I can fix this soon...\nthanks for the report btw :)",
                      "Gomenne,.. thanks for the feedback though ^^",
                      ]
         elif cond == "fail":
             lines = ["Gomen,, try to send it again..",
-                     "Gomen,, master is busy fixing other stuff :'> ",
+                     "Gomen,, dev is busy fixing other stuff :'> ",
                      "Gomenne,, seems report function is not working properly ...",
-                     "Gomenne,, please try to tell master by personal chat .. ",
+                     "Gomenne,, please try to tell dev by personal chat .. ",
                      "Gomen,, can you repeat the report please ? .. :'> ",
                      "Gomen,, I'm still learning how to report stuff... :'> ",
                      ]
@@ -1002,7 +1002,7 @@ class Lines:  # class to store respond lines
     def dev_mode_set_tag_notifier(cond):
 
         if cond == "on":
-            lines = ["OK, I will tell you if someone tag you master ~",
+            lines = ["OK, I will tell you if someone tag you ~",
                      "Tag notifier is on active mode :> ",
                      "Sure, I will notify you",
                      "Roger..",

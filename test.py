@@ -11,6 +11,8 @@ from datetime import datetime
 from xml.etree import ElementTree
 
 import wikipedia
+
+
 class OtherUtil:
 
     @staticmethod
@@ -78,25 +80,7 @@ class OtherUtil:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 
-def back_up_summary(keyword, language="en"):
-    """ Function to run as back up of main function """
-    report = []
 
-    # Set page language
-    wikipedia.set_lang(language)
-
-    # Get page title
-    back_up_wikipedia_page = wikipedia.page(keyword)
-    report.append(back_up_wikipedia_page.title)
-    report.append(" ")
-
-    page_url = back_up_wikipedia_page.url
-
-    back_up_wikipedia_summary = wikipedia.summary(keyword, chars=660)
-    report.append(back_up_wikipedia_summary)
-
-    report = "\n".join(report)
-    return report, page_url
 
 
 
