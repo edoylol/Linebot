@@ -2356,11 +2356,13 @@ class Function:
             def request_page():
                 """ Function to send weather user need detailed info about keyword. Send a confirmation to user """
 
+                page_url_mod = page_url.replace(" ", "_")
+
                 # Generate button template
                 text = Lines.wiki_search("ask detail info")
                 header_pic = Picture.header("background")
                 buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
-                    URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url))
+                    URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url_mod))
                 ])
                 template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
 
