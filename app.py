@@ -2329,7 +2329,7 @@ class Function:
 
                 # Find the index of apostrophe
                 index_start = text.find("'")
-                index_stop = text.rfind("'")
+                index_stop = text.rfind("'")+1
 
                 # Determine whether 2 apostrophe are exist and the text exist
                 text_available = (index_stop - index_start) >= 1
