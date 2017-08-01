@@ -762,6 +762,12 @@ class Lines:  # class to store respond lines
                      "Sorry, I didn't catch which one should I translate..",
                      "Which one .-. ?",
                      "Whatt ?? .-."]
+        elif cond == "language list not found":
+            lines = ["I can't get the language list",
+                     "Seems there's something wrong with microsoft...",
+                     "I can't get the list of language available for translate...",
+                     "The translation module seems having some issue when getting list of language...",
+                     "Sorry.. translation module can't get the list of languages :( "]
         elif cond == "destination language not found":
             lines = ["To which language? English?\n",
                      "Which language should I translate to? English?\n",

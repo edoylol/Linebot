@@ -16,6 +16,9 @@
       <w>dropjify</w>
       <w>epid</w>
       <w>epis</w>
+      <w>flac</w>
+      <w>genyoutube</w>
+      <w>gifv</w>
       <w>heroku</w>
       <w>hostid</w>
       <w>hostlist</w>
@@ -30,11 +33,14 @@
       <w>mirrorcreator</w>
       <w>moviedata</w>
       <w>movietitle</w>
+      <w>mpeg</w>
+      <w>nofollow</w>
       <w>notif</w>
       <w>notyetcreated</w>
       <w>pastebox</w>
       <w>poastback</w>
       <w>postback</w>
+      <w>rmvb</w>
       <w>sakurasou</w>
       <w>schedulelist</w>
       <w>showtimes</w>
@@ -45,7 +51,9 @@
       <w>upgtsm</w>
       <w>userid</w>
       <w>userlist</w>
+      <w>webm</w>
       <w>wikipedia</w>
+      <w>wiktionary</w>
       <w>zippyshare</w>
     </words>
   </dictionary>

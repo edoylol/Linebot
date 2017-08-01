@@ -77,3 +77,25 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
+
+page_url = "https://en.wikipedia.org/wiki/king prawn"
+try:
+    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    page_source_code_text = con.read()
+    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+    mod_page = mod_page.find_all('p')[1]
+except:
+    report = Lines.general_lines("failed to open page") % page_url
+
+page_url = "https://en.wikipedia.org/wiki/king_prawn"
+try:
+    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+    con = urllib.request.urlopen(req)
+    page_source_code_text = con.read()
+    mod_page2 = BeautifulSoup(page_source_code_text, "html.parser")
+    mod_page2 = mod_page2.find_all('p')[1]
+except:
+    report = Lines.general_lines("failed to open page") % page_url
+
+print(mod_page == mod_page2)

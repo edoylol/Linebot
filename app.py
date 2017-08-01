@@ -1716,13 +1716,481 @@ class Function:
             function_name = "Anime Download Link"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    """ ==========  29 July 2017 last update ============== """
+    @staticmethod
+    def download_youtube():
+        """ Function to return download link for youtube video with certain specification """
+
+        try:
+            def get_youtube_link():
+                """ Function to crop the youtube video link from text """
+
+                keyword = ["https://www.youtube.com/watch?v=", "https://youtu.be/"]
+                youtube_link = ""
+                text = original_text
+
+                # If the keyword is found in Original text (case sensitive)
+                if any(word in text.lower() for word in keyword):
+                    split_text = text.split(" ")
+                    for word in split_text:
+                        if any(x in word.lower() for x in keyword):
+                            # If the word that represent youtube link found, set it and return it
+                            youtube_link = word
+
+                return youtube_link
+
+            def get_spec():
+                """ Function to get requested video's spec and format from the text """
+
+                # Default format
+                vid_format = "MP4"
+                vid_quality_min = 720
+                vid_quality_max = 720
+                default = True
+
+                # List of available video and audio format
+                video_audio_format_list = ['3g2', '3gp', 'aa', 'aac', 'aax', 'act', 'amr', 'amv', 'asf', 'au', 'avi',
+                                           'awb', 'dct', 'drc', 'dss', 'dvf', 'f4a', 'f4b', 'f4p', 'f4v', 'flac', 'flv',
+                                           'gif', 'gifv', 'm4a', 'm4b', 'm4p', 'm4v', 'mkv', 'mmf', 'mng', 'mov', 'mp2',
+                                           'mp3', 'mp4', 'mpc', 'mpe', 'mpeg', 'mpg', 'mpv', 'msv', 'ogg', 'ogv', 'rm',
+                                           'rmvb', 'vob', 'wav', 'webm', 'wma', 'wmv', 'yuv']
+
+                # If requested format is valid and available, use it as download format
+                if any(word in text for word in video_audio_format_list):
+                    split_text = text.split(" ")
+                    for word in split_text:
+                        if word in video_audio_format_list:
+                            vid_format = word
+                            default = False
+
+                # If there's specified quality is valid and available, use it as download format
+                if any(word in text for word in ['min', 'max']):
+                    split_text = text.split(" ")
+                    index = 0
+                    for word in split_text:
+
+                        # If minimum quality is specified
+                        if 'min' in word:
+                            try:
+                                vid_quality_min = int(split_text[index + 1])
+                                default = False
+                            except:
+                                pass
+
+                        # If maximum quality is specified
+                        if 'max' in word:
+                            try:
+                                vid_quality_max = int(split_text[index + 1])
+                                default = False
+                            except:
+                                pass
+
+                        index = index + 1
+
+                return vid_format.upper(), vid_quality_min, vid_quality_max, default
+
+            def get_genyoutube(youtube_link):
+                """ Function to return genyoutube link from youtube link """
+
+                if "https://www.youtube.com/watch?v=" in youtube_link:
+                    video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
+                elif "https://youtu.be/" in youtube_link:
+                    video_id = youtube_link.replace("https://youtu.be/", "")
+                else:
+                    video_id = "not found"
+
+                return "http://video.genyoutube.net/" + video_id
+
+            def get_download_data(link_data):
+                """ Function to return video data (ex : .mp4 720 )"""
+
+                remove_keyword = ['<span class="infow">', '<i class="glyphicon glyphicon-', '">', '</span>', '</i></span>',
+                                  'video', 'volume-', '</i>', '<', '>', '/']
+
+                for i in range(0, len(remove_keyword)):
+                    link_data = link_data.replace(remove_keyword[i], "")
+                vid_data = link_data.split(" ")
+                vid_data[2] = vid_data[2].replace("-", " ")  # extra formatting for certain data
+
+                return vid_data
+
+            def approved_vid(data, req_format="MP4", req_quality_min=720, req_quality_max=720):
+                """ Function to filter video which format fulfil requirements """
+
+                # Get the video's format and quality
+                vid_format = data[0]
+                vid_quality = data[1]
+
+                # Remove unnecessary alphabet in quality (eg 'p' in 720p)
+                remove_keyword = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                for i in range(0, len(remove_keyword)):
+                    vid_quality = vid_quality.replace(remove_keyword[i], "")
+
+                # Make sure the quality is a number
+                try:
+                    vid_quality = int(vid_quality)
+                except:
+                    vid_quality = 0
+
+                # Return boolean that represent if video's format fulfil requirements
+                return (vid_format == req_format) and (vid_quality >= req_quality_min) and (vid_quality <= req_quality_max)
+
+            def send_vid_option(video_option, video_links):
+                """ Function to send the video download link to user in form of button template """
+
+                # Generate button header
+                title = "Youtube download"
+                text = Lines.download_youtube("pick one to download")
+                header_pic = Picture.header("background")
+
+                # Button row proportionate to how many videos available for download
+                option = len(video_option)
+                if option == 1:
+
+                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0]))]
+
+                elif option == 2:
+
+                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                               URITemplateAction(label=video_option[1], uri=str(video_links[1]))]
+
+                elif option == 3:
+
+                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                               URITemplateAction(label=video_option[1], uri=str(video_links[1])),
+                               URITemplateAction(label=video_option[2], uri=str(video_links[2]))]
+
+                # Options more than 3
+                else:
+
+                    # Create list of other videos option
+                    reply = [Lines.download_youtube("header")]
+                    for i in range(0, len(video_option)):
+                        reply.append(video_option[i])
+                    reply.append(Lines.download_youtube("footer"))
+                    reply = "\n".join(reply)
+
+                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
+                               URITemplateAction(label=video_option[1], uri=str(video_links[1])),
+                               URITemplateAction(label=video_option[2], uri=str(video_links[2])),
+                               MessageTemplateAction(label='Others...', text=reply)]
+
+                # Send the final result to user
+                buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=actions)
+                template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
+
+            # General variable
+            req_format, req_quality_min, req_quality_max, default = get_spec()
+            video_option = []
+            video_links = []
+            youtube_link = get_youtube_link()
+
+            # If youtube link is not available in text
+            if youtube_link == "":
+                report = Lines.download_youtube("page not found")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            # If youtube link is available, try to open genyoutube version
+            else:
+                page_url = get_genyoutube(youtube_link)
+
+                # Try to open the genyoutube page
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    report = Lines.download_youtube("page not found")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # If the genyoutube page is opened, parse the page
+                try:
+                    links = mod_page.find_all("a", {"rel": "nofollow"})
+                    for link in links:
+                        href = link.get("href")
+                        vid_keyword = "http://redirector.googlevideo.com"
+
+                        # If found link has video keyword listed above, try to get the link data and format
+                        if vid_keyword in href:
+                            link_data = str(BeautifulSoup(str(link), "html.parser").find('span', {"class": "infow"}))
+                            data = get_download_data(link_data)
+
+                            # If found data fulfil the requirements format, put it in the final result
+                            if approved_vid(data, req_format, req_quality_min, req_quality_max):
+                                video_option.append(" ".join(data))
+                                video_links.append(href)
+                except:
+                    report = Lines.download_youtube("gathering video data failed")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # If there's at least 1 video found and fulfil the requirements
+                if len(video_option) > 0:
+                    if default:
+                        report = Lines.download_youtube("send option header") % "default settings"
+                    else:
+                        settings = ("format : " + str(req_format) + ", min : " + str(req_quality_min) + "p, max : " + str(req_quality_max) + "p")
+                        report = Lines.download_youtube("send option header") % settings
+
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    send_vid_option(video_option, video_links)
+
+                else:
+                    report = Lines.download_youtube("no video found")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        except Exception as exception_detail:
+            function_name = "Youtube download"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    @staticmethod
+    def translate_text():
+        """ Function to translate certain part of text into another language """
+
+        try:
+            class AzureAuthClient(object):
+                """
+                Provides a client for obtaining an OAuth token from the authentication service
+                for Microsoft Translator in Azure Cognitive Services.
+                """
+
+                def __init__(self, client_secret):
+                    """
+                    :param client_secret: Client secret.
+                    """
+
+                    self.client_secret = client_secret
+                    # token field is used to store the last token obtained from the token service
+                    # the cached token is re-used until the time specified in reuse_token_until.
+                    self.token = None
+                    self.reuse_token_until = None
+
+                def get_access_token(self):
+                    """
+                    Returns an access token for the specified subscription.
+                    This method uses a cache to limit the number of requests to the token service.
+                    A fresh token can be re-used during its lifetime of 10 minutes. After a successful
+                    request to the token service, this method caches the access token. Subsequent
+                    invocations of the method return the cached token for the next 5 minutes. After
+                    5 minutes, a new token is fetched from the token service and the cache is updated.
+                    """
+
+                    if (self.token is None) or (datetime.utcnow() > self.reuse_token_until):
+                        token_service_url = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
+
+                        request_headers = {'Ocp-Apim-Subscription-Key': self.client_secret}
+
+                        response = requests.post(token_service_url, headers=request_headers)
+                        response.raise_for_status()
+
+                        self.token = response.content
+                        self.reuse_token_until = datetime.utcnow() + timedelta(minutes=5)
+
+                    return self.token
+
+            def get_text_translation(final_token, text_to_translate, from_lang_code, to_lang_code):
+
+                # Call to Microsoft Translator Service
+                headers = {"Authorization ": final_token}
+                translate_url = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text={}&from={}&to={}".format(
+                    text_to_translate, from_lang_code, to_lang_code)
+
+                translation_data = requests.get(translate_url, headers=headers)
+                # Parse xml return values
+                translation = ElementTree.fromstring(translation_data.text.encode('utf-8'))
+
+                # Display translation
+                return translation.text
+
+            def get_text():
+                """ Function to crop the text which going to be translated from the original text """
+
+                if "'" in text:
+                    index_start = text.find("'") + 1
+                    index_stop = text.rfind("'")
+                    keyword = text[index_start:index_stop]
+                    return keyword
+
+                return ""
+
+            def get_language(cond):
+                """ Function to return the language of text, either 'from' or 'to' """
+
+                # Remove the text to translate, to minimize errors
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
+                crop_text = text.replace(text[index_start:index_stop], '')
+
+                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
+                           'how', "how's", 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
+                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
+                           'this', 'what', "what's", 'whats', 'will', 'you']
+
+                filtered_text = OtherUtil.filter_words(crop_text)
+                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+                # Determine the keyword to use, whether it's source language or destination language
+                if cond == "from":
+                    specific_keyword = ['from', 'fr']
+                elif cond == "to":
+                    specific_keyword = ['in', 'to']
+                else:
+                    specific_keyword = [""]
+
+                # Searching the text for language code or language name
+                found = False
+                try:
+                    for i in range(0, len(filtered_text) + 1):
+                        if filtered_text[i] in specific_keyword:
+                            language = (filtered_text[i + 1])
+                            found = True
+                            return language, found
+                except:
+                    pass
+
+                return "", found
+
+            def get_available_language():
+                """ Function to return available language for translation """
+
+                # Try to open the page
+                try:
+                    page_url = "https://msdn.microsoft.com/en-us/library/hh456380.aspx"
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Try to parse the page
+                try:
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                    code_table = mod_page.find_all("td", {"data-th": "Language Code"})
+                    name_table = mod_page.find_all("td", {"data-th": "English Name"})
+
+                    # Create dictionary of language available
+                    language_table = {}
+                    for i in range(0, len(code_table)):
+                        language_code = code_table[i].text.strip()
+                        language_name = name_table[i].text.strip()
+                        language_table[language_name] = language_code
+
+                    return language_table
+
+                except:
+                    report = Lines.general_lines("formatting error") % "list of available language"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+            def get_language_code(available_language, keyword):
+                """ Function to return the language into respectively code """
+
+                # If the keyword is not empty
+                if keyword != "":
+
+                    # If the keyword is already in form of code
+                    for key in available_language:
+                        if keyword in available_language[key].lower():
+                            return available_language[key], key
+
+                    # If the keyword is in form of name
+                    for key in available_language:
+                        if keyword in key.lower():
+                            return available_language[key], key
+
+                return "", ""
+
+            # General variable
+            cont = True
+            result = []
+            text_to_translate = get_text()
+
+            # Just to escape 'might be referenced before assignment' warning which will never happened in the first place...
+            available_language = None
+            to_lang_code = ''
+            to_lang = ''
+            from_lang_code = ''
+            translated_text = ''
+
+            # if the text is not available, send report and end the process
+            if text_to_translate == "":
+                result.append(Lines.translate_text("text to translate not found"))
+                cont = False
+
+            # if text to translate is available, try to get the languages list
+            if cont:
+                available_language = get_available_language()  # this might return void
+                if available_language is None:
+                    result.append(Lines.translate_text("language list not found"))
+                    cont = False
+
+            # If the available language is listed and available, try to extract source and destination languages
+            if cont:
+
+                # Extract from-to language from the text
+                from_lang, is_from_lang_found = get_language("from")
+                to_lang, is_to_lang_found = get_language("to")
+                from_lang_code, from_lang = get_language_code(available_language, from_lang)
+
+                # If destination language is found
+                if is_to_lang_found:
+                    to_lang_code, to_lang = get_language_code(available_language, to_lang)
+
+                # Destination language not found
+                else:
+                    to_lang = "english"
+                    to_lang_code = "en"
+                    result.append(Lines.translate_text("destination language not found"))
+
+            # if the destination language is found, try to do the translation
+            if cont:
+
+                # if destination language is available, get the translation
+                if to_lang_code != '':
+                    azure_keys = ['1c3ea2f61de74a4f8d3bdcbe4cce7316', '20039c3da1074c9bba90ebd7600f1381']
+                    client_secret = random.choice(azure_keys)
+                    auth_client = AzureAuthClient(client_secret)
+                    raw_bearer_token = str(auth_client.get_access_token())
+                    bearer_token = 'Bearer ' + raw_bearer_token[2:-1]
+                    translated_text = get_text_translation(bearer_token, text_to_translate, from_lang_code, to_lang_code)
+                    translated_text = translated_text.lower()
+
+                # destination language not available
+                else:
+                    result.append(Lines.translate_text("destination language not available") % to_lang)
+                    cont = False
+
+            # if the text is translated, send it to user
+            if cont:
+
+                # If the text is different from the original text (before translation)
+                if text_to_translate != translated_text.lower():
+                    result.append(Lines.translate_text("send translated").format(text_to_translate, to_lang, translated_text))
+
+                # If the text is the same as before
+                else:
+                    result.append(Lines.translate_text("already in that language") % to_lang)
+
+            report = "\n".join(result)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        except Exception as exception_detail:
+            function_name = "Translate"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def wiki_search():
+        """ Function to get information about certain part of text, from Wikipedia """
 
-        try :
+        try:
             def getting_page_title(mod_page):
+                """ Function to return wikipedia page title """
+
                 try:
                     first_heading = mod_page.findAll("h1", {"id": "firstHeading"})
                     page_title = first_heading[0].string
@@ -1731,52 +2199,97 @@ class Function:
                     return "page title doesn't exist"
 
             def is_specific(mod_page):
+                """ Function to check whether the designated page is specific or not """
+
                 content = str(mod_page.find_all('p'))
                 keyword = ["commonly refers to", "may also refer to", "may refer to"]
 
+                # If keyword found in the page, the page is not specific
                 if any(word in content for word in keyword):
                     return False
                 else:
                     return True
 
             def has_disambiguation(mod_page):
+                """ Function to check whether keyword has other disambiguation """
+
                 content = str(mod_page.find_all('a', {"class": "mw-disambig"}))
                 keyword = ["disambiguation"]
 
+                # If the keyword is found in the page, then the keyword has disambiguation
                 if any(word in content for word in keyword):
                     return True
                 else:
                     return False
 
             def first_paragraph_coordinate(mod_page):
+                """ Function to return boolean whether first paragraph is coordinate or not """
+
                 content = str(mod_page.find('p'))
                 keyword = ["coordinate"]
 
+                # If keyword found in the first paragraph, then it's a coordinate
                 if any(word in content for word in keyword):
                     return True
                 else:
                     return False
 
             def get_paragraph(mod_page, cond='first'):
+                """ Function to return first paragraph* of the page.
+                note: Certain condition might result in failure and get more than one or less than one paragraph """
 
                 def filter_paragraph_contents(content, start_sym='<', end_sym='>'):
-                    isfilter = (start_sym or end_sym) in content
-                    while isfilter:
+                    """ Function to remove classic wikipedia's indexing and citation"""
+
+                    need_filter = (start_sym or end_sym) in content
+                    # Remove all indexing and citation
+                    while need_filter:
                         start_index = content.find(start_sym)
                         stop_index = content.find(end_sym) + 1
                         content = content.replace(str(content[start_index:stop_index]), "")
-                        isfilter = (start_sym or end_sym) in content
+                        need_filter = (start_sym or end_sym) in content
+
+                    # Return clean paragraph
                     return content
 
-                if cond == 'first':
-                    content = mod_page.find('p')
-                elif cond == 'second':
-                    content = mod_page.find_all('p')[1]
-                content = filter_paragraph_contents(str(content), '<', '>')
-                content = filter_paragraph_contents(str(content), '[', ']')
-                return content
+                # If the first paragraph is un-usable, use second paragraph instead.
+                if cond == 'second':
+                    start_paragraph = 1
+
+                # Else use first paragraph only
+                else:
+                    start_paragraph = 0
+
+                # General variable
+                content = mod_page.find_all('p')
+                result = []
+                letter_count = 0
+
+                # Get paragraph until word count about 500 - 850 words.. can be less than 500, but not more than 850
+                while letter_count < 500 and start_paragraph <= len(content):
+
+                    # Formatting the paragraph
+                    paragraph_text = content[start_paragraph].text.strip()
+                    paragraph_text = filter_paragraph_contents(str(paragraph_text), '<', '>')
+                    paragraph_text = filter_paragraph_contents(str(paragraph_text), '[', ']')
+
+                    # If after append the temporary text, the letter count still less than 850, append it and crawl next paragraph
+                    if letter_count + len(paragraph_text) < 850:
+                        result.append(paragraph_text)
+                        letter_count += len(paragraph_text)
+                        start_paragraph += 1
+
+                    # If after append the temporary text, the letter count will surpass 850, then don't append it, and end the process
+                    else:
+                        break
+
+                # Convert result to string and return it
+                result = "\n".join(result)
+                return result
 
             def show_suggestion(mod_page):
+                """ If the page is not specific, show some suggestion of other keyword which might be more specific """
+
                 suggestion = []
                 keyword = ['All pages beginning with ', 'disambiguation', 'Categories', 'Disambiguation',
                            'Place name disambiguation ', 'All article disambiguation ', 'All disambiguation ', 'Talk',
@@ -1795,66 +2308,83 @@ class Function:
                            'Edit links', 'Creative Commons Attribution-ShareAlike License', 'Terms of Use',
                            'Privacy Policy',
                            'Privacy policy', 'About Wikipedia', 'Disclaimers', 'Contact Wikipedia', 'Developers',
-                           'Cookie statement']
+                           'Cookie statement']  # Keyword to be avoided
 
                 links = mod_page.find_all('a')
-
                 for link in links:
                     href = str(link.get("href"))
-                    if "/wiki/" in (href[:6]):  # to eliminate wiktionary links
+                    if "/wiki/" in (href[:6]):   # To eliminate wiktionary links
                         if link.string is not None:
                             if not (any(word in link.string for word in keyword)):
+
+                                # If the link passed certain category test, (which more or less led to valid suggestion), append it
                                 suggestion.append(link.string)
+
+                # Return top 10 suggestion only
                 suggestion = suggestion[:10]
                 return suggestion
 
             def get_search_keyword():
+                """ Function to get search keyword from text """
 
-                split_text = OtherUtil.filter_words(text, "for wiki search")
-                keyword = []
-                for word in split_text:
-                    if "'" in word:
-                        keyword.append(word)
+                # Find the index of apostrophe
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
 
-                if keyword == []:
-                    return
-                else:
-                    keyword = " ".join(keyword)
-                    keyword = keyword.replace(" ", "_")
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
+                if text_available:
+                    keyword = original_text[index_start:index_stop]  # Use original text since some page has case sensitive
                     return keyword
 
             def get_search_language():
+                """ Function to get search language from text """
 
-                try:
-                    split_text = OtherUtil.filter_words(text)
-                    index_now = 0
-                    for word in split_text:
-                        if word == "wiki":
-                            index_found = index_now - 1
-                            break
-                        index_now = index_now + 1
-                    language = split_text[index_found]
+                # General variable
+                language = 'en'
+                filtered_text = OtherUtil.filter_words(text)
+                keyword = ["wiki"]
 
-                except:
-                    language = 'en'  # default search language
+                # Search for language by using text before keyword scheme
+                for i in range(0, len(filtered_text)):
+                    if any(word in filtered_text[i] for word in keyword):
+                        language = (filtered_text[i-1])
+                        return language
 
                 return language
 
             def request_page():
+                """ Function to send weather user need detailed info about keyword. Send a confirmation to user """
+
+                # Generate button template
                 text = Lines.wiki_search("ask detail info")
                 header_pic = Picture.header("background")
                 buttons_template = ButtonsTemplate(text=text, thumbnail_image_url=header_pic, actions=[
                     URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url))
                 ])
                 template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
+
+                # Send the template
                 line_bot_api.push_message(address, template_message)
 
-            keyword = get_search_keyword()
-            language = get_search_language()
+            # General variable
             report = []
             request_detailed_info = False
+            cont = True
+            mod_page = ""  # Just to escape 'variable might be referenced before assignment' warning which will never happened
 
-            if keyword != None:
+            # Get keyword and language preferences
+            keyword = get_search_keyword()
+            language = get_search_language()
+
+            # If no keyword found, send notification, and end the process
+            if keyword is None:
+                report.append(Lines.wiki_search("no keyword found"))
+                cont = False
+
+            # If keyword is found, try to open the wikipedia page
+            if cont:
+                # Try to open the page
                 try:
                     keyword = keyword[1:-1]
                     page_url = "https://" + language + ".wikipedia.org/wiki/" + keyword
@@ -1862,222 +2392,59 @@ class Function:
                     con = urllib.request.urlopen(req)
                     page_source_code_text = con.read()
                     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                    exist = True
-                except :
+
+                # If failed to open the page, send notice and end the process
+                except:
                     report.append(Lines.wiki_search("page not found") % (language, keyword))
                     report.append(Lines.wiki_search("try different keyword / language"))
                     report.append("https://meta.wikimedia.org/wiki/List_of_Wikipedias")
-                    exist = False
+                    cont = False
 
-                if exist:
-                    title = getting_page_title(mod_page)
-                    if is_specific(mod_page):
-                        report.append(title)
-                        if has_disambiguation(mod_page):
-                            report.append(Lines.wiki_search("has disambiguation"))
+            # If the wiki page is available, try to get the title and paragraph
+            if cont:
+                title = getting_page_title(mod_page)
 
+                # Check whether it's specific or not,
+                if is_specific(mod_page):
 
-                        if first_paragraph_coordinate(mod_page):
-                            report.append(get_paragraph(mod_page, 'second'))
-                        else:
-                            report.append(get_paragraph(mod_page, 'first'))
+                    # If it's specific page, send title and information about page
+                    report.append(title)
 
-                        request_detailed_info = True
+                    # Check whether it has disambiguation or not, send extra header if yes
+                    if has_disambiguation(mod_page):
+                        report.append(Lines.wiki_search("has disambiguation"))
 
+                    # If first paragraph is coordinate start from second paragraph instead
+                    if first_paragraph_coordinate(mod_page):
+                        report.append(get_paragraph(mod_page, 'second'))
+
+                    # If first paragraph is usable
                     else:
-                        report.append(Lines.wiki_search("not specific page - header") % keyword)
-                        report.append(Lines.wiki_search("not specific page - content") % keyword)
-                        suggestion = show_suggestion(mod_page)
-                        suggestion = "\n".join(suggestion)
-                        report.append(suggestion)
-            else:
-                report.append(Lines.wiki_search("no keyword found"))
+                        report.append(get_paragraph(mod_page, 'first'))
 
+                    request_detailed_info = True
+
+                # If not send extra header, and send suggestion instead of information
+                else:
+                    report.append(Lines.wiki_search("not specific page - header") % keyword)
+                    report.append(Lines.wiki_search("not specific page - content") % keyword)
+                    suggestion = show_suggestion(mod_page)
+                    suggestion = "\n".join(suggestion)
+                    report.append(suggestion)
+
+            # Send the final result to user
             report = "\n".join(report)
             line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            # Send prompt whether show detailed page or not
             if request_detailed_info:
                 request_page()
 
         except Exception as exception_detail:
             function_name = "Wiki search"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    @staticmethod
-    def download_youtube():
-
-        try :
-            def get_youtube_link():
-                keyword = ["https://www.youtube.com/watch?v=","https://youtu.be/"]
-                youtube_link = ""
-                text = original_text
-                if any(word in text.lower() for word in keyword) :
-                    text = text.split(" ")
-                    for word in text:
-                        if any(x in word.lower() for x in keyword):
-                            youtube_link = word
-
-                return youtube_link
-
-            def get_spec():
-                vid_format = "MP4"
-                vid_quality_min = 720
-                vid_quality_max = 720
-                default = True
-
-                video_audio_format_list = ['3g2', '3gp', 'aa', 'aac', 'aax', 'act', 'amr', 'amv', 'asf', 'au', 'avi',
-                                           'awb', 'dct', 'drc', 'dss', 'dvf', 'f4a', 'f4b', 'f4p', 'f4v', 'flac', 'flv',
-                                           'gif', 'gifv', 'm4a', 'm4b', 'm4p', 'm4v', 'mkv', 'mmf', 'mng', 'mov', 'mp2',
-                                           'mp3', 'mp4', 'mpc', 'mpe', 'mpeg', 'mpg', 'mpv', 'msv', 'ogg', 'ogv', 'rm',
-                                           'rmvb', 'vob', 'wav', 'webm', 'wma', 'wmv', 'yuv']
-
-                if any(word in text for word in video_audio_format_list):
-                    split_text = text.split(" ")
-                    for word in split_text :
-                        if word in video_audio_format_list :
-                            vid_format = word
-                            default = False
-
-                if any(word in text for word in ['min','max']):
-                    split_text = text.split(" ")
-                    index = 0
-                    for word in split_text :
-                        if 'min' in word :
-                            try :
-                                vid_quality_min = int(split_text[index+1])
-                                default = False
-                            except :
-                                pass
-
-                        if 'max' in word :
-                            try :
-                                vid_quality_max = int(split_text[index+1])
-                                default = False
-                            except :
-                                pass
-
-                        index = index + 1
-
-                return (vid_format.upper(),vid_quality_min,vid_quality_max,default)
-
-            def get_genyoutube(youtube_link):
-                if "https://www.youtube.com/watch?v=" in youtube_link :
-                    video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
-                elif "https://youtu.be/" in youtube_link :
-                    video_id = youtube_link.replace("https://youtu.be/", "")
-
-                return "http://video.genyoutube.net/" + video_id
-
-            def get_download_data(link_data):
-                remove_keyword = ['<span class="infow">', '<i class="glyphicon glyphicon-', '">', '</span>', '</i></span>',
-                                  'video', 'volume-', '</i>', '<', '>', '/']
-                for i in range(0, len(remove_keyword)):
-                    link_data = link_data.replace(remove_keyword[i], "")
-                vid_data = link_data.split(" ")
-                vid_data[2] = vid_data[2].replace("-", " ")
-                return vid_data
-
-            def approved_vid(data, req_format="MP4", req_quality_min=720, req_quality_max=720):
-                vid_format = data[0]
-                vid_quality = data[1]
-
-                remove_keyword = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                for i in range(0, len(remove_keyword)):
-                    vid_quality = vid_quality.replace(remove_keyword[i], "")
-                vid_quality = int(vid_quality)
-                return (vid_format == req_format) and (vid_quality >= req_quality_min) and (vid_quality <= req_quality_max)
-
-            def send_vid_option(video_option, video_links):
-                title = "Youtube download"
-                text = Lines.download_youtube("pick one to download")
-                header_pic = Picture.header("background")
-
-                option = len(video_option)
-                if option == 1:
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0]))]
-                elif option == 2:
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
-                               URITemplateAction(label=video_option[1], uri=str(video_links[1]))]
-                elif option == 3:
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
-                               URITemplateAction(label=video_option[1], uri=str(video_links[1])),
-                               URITemplateAction(label=video_option[2], uri=str(video_links[2]))]
-                elif option > 3:
-
-                    reply = []
-                    reply.append(Lines.download_youtube("header"))  # remember to put \n at the end
-                    for i in range(0, len(video_option)):
-                        reply.append(video_option[i])
-                    reply.append(Lines.download_youtube("footer"))  # remember to put \n at the front
-                    reply = "\n".join(reply)
-
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
-                               URITemplateAction(label=video_option[1], uri=str(video_links[1])),
-                               URITemplateAction(label=video_option[2], uri=str(video_links[2])),
-                               MessageTemplateAction(label='Others...', text=reply)]
-
-                buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=actions)
-                template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
-
-            req_format,req_quality_min,req_quality_max,default = get_spec()
-            video_option = []
-            video_links = []
-
-            youtube_link = get_youtube_link()
-            if youtube_link == "" :
-                report = Lines.download_youtube("page not found")
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                cont = False
-            else :
-                cont = True
-
-            # if youtube link is available
-            if cont :
-                page_url = get_genyoutube(youtube_link)
-                try:
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    cont = True
-                except:
-                    report = Lines.download_youtube("page not found")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    cont = False
-
-            # if youtube download link is available
-            if cont:
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                links = mod_page.find_all("a", {"rel": "nofollow"})
-                for link in links:
-                    try:
-                        href = link.get("href")
-                        vid_keyword = "http://redirector.googlevideo.com"
-                        if vid_keyword in href:
-                            link_data = str(BeautifulSoup(str(link), "html.parser").find('span', {"class": "infow"}))
-                            data = get_download_data(link_data)
-                            if approved_vid(data,req_format,req_quality_min,req_quality_max):
-                                video_option.append(" ".join(data))
-                                video_links.append(href)
-                    except:
-                        report = Lines.download_youtube("gathering video data failed")
-                        line_bot_api.push_message(address, TextSendMessage(text=report))
-
-                if len(video_option) > 0:
-                    if default :
-                        report = Lines.download_youtube("send option header") % "default settings"
-                    else :
-                        settings = ("format : "+str(req_format)+", min : "+str(req_quality_min)+"p, max : "+str(req_quality_max)+"p")
-                        report = Lines.download_youtube("send option header") % settings
-
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    send_vid_option(video_option, video_links)
-                else:
-                    report = Lines.download_youtube("no video found")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-
-        except Exception as exception_detail:
-            function_name = "Youtube download"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+    """ ==========  1 August 2017 last update ============== """
 
     @staticmethod
     def summonerswar_wiki(cond="default"):
@@ -2385,7 +2752,7 @@ class Function:
                         report = "\n".join(report)
                         line_bot_api.push_message(address, TextSendMessage(text=report))
             except Exception as e:
-                print("ERROR DEF",e)
+                print("ERROR DEF", e)
                 report = Lines.summonerswar_wiki("random errors")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
@@ -2518,13 +2885,11 @@ class Function:
                 try:
                     city_name = weather_data["name"]
                 except:
-                    print("can't get city name (weather)")
                     city_name = "Undefined"
                 try:
                     city_weather_type = weather_data["weather"][0]['main']
                     city_weather_description = weather_data["weather"][0]['description']
                 except:
-                    print("can't get weather data (weather)")
                     city_weather_type = "Undefined"
                     city_weather_description = "Undefined"
                 try:
@@ -2532,7 +2897,6 @@ class Function:
                     city_temp_min = weather_data["main"]['temp_min']
                     city_temp_max = weather_data["main"]['temp_max']
                 except:
-                    print("can't get temp data (weather)")
                     city_temp = "Undefined"
                     city_temp_min = "Undefined"
                     city_temp_max = "Undefined"
@@ -2832,196 +3196,6 @@ class Function:
 
         except Exception as exception_detail:
             function_name = "ITB ARC database"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
-
-    @staticmethod
-    def translate_text():
-
-        try :
-            class AzureAuthClient(object):
-                """
-                Provides a client for obtaining an OAuth token from the authentication service
-                for Microsoft Translator in Azure Cognitive Services.
-                """
-
-                def __init__(self, client_secret):
-                    """
-                    :param client_secret: Client secret.
-                    """
-
-                    self.client_secret = client_secret
-                    # token field is used to store the last token obtained from the token service
-                    # the cached token is re-used until the time specified in reuse_token_until.
-                    self.token = None
-                    self.reuse_token_until = None
-
-                def get_access_token(self):
-                    '''
-                    Returns an access token for the specified subscription.
-                    This method uses a cache to limit the number of requests to the token service.
-                    A fresh token can be re-used during its lifetime of 10 minutes. After a successful
-                    request to the token service, this method caches the access token. Subsequent
-                    invocations of the method return the cached token for the next 5 minutes. After
-                    5 minutes, a new token is fetched from the token service and the cache is updated.
-                    '''
-
-                    if (self.token is None) or (datetime.utcnow() > self.reuse_token_until):
-                        token_service_url = 'https://api.cognitive.microsoft.com/sts/v1.0/issueToken'
-
-                        request_headers = {'Ocp-Apim-Subscription-Key': self.client_secret}
-
-                        response = requests.post(token_service_url, headers=request_headers)
-                        response.raise_for_status()
-
-                        self.token = response.content
-                        self.reuse_token_until = datetime.utcnow() + timedelta(minutes=5)
-
-                    return self.token
-
-            def GetTextTranslation(finalToken, textToTranslate, fromLangCode, toLangCode):
-
-                # Call to Microsoft Translator Service
-                headers = {"Authorization ": finalToken}
-                translateUrl = "http://api.microsofttranslator.com/v2/Http.svc/Translate?text={}&from={}&to={}".format(
-                    textToTranslate, fromLangCode, toLangCode)
-
-                translationData = requests.get(translateUrl, headers=headers)
-                # parse xml return values
-                translation = ElementTree.fromstring(translationData.text.encode('utf-8'))
-
-                # display translation
-                return translation.text
-
-            def get_text():
-                if "'" in text:
-                    index_start = text.find("'") + 1
-                    index_stop = text.rfind("'")
-                    keyword = text[index_start:index_stop]
-                    return keyword
-                return ""
-
-            def get_language(cond):
-                # remove the text to translate, to minimize errors
-                index_start = text.find("'") + 1
-                index_stop = text.rfind("'")
-                crop_text = text.replace(text[index_start:index_stop], '')
-
-                keyword = ['', ' ', '?', 'about', 'are', 'at', 'be', 'do', 'does', 'for', 'gonna', 'have',
-                           'how', "how's", 'information', 'is', 'it', 'kato', 'kato,', 'like', 'me',
-                           'meg', 'meg,', 'megumi', 'megumi,', 'now', 'please', 'pls', 'show', 'the', 'think',
-                           'this', 'what', "what's", 'whats', 'will', 'you']
-
-                filtered_text = OtherUtil.filter_words(crop_text)
-                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-                if cond == "from":
-                    specific_keyword = ['from', 'fr']
-                elif cond == "to":
-                    specific_keyword = ['in', 'to']
-
-                found = False
-                try:
-                    for i in range(0, len(filtered_text) + 1):
-                        if filtered_text[i] in specific_keyword:
-                            language = (filtered_text[i + 1])
-                            found = True
-                            return language, found
-                except:
-                    pass
-
-                return "", found
-
-            def get_available_language():
-                page_url = "https://msdn.microsoft.com/en-us/library/hh456380.aspx"
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-                code_table = mod_page.find_all("td", {"data-th": "Language Code"})
-                name_table = mod_page.find_all("td", {"data-th": "English Name"})
-
-                language_table = {}
-                # create dictionary of language available
-                for i in range(0, len(code_table)):
-                    language_code = code_table[i].text.strip()
-                    language_name = name_table[i].text.strip()
-                    language_table[language_name] = language_code
-
-                return language_table
-
-            def get_language_code(available_language, keyword):
-
-                if keyword != "":
-
-                    for key in available_language:  # if the keyword is already in form of code
-                        if keyword in available_language[key].lower():
-                            return available_language[key],key
-
-                    for key in available_language:  # else if the keyword is in form of name
-                        if keyword in key.lower():
-                            return available_language[key],key
-
-                return "",""
-
-            cont = True  # create continue-flag
-            result = []
-
-            textToTranslate = get_text()
-
-            # if the text is not available
-            if textToTranslate == "":
-                cont = False
-                result.append(Lines.translate_text("text to translate not found"))
-
-            # if text to translate is available
-            if cont:
-                available_language = get_available_language()
-
-                # extract from-to language from the text
-                from_lang, is_from_lang_found = get_language("from")
-                to_lang, is_to_lang_found = get_language("to")
-                from_lang_code,from_lang = get_language_code(available_language, from_lang)
-
-                # if destination language is found
-                if is_to_lang_found:
-                    to_lang_code,to_lang = get_language_code(available_language, to_lang)
-
-                # destination language not found
-                else:
-                    to_lang = "english"
-                    to_lang_code = "en"
-                    result.append(Lines.translate_text("destination language not found"))
-
-            # if the destination language is found
-            if cont:
-
-                # if destination language is available
-                if to_lang_code != '':
-                    azure_keys = ['1c3ea2f61de74a4f8d3bdcbe4cce7316', '20039c3da1074c9bba90ebd7600f1381']
-                    client_secret = random.choice(azure_keys)
-                    auth_client = AzureAuthClient(client_secret)
-                    raw_bearer_token = str(auth_client.get_access_token())
-                    bearer_token = 'Bearer ' + raw_bearer_token[2:-1]
-                    translated_text = GetTextTranslation(bearer_token, textToTranslate, from_lang_code, to_lang_code)
-                    translated_text = translated_text.lower()
-
-                # destination language not available
-                else:
-                    cont = False
-                    result.append(Lines.translate_text("destination language not available") % to_lang)
-
-            # if the destination language is available
-            if cont:
-                if textToTranslate != translated_text.lower():
-                    result.append(Lines.translate_text("send translated").format(textToTranslate, to_lang, translated_text))
-                else:
-                    result.append(Lines.translate_text("already in that language") % to_lang)
-
-            report = "\n".join(result)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-        except Exception as exception_detail:
-            function_name = "Translate"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
     """====================== Sub Function List ============================="""
