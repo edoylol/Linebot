@@ -2328,7 +2328,7 @@ class Function:
                 """ Function to get search keyword from text """
 
                 # Find the index of apostrophe
-                index_start = text.find("'") + 1
+                index_start = text.find("'")
                 index_stop = text.rfind("'")
 
                 # Determine whether 2 apostrophe are exist and the text exist
