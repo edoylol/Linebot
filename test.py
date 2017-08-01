@@ -97,4 +97,3 @@ functionlist = Database.functionlist
 
 desc = functionlist["Anime download link"]["description"]
 
-print(desc)

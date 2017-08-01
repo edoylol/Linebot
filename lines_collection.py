@@ -180,10 +180,10 @@ class Lines:  # class to store respond lines
                      ]
         elif cond == "participant list missing":
             lines = ["I think the participant list is missing...",
-                     "Megumi will still send to dev list, since there is no participant list..",
-                     "Try to add participant list next time ,kay ? ^^ \n(sent to dev list) ",
+                     "Megumi can not send the invitation, since there is no participant list..",
+                     "Try to add participant list next time ,kay ? ^^ \n(not sent) ",
                      "If you want to add participant list next time, just use 'to participant_list'",
-                     "If there is no participant list, it will be sent to dev list."
+                     "If there is no participant list, it will not be sent."
                      ]
         elif cond == "yes":  # Take 1 argument : responder
             lines = ["About the invitation, %s said that (he/she) will come..",
@@ -785,7 +785,7 @@ class Lines:  # class to store respond lines
                      "'{0}' can be translated into {1} as '{2}'",
                      "'{2}' means '{0}' in {1}",
                      "Mostly people say '{2}' for '{0}' in {1}",
-                     "T think '{2}' is common trasnlation for '{0}' in {1}"]
+                     "I think '{2}' is common trasnlation for '{0}' in {1}"]
         elif cond == "already in that language":  # Take 1 argument : to language
             lines = ["Wait..isn't it already in %s ?",
                      "Wait..I think it's already in %s...isn't it ?",

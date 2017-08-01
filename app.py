@@ -2501,11 +2501,11 @@ class Function:
         try :
             def get_search_keyword():
 
-                keyword = [' ', 'about', 'are', 'bad', 'build', 'good', 'how', 'hows', 'i', 'idea', 'info', 'infos', 'information', 'is',
-                           'kato', 'me', 'meg', 'megumi', 'people', 'rating', 'ratings', 's', 'should', 'show', 'shows',
-                           'skill', 'skills', 'stat', 'stats', 'summoner', 'summoners', 'summonerswar', 'sw', 'think', 'the'
-                           'thought', 'to', 'use', 'uses', 'war', 'what', 'whats', 'worth', 'worthed', 'you', 'your'
-                           ]
+                keyword = [' ', 'about', 'are', 'bad', 'build', 'good', 'how', 'hows', 'i', 'idea', 'info', 'information',
+                           'infos', 'is', 'kato', 'me', 'meg', 'megumi', 'need', 'of', 'people', 'please', 'rating', 'ratings', 's',
+                           'should', 'show', 'shows', 'skill', 'skills', 'stat', 'stats', 'summoner', 'summoners',
+                           'summonerswar', 'sw', 'thethought', 'think', 'to', 'use', 'uses', 'war', 'what',
+                           'whats', 'worth', 'worthed', 'you', 'your']
 
                 filtered_text = OtherUtil.filter_words(text, "sw wiki")
                 filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
