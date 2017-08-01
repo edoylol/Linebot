@@ -77,189 +77,26 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-def wiki_search():
-    def getting_page_title(mod_page):
-        try:
-            first_heading = mod_page.findAll("h1", {"id": "firstHeading"})
-            page_title = first_heading[0].string
-            return page_title
-        except:
-            return "page title doesn't exist"
 
-    def is_specific(mod_page):
-        content = str(mod_page.find_all('p'))
-        keyword = ["commonly refers to", "may also refer to", "may refer to"]
-
-        if any(word in content for word in keyword):
-            return False
-        else:
-            return True
-
-    def has_disambiguation(mod_page):
-        content = str(mod_page.find_all('a', {"class": "mw-disambig"}))
-        keyword = ["disambiguation"]
-
-        if any(word in content for word in keyword):
-            return True
-        else:
-            return False
-
-    def first_paragraph_coordinate(mod_page):
-        content = str(mod_page.find('p'))
-        keyword = ["coordinate"]
-
-        if any(word in content for word in keyword):
-            return True
-        else:
-            return False
-
-    def get_paragraph(mod_page, cond='first'):
-
-        def filter_paragraph_contents(content, start_sym='<', end_sym='>'):
-            isfilter = (start_sym or end_sym) in content
-            while isfilter:
-                start_index = content.find(start_sym)
-                stop_index = content.find(end_sym) + 1
-                content = content.replace(str(content[start_index:stop_index]), "")
-                isfilter = (start_sym or end_sym) in content
-            return content
-
-        if cond == 'first':
-            content = mod_page.find('p')
-        elif cond == 'second':
-            content = mod_page.find_all('p')[1]
-        content = filter_paragraph_contents(str(content), '<', '>')
-        content = filter_paragraph_contents(str(content), '[', ']')
-        return content
-
-    def show_suggestion(mod_page):
-        suggestion = []
-        keyword = ['All pages beginning with ', 'disambiguation', 'Categories', 'Disambiguation',
-                   'Place name disambiguation ', 'All article disambiguation ', 'All disambiguation ', 'Talk',
-                   'Contributions', 'Article', 'Talk', 'Read', 'Main page', 'Contents', 'Featured content',
-                   'Current events', 'Random article', 'Donate to Wikipedia', 'Help', 'About Wikipedia',
-                   'Community portal',
-                   'Recent changes', 'Contact page', 'What links here', 'Related changes', 'Upload file',
-                   'Special pages',
-                   'Wikidata item', 'Wikispecies', 'Cebuano', 'Čeština', 'Deutsch', 'Eesti', 'Español',
-                   'Français',
-                   '한국어', 'Italiano', 'עברית', 'Latviešu', 'Magyar', 'Nederlands', '日本語', 'Norsk bokmål',
-                   'پښتو',
-                   'Polski', 'Português', 'Русский', 'Simple English', 'Slovenščina', 'Српски / srpski',
-                   'Srpskohrvatski / српскохрватски', 'Suomi', 'Svenska', 'Türkçe', 'Українська', 'اردو',
-                   'Volapük',
-                   'Edit links', 'Creative Commons Attribution-ShareAlike License', 'Terms of Use',
-                   'Privacy Policy',
-                   'Privacy policy', 'About Wikipedia', 'Disclaimers', 'Contact Wikipedia', 'Developers',
-                   'Cookie statement']
-
-        links = mod_page.find_all('a')
-
-        for link in links:
-            href = str(link.get("href"))
-            if "/wiki/" in (href[:6]):  # to eliminate wiktionary links
-                if link.string is not None:
-                    if not (any(word in link.string for word in keyword)):
-                        suggestion.append(link.string)
-        suggestion = suggestion[:10]
-        return suggestion
-
-    def get_search_keyword():
-
-        split_text = OtherUtil.filter_words(text, "for wiki search")
-        keyword = []
-        for word in split_text:
-            if "'" in word:
-                keyword.append(word)
-
-        if keyword == []:
-            return
-        else:
-            keyword = " ".join(keyword)
-            keyword = keyword.replace(" ", "_")
-            return keyword
-
-    def get_search_language():
-
-        try:
-            split_text = OtherUtil.filter_words(text)
-            index_now = 0
-            for word in split_text:
-                if word == "wiki":
-                    index_found = index_now - 1
-                    break
-                index_now = index_now + 1
-            language = split_text[index_found]
-
-        except:
-            language = 'en'  # default search language
-
-        return language
-
-    keyword = get_search_keyword()
-    language = get_search_language()
+def back_up_summary(keyword, language="en"):
+    """ Function to run as back up of main function """
     report = []
-    request_detailed_info = False
 
-    if keyword != None:
-        try:
-            keyword = keyword[1:-1]
-            page_url = "https://" + language + ".wikipedia.org/wiki/" + keyword
-            req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-            con = urllib.request.urlopen(req)
-            page_source_code_text = con.read()
-            mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-            exist = True
-        except:
-            report.append(Lines.wiki_search("page not found") % (language, keyword))
-            report.append(Lines.wiki_search("try different keyword / language"))
-            report.append("https://meta.wikimedia.org/wiki/List_of_Wikipedias")
-            exist = False
+    # Set page language
+    wikipedia.set_lang(language)
 
-        if exist:
-            title = getting_page_title(mod_page)
-            if is_specific(mod_page):
-                report.append(title)
-                if has_disambiguation(mod_page):
-                    report.append(Lines.wiki_search("has disambiguation"))
+    # Get page title
+    back_up_wikipedia_page = wikipedia.page(keyword)
+    report.append(back_up_wikipedia_page.title)
+    report.append(" ")
 
-                if first_paragraph_coordinate(mod_page):
-                    report.append(get_paragraph(mod_page, 'second'))
-                else:
-                    report.append(get_paragraph(mod_page, 'first'))
+    page_url = back_up_wikipedia_page.url
 
-                request_detailed_info = True
-
-            else:
-                report.append(Lines.wiki_search("not specific page - header") % keyword)
-                report.append(Lines.wiki_search("not specific page - content") % keyword)
-                suggestion = show_suggestion(mod_page)
-                suggestion = "\n".join(suggestion)
-                report.append(suggestion)
-    else:
-        report.append(Lines.wiki_search("no keyword found"))
+    back_up_wikipedia_summary = wikipedia.summary(keyword, chars=660)
+    report.append(back_up_wikipedia_summary)
 
     report = "\n".join(report)
-    print(report)
-
-text = "'hatsune miku'"
-
-
-print(" ----------------  JESSIN API ---------------------")
-
-tic = time.clock()
-wiki_search()
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
-
-print(" ----------------  WIKIPEDIA API ---------------------")
-
-tic = time.clock()
-summary = wikipedia.summary(text[1:-1], sentences= 1)
-print(summary)
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
-
+    return report, page_url
 
 
 

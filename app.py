@@ -27,6 +27,7 @@ import Database
 import unshortenit
 import json
 import apiai
+import wikipedia
 
 from argparse import ArgumentParser
 from flask import Flask, request, abort
@@ -2281,6 +2282,7 @@ class Function:
 
                     # If after append the temporary text, the letter count will surpass 850, then don't append it, and end the process
                     else:
+                        result.append("\n...")  # Just to make sure it's not cut ungracefully
                         break
 
                 # Convert result to string and return it
@@ -2361,7 +2363,6 @@ class Function:
 
                 # Generate button template
                 text = Lines.wiki_search("ask detail info")
-                #header_pic = Picture.header("background")
                 buttons_template = ButtonsTemplate(text=text, actions=[
                     URITemplateAction(label=Labels.confirmation("yes"), uri=str(page_url_mod))
                 ])
@@ -2369,6 +2370,28 @@ class Function:
 
                 # Send the template
                 line_bot_api.push_message(address, template_message)
+
+            def back_up_summary(keyword, language="en"):
+                """ Function to run as back up of main function """
+
+                report = []
+
+                # Set page language
+                wikipedia.set_lang(language)
+
+                # Get page title
+                back_up_wikipedia_page = wikipedia.page(keyword)
+                report.append(back_up_wikipedia_page.title)
+                report.append(" ")
+
+                # Get page url
+                page_url = back_up_wikipedia_page.url
+
+                # Get page summary, cap to about 760 char
+                back_up_wikipedia_summary = wikipedia.summary(keyword, chars=760)
+                report.append(back_up_wikipedia_summary)
+
+                return report, page_url
 
             # General variable
             report = []
@@ -2398,9 +2421,18 @@ class Function:
 
                 # If failed to open the page, send notice and end the process
                 except:
-                    report.append(Lines.wiki_search("page not found") % (language, keyword))
-                    report.append(Lines.wiki_search("try different keyword / language"))
-                    report.append("https://meta.wikimedia.org/wiki/List_of_Wikipedias")
+
+                    # Last resort try to use wikipedia api (credit to : Jonathan Goldsmith)
+                    try:
+                        report, page_url = back_up_summary(keyword, language=language)
+                        request_detailed_info = True
+
+                    # If back up crawler still won't work, send notice and end the process
+                    except:
+                        report.append(Lines.wiki_search("page not found") % (language, keyword))
+                        report.append(Lines.wiki_search("try different keyword / language"))
+                        report.append("https://meta.wikimedia.org/wiki/List_of_Wikipedias")
+
                     cont = False
 
             # If the wiki page is available, try to get the title and paragraph
