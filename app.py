@@ -3532,6 +3532,7 @@ class Function:
         # Else send default manual
         else:
 
+            # Base data to fill the manual
             title = ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities", "Still learning~", "Dev only :>"]
             carousel_text = ["Some simple things I can do ~",
                              "Some information about our lovely planet",

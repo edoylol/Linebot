@@ -561,7 +561,7 @@ functionlist = {
       ]
    },
    "Youtube download": {
-      "description": "Youtube download\n\nWell.. I heard that youtube doesn't give access to download their videos.. But no worries, I'm here to help you out~ \nJust put in the video link, (and maybe format or size you want) and hopla... I have the video right there... ^^",
+      "description": "Youtube download\n\nWell.. I heard that youtube doesn't give access to download their videos.. but no worries, I'm here to help you out~ \nJust put in the video link, (and maybe format or size you want) and hopla... I have the video right there... ^^",
       "tips": "Try to say download youtube <link>, you can specify the quality like <min 360p> or <mp4>,, try it out yourself ;) \n\nDev's note : I forgot how to use this to be honest, I always let meg to decide the format ;)",
       "example": [
          "meg, save this https://www.youtube.com/watch?v=i9OAv8-b3LY youtube video",
