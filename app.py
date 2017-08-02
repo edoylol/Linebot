@@ -3511,23 +3511,32 @@ class Function:
                     function_name = item
             function_description = function_list[function_name]["description"]
             function_tips = function_list[function_name]["tips"]
-            function_examples = random.sample(set(function_list[function_name]["example"]), 3)
 
             # Re-format the manuals
             report = "{}\n\nTips : {}".format(function_description, function_tips)
+
+            # Send the manuals
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            # Generate button to see example
-            report = Lines.show_manual("see example?")
-            buttons_template = ButtonsTemplate(text=report, actions=[
-                MessageTemplateAction(label='Try..', text=function_examples[0]),
-                MessageTemplateAction(label='Try..', text=function_examples[1]),
-                MessageTemplateAction(label='Try..', text=function_examples[2])
-            ])
+            # Generate prompt to show examples
+            try:
+                function_examples = random.sample(set(function_list[function_name]["example"]), 3)
 
-            # Send the confirmation
-            template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
-            line_bot_api.push_message(address, template_message)
+                # Generate button to see example
+                report = Lines.show_manual("see example?")
+                buttons_template = ButtonsTemplate(text=report, actions=[
+                    MessageTemplateAction(label='Try..', text=function_examples[0]),
+                    MessageTemplateAction(label='Try..', text=function_examples[1]),
+                    MessageTemplateAction(label='Try..', text=function_examples[2])
+                ])
+
+                # Send the confirmation
+                template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
+
+            # For Dev mode only, there's no available example
+            except:
+                pass
 
         # Else send default manual
         else:
