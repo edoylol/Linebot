@@ -3,8 +3,7 @@
 
 """ DICTIONARY TO USERLIST DICTIONARY """
 
-userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori',
-            'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
+userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi'}
 
 aloy_goes_to_afaid = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
 family = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori'}

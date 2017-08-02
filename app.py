@@ -3444,6 +3444,7 @@ class Function:
             try:
                 print("=================================== NEW USER LIST ===================================\n")
                 print(userlist)
+                time.sleep(5)
                 print("\n================================= END OF USER LIST =================================")
                 reply = Lines.dev_mode_userlist("print userlist success") % userlist_update_count
                 userlist_update_count = 0
