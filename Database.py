@@ -3,12 +3,23 @@
 
 """ DICTIONARY TO USERLIST DICTIONARY """
 
-userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi'}
+userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',
+            'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi', 'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
 
-aloy_goes_to_afaid = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han'}
-family = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori'}
+aloy_goes_to_afaid = {
+    'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',
+    'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han',
+    'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
+
+family = {
+    'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',
+    'Ue93cccad22d1bff67371b9bdad100653': 'Shiori',
+    'Ufb20f88482e503b801c8a59cd7f188d4': 'novi'
+    }
+
 devlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D'}
 dummy_account = {'U77035fb1a3afewefbe5631c408526d0b': 'test bot'}
+
 list_dictionary = {"userlist": userlist, "aloy_afaid": aloy_goes_to_afaid, "family": family, "dev": devlist, "dummy": dummy_account}
 
 

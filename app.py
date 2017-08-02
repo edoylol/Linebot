@@ -3542,6 +3542,16 @@ class Function:
         # Else send default manual
         else:
 
+            def dev_mode_extension_check():
+                """ Function to check whether dev mode extension is enabled """
+
+                if all(word in text for word in ["dev", "mode"]):
+                        dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                        if dev_extension_user_check:
+                            return True
+
+                return False
+
             # Base data to fill the manual
             title = ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities", "Still learning~", "Dev only :>"]
             carousel_text = ["Some simple things I can do ~",
@@ -3596,21 +3606,23 @@ class Function:
             template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
-            # Generate manual extension pack
-            carousel_template = CarouselTemplate(columns=[
-                CarouselColumn(title=title[5], text=carousel_text[5][:60], actions=[
-                    PostbackTemplateAction(label=function_list[5][0], data=str(command + function_list[5][0])),
-                    PostbackTemplateAction(label=function_list[5][1], data=str(command + function_list[5][1])),
-                    PostbackTemplateAction(label=function_list[5][2], data=str(command + function_list[5][2]))]),
-                CarouselColumn(title=title[6], text=carousel_text[6][:60], actions=[
-                    PostbackTemplateAction(label=function_list[6][0], data=str(command + function_list[6][0])),
-                    PostbackTemplateAction(label=function_list[6][1], data=str(command + function_list[6][1])),
-                    PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))])
-            ])
+            enable_dev_mode_extension = dev_mode_extension_check()
+            if enable_dev_mode_extension:
+                # Generate manual extension pack
+                carousel_template = CarouselTemplate(columns=[
+                    CarouselColumn(title=title[5], text=carousel_text[5][:60], actions=[
+                        PostbackTemplateAction(label=function_list[5][0], data=str(command + function_list[5][0])),
+                        PostbackTemplateAction(label=function_list[5][1], data=str(command + function_list[5][1])),
+                        PostbackTemplateAction(label=function_list[5][2], data=str(command + function_list[5][2]))]),
+                    CarouselColumn(title=title[6], text=carousel_text[6][:60], actions=[
+                        PostbackTemplateAction(label=function_list[6][0], data=str(command + function_list[6][0])),
+                        PostbackTemplateAction(label=function_list[6][1], data=str(command + function_list[6][1])),
+                        PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))])
+                ])
 
-            # Send extension manual
-            template_message = TemplateSendMessage(alt_text="Megumi's manual - extension ", template=carousel_template)
-            line_bot_api.push_message(address, template_message)
+                # Send extension manual
+                template_message = TemplateSendMessage(alt_text="Megumi's manual - extension ", template=carousel_template)
+                line_bot_api.push_message(address, template_message)
 
 
 class OtherUtil:
