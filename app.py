@@ -61,7 +61,7 @@ app = Flask(__name__)
 
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
-api_ai_access_token = '345a68d18548429a9a69f9b0b7a7c857'
+api_ai_access_token = '4ead94fa71234f82af81f8e92e72962a'
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
@@ -177,6 +177,9 @@ def message_text(event):
             print("ACTION :", megumi_action)
         except:
             megumi_action = "Function_false"
+
+        if any(word in text for word in ["stalk","instagram","insta"]):
+            megumi_action = "Function_stalk_instagram"
 
         # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
