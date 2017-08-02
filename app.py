@@ -3378,6 +3378,7 @@ class Function:
             MessageTemplateAction(label=ans_no, text=ans_no)])
         template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
         line_bot_api.push_message(address, template_message)
+        print("SHOW MANUAL PROMPT SENT")
 
         # Send notice when someone added
         report = Lines.added("report") % (user, user_id)
