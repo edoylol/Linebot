@@ -3508,7 +3508,7 @@ class Function:
             command = "Manual : "
 
             # Create default manual header
-            report = Lines.show_manual("header")
+            report = [Lines.show_manual("header")]
             report.append(Lines.show_manual("tips"))
             report = "\n".join(report)
 
