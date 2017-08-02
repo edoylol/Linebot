@@ -76,10 +76,3 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-
-function_list = Database.functionlist
-function_name = "Anime download link"
-requested_function = "anime download link"
-for x in function_list:
-    if requested_function in x.lower():
-        print(x)

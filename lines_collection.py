@@ -847,7 +847,8 @@ class Lines:  # class to store respond lines
                      "\nfriendly tips : Don't worry if you input wrong command, I will let you know..",
                      "\nfriendly tips : I am still learning, that's why don't hesitate to tell me if I'm wrong or if you have new suggestion",
                      "\nfriendly tips : Use report bug function to send feedback for better future !",
-                     "\nfriendly tips : Practice make's perfect, so train me to get better and better !"]
+                     "\nfriendly tips : Practice make's perfect, so train me to get better and better !",
+                     "\nfriendly tips : There are many different type of examples for one function, try them all ! "]
         elif cond == "see example?":
             lines = ["Would you like to try it ?",
                      "Let's test it out ~",

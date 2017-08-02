@@ -3511,22 +3511,22 @@ class Function:
                     function_name = item
             function_description = function_list[function_name]["description"]
             function_tips = function_list[function_name]["tips"]
-            function_examples = function_list[function_name]["example"]
+            function_examples = random.sample(set(function_list[function_name]["example"]), 3)
 
             # Re-format the manuals
             report = "{}\n\nTips : {}".format(function_description, function_tips)
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            # Generate confirmation to see example
+            # Generate button to see example
             report = Lines.show_manual("see example?")
-            ans_yes = Labels.confirmation("yes")
-            ans_no = Labels.confirmation("no")
-            confirm_template = ConfirmTemplate(text=report, actions=[
-                MessageTemplateAction(label=ans_yes, text=random.choice(function_examples)),
-                MessageTemplateAction(label=ans_no, text=ans_no)])
+            buttons_template = ButtonsTemplate(text=report, actions=[
+                MessageTemplateAction(label='Try..', text=function_examples[0]),
+                MessageTemplateAction(label='Try..', text=function_examples[1]),
+                MessageTemplateAction(label='Try..', text=function_examples[2])
+            ])
 
             # Send the confirmation
-            template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+            template_message = TemplateSendMessage(alt_text=report, template=buttons_template)
             line_bot_api.push_message(address, template_message)
 
         # Else send default manual
