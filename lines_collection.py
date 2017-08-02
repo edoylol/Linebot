@@ -1181,7 +1181,7 @@ class Lines:  # class to store respond lines
 
     @staticmethod
     def megumi():
-        return ['megumi ', 'kato ', 'meg ', 'megumi,', 'kato,', 'meg,']
+        return ['megumi', 'kato', 'meg', 'megumi,', 'kato,', 'meg,']
 
     @staticmethod
     def jessin():

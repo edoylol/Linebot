@@ -76,3 +76,22 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+page_url = "https://www.instagram.com/n_godjali/"
+req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+con = urllib.request.urlopen(req)
+page_source_code_text = con.read()
+mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+rawdatas = mod_page.find_all("script")
+temp = []
+for x in rawdatas:
+    temp.append(str(x))
+rawdatas = max(temp, key=len)
+
+text = rawdatas
+index_start = text.find("{")
+index_stop = text.rfind("}")+1
+rawdatas = text[index_start:index_stop]
+
+print(rawdatas)
