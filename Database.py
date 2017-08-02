@@ -3,13 +3,16 @@
 
 """ DICTIONARY TO USERLIST DICTIONARY """
 
-userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi', 'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
+userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D', 'Ubd609793f36b54db7ce9fbe175b18db2': 'arvel', 'U86bb289de3a717627a10660344848785': '❄ Mansen ゆき', 'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi', 'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
 
 aloy_goes_to_afaid = {
     'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',
     'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han',
     'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G',
-    'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora'}
+    'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora',
+    'Ubd609793f36b54db7ce9fbe175b18db2': 'arvel',
+    'U86bb289de3a717627a10660344848785': '❄ Mansen ゆき'
+}
 
 family = {
     'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',

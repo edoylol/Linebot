@@ -18,7 +18,7 @@ class Lines:  # class to store respond lines
                      "I kinda have the %s data somehow..,\nBut I can't gather the information you want right now.. ",
                      "Ugh... %s data is somehow different from normal data,..\nI can't send it to you unless I know it's safe...",
                      "It's weird...I can't prettify the %s data...\nI'm sure you don't want a messy data right? "]
-        elif cond == "search fail":  # Take 1 argument : where the process happen
+        elif cond == "search fail":  # Take 1 argument : something being searched
             lines = ["Try to put the %s, I need it ^^ ",
                      "Seems there's no %s ._. ",
                      "I don't see any %s ._. ",
@@ -862,6 +862,39 @@ class Lines:  # class to store respond lines
                      "Would you like to know what can I do? :)",
                      "Do you want to know me better ? :)"]
 
+        else:
+            lines = [""]
+
+        return random.choice(lines)
+
+    @staticmethod
+    def stalk_instagram(cond):
+
+        if cond == "header":  # Take 1 argument : keyword
+            lines = ["{} ? Wait a second.. I will try to stalk... :> ",
+                     "Sure.. Wait...trying to get {} information for you ",
+                     "Hmm... Stalking is not a good habit...\nBut who cares right ? :>",
+                     "Stalking {} .... Someone tried to stalk {}....\n#teehee...",
+                     "Megumi used 'stalk' to {}...\n.\n.\n.\nGotcha !!"]
+        elif cond == "private":
+            lines = ["Oops... Seems the page is private :P",
+                     "This page is private dude... Try other one...",
+                     "P R I V A T E ..... You have to pay me more for this page :>",
+                     "I have it already... But you have to pay me some moneh for this :P\n\n#JK.. Its private..",
+                     "Seems I can't stalk this page...They rejected my request to stalk .-. \n\nI did politely ask 'can I stalk here?'... "]
+        elif cond == "user information header":
+            lines = ["Here's some information about him/her...\n",
+                     "Here you go... \n",
+                     "I'm back ~ \n",
+                     "I'm back with something you want :)",
+                     "Stalk operation success ! :> "]
+
+        elif cond == "picture count 0":
+            lines = ["This user seems haven't post anything yet",
+                     "I don't see any picture to send..",
+                     "This user doesn't have any picture yet..",
+                     "I'm pretty sure this account is inactive",
+                     "I wonder if this user never posted anything yet.."]
         else:
             lines = [""]
 
