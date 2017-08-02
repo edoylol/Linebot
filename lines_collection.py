@@ -831,6 +831,30 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     @staticmethod
+    def show_manual(cond):
+
+        if cond == "header":
+            lines = ["Manual? Okay, wait a second...",
+                     "Sure... Wait a second :)",
+                     "Do you need help? Wait a second :)",
+                     "Sure..Megumi's manuals coming~",
+                     "Summoning Megumi's manuals ~"]
+        elif cond == "tips":
+            lines = ["\nfriendly tips : I can handle many different input format, try it out yourself ~"
+                     "\nfriendly tips : Don't let me disappoint you, I learn every time you talk to me",
+                     "\nfriendly tips : Try out other way to call my functions, there're lots of different ways to do it",
+                     "\nfriendly tips : You have to include my name, otherwise I won't help you :3",
+                     "\nfriendly tips : Don't worry if you input wrong command, I will let you know..",
+                     "\nfriendly tips : I am still learning, that's why don't hesitate to tell me if I'm wrong or if you have new suggestion",
+                     "\nfriendly tips : Use report bug function to send feedback for better future !",
+                     "\nfriendly tips : Practice make's perfect, so train me to get better and better !"]
+
+        else:
+            lines = [""]
+
+        return random.choice(lines)
+
+    @staticmethod
     def join(cond):
 
         if cond == "join":

@@ -352,216 +352,223 @@ anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupl
                   "datafilehost": 84, "uptobox": 42, "katfile": 100}
 
 """ DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
-
+# Last updated 2 August 2017 : 21 Function listed
 functionlist = {
-  "Anime download link": {
-    "description": "Anime download link\n\nI can help you gather the anime download links if you know it's pasted. co link, mirror creator link, or simply the title as long it's listed in the cyber12 2016-2017 database\nI use cyber12 simply because of their great-quality encoding :3\nanyway, I use zippyshare as default, but you can request your favourite host like solidfiles, dropjify, etc.\nYou can also specify which episode to start with :>\n\nDon't worry, I will try my best to help you out ~ ",
-    "example": [
-      "Meg, show me this 'https://www.mirrorcreator.com/files/1ORJQKM3' anime download link",
-      "Please show me download link for 'kakegurui' anime ep 3 meg",
-      "Meg, download link for 'eromanga' ep 11 from solidfiles please... ",
-      "Meg, request 'apocrypha' anime download link ep 23 from dropjify",
-      "Show me 'Love Live Sunshine' anime download link ep 12 meg.."
-    ]
-  },
-  "Choose one": {
-    "description": "Choose on\n\nI can help you choose if you can't make up your mind :>\nJust put a '#' before the options :)\n\nDon't worry, I will be as fair as possible :3",
-    "example": [
-      "meg, choose between #han or #toto",
-      "meg, which one do you like ? #spagetty or #pasta ?",
-      "#romance #comedy or #pyscho ? which one meg ?",
-      "meg, do you prefer to #take-a-bath first or #eat-first ?",
-      "meg, do you like Han? #yes #no"
-    ]
-  },
-  "Cinema's schedule": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Convert": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Default reply": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Dev : Print userlist": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Dev : Set notifier": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Echo": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Fact or Hoax": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "ITB-ARC Database": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Manuals": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "News": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Random number": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Report Bug": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "SW wiki": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Send Invite": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Time & Date": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Translate": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Weather forecast": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Wiki search": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  },
-  "Youtube download": {
-    "description": "lalala",
-    "example": [
-      "a",
-      "b",
-      "c",
-      "d",
-      "e"
-    ]
-  }
+   "Anime download link": {
+      "description": "Anime download link\n\nI can help you gather the anime download links as long it's listed in the cyber12 2016-2017 database\nAnyway, I use zippyshare as default, but you can request your favourite host like solidfiles, dropjify, etc.\nYou can also specify which episode to start with :>\n\nDon't worry, I will try my best to help you out \nLong Live WEEBS~ ",
+      "tips": "Try to say download anime <'title'>, or maybe extra specified like <ep 3> or <from solidfiles> etc.",
+      "example": [
+         "Meg, show me this 'https://www.mirrorcreator.com/files/1ORJQKM3' anime download link",
+         "Please show me download link for 'kakegurui' anime ep 3 meg",
+         "Meg, download link for 'eromanga' ep 11 from solidfiles please... ",
+         "Meg, request 'apocrypha' anime download link ep 23 from dropjify",
+         "Show me 'Love Live Sunshine' anime download link ep 12 meg.."
+      ]
+   },
+   "Choose one": {
+      "description": "Choose one\n\nI can help you choose something if you can't make up your mind :>\nJust put a '#' before the options :)\n\nDon't worry, I will be as fair as possible :3",
+      "tips": "Try to say choose #something #something in any format you want ~ :>",
+      "example": [
+         "meg, choose between #han or #toto",
+         "meg, which one do you like ? #spagetty or #pasta ?",
+         "#romance #comedy or #pyscho ? which one meg ?",
+         "meg, do you prefer to #take-a-bath first or #eat-first ?",
+         "meg, do you like Han? #yes #no"
+      ]
+   },
+   "Cinema's schedule": {
+      "description": "Show cinema's movie schedule\n\nI think you will love this :)\nI can gather today movies schedules from specified xxi or cgv. Just ask, and I will get it ready for you...\nSadly dev doesn't give me allowance to pay for your ticket though :P",
+      "tips": "Try to say show <xxi/cgv> <cinema> movie schedule/ list/ playing in any format you want~ :) ",
+      "example": [
+         "Meg, show me xxi tsm movie schedule",
+         "Show me cgv movie schedule meg",
+         "Can you show me xxi citylink movie list, meg?",
+         "meg, what movies playing at cgv paris van java ?",
+         "Meg, what movies are playing at grand indonesia ?"
+      ]
+   },
+   "Convert": {
+      "description": "Sadly I'm still trying my best to memorize all constants and multipliers :'>",
+      "tips": "Not yet available",
+      "example": [
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~"
+      ]
+   },
+   "Default reply": {
+      "description": "Default reply\n\nTry to say something general or ask me some random question, I'll try my best to answer it :)\nForgive me if I don't understand some of it... I'm still learning :)\nps: Think of me as your baby girl learning to talk :P",
+      "tips": "Try to ask random question or say random daily things and let's see if I can reply with the answer you want :P ",
+      "example": [
+         "meg, goodnight. I'm going to sleep",
+         "where do you live meg ?",
+         "meg, how old are you right now ?",
+         "Meg, do you have any hobbies ?",
+         "are you here meg ?"
+      ]
+   },
+   "Dev : Print userlist": {
+      "description": "Dev : Print userlist\n<Developer only>\nMegumi will try to memorise everyone's name, so I will be able to know more and more about you :)",
+      "tips": "Try to say Dev Mode print userlist (only available in dev mode)"
+   },
+   "Dev : Set notifier": {
+      "description": "Dev : Enable/disable notifier\n<Developer only>\nMegumi will tell dev when their name is being called \nHow about trying to call him here ? :p",
+      "tips": "Try to say Dev mode enable / disable notifier (only available in dev mode)"
+   },
+   "Echo": {
+      "description": "Echo\n\nWell.. you should know what I will do here right ? XD \nI will say anything you put between aphostrhope ",
+      "tips": "Try to say something in <'something'> and include <say> in your text, you can go in any format though...",
+      "example": [
+         "meg, say 'i love you ~'",
+         "say 'EKUSUPUROSIONNNN' meg",
+         "meg, say 'nyaaa nyaa nyaa nyaaa~ :3 ' ",
+         "meg, repeat after me, say 'Idolmaster is better than lovelive !'",
+         "meg , say 'pineapple on pizza is delicious' :) "
+      ]
+   },
+   "Fact or Hoax": {
+      "description": "Ssstt...I'm spying flat earth community to prove them that earth is not flat ! NYAHAHAHA\n\n\n....oops... ",
+      "tips": "Not yet available",
+      "example": [
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~"
+      ]
+   },
+   "ITB-ARC Database": {
+      "description": "ITB-ARC Database\n\nWell.. This kinda leak information to outsiders but who care :v\nThey don't pay me to keep their secret...#ssst~\n\nI think they are updating the database right now, so you can't access it anyway.... ",
+      "tips": "Try to include <itb> in your chat together with <'keyword'>, it can be nim or name ",
+      "example": [
+         "meg, who has '16316123' nim in itb ?",
+         "meg, show me information about itb students 'ozora'",
+         "meg, show me students with name begin with 'kevin' in itb",
+         "meg, show me students with last name 'Wijaya' in itb",
+         "meg, do you have information about itb students 'Riona' ? :3 "
+      ]
+   },
+   "Manuals": {
+      "description": "Megumi's manuals\n\nYou probably know how to use this already don't you ? .-. \nJust learn by playing with me :) you will know how to use it by default xD",
+      "tips": "Try to say 'show manuals' or 'can you help me' to request full manuals :) ",
+      "example": [
+         "Meg, can you help me ?",
+         "Show me your manual guide meg",
+         "Meg, please show me your manual book",
+         "show help please meg",
+         "Meg, please help me with your manual guide.."
+      ]
+   },
+   "News": {
+      "description": "Megumi's currently offline..\n\nps: Journalism class is still going on.. Talk to you later..",
+      "tips": "Not yet available",
+      "example": [
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~",
+         "touch~"
+      ]
+   },
+   "Random number": {
+      "description": "Random number\n\nI will be your RNG goddess~ \n\nOr maybe a dice.... ",
+      "tips": "Try to say 'number to number' (or something similar) on your chat and I will be your RNG ~ ",
+      "example": [
+         "Meg, choose one number between 11 to 23",
+         "choose one from 1 to 15 meg",
+         "meg, 11 to 15 , which one ?",
+         "from 1 to 12 which one do you like meg ?",
+         "Pick one number between 55 and 99 meg"
+      ]
+   },
+   "Report Bug": {
+      "description": "Report bug\n\nWell if someday you found something wrong, don't hesitate to report it. Megumi will take note if you told me to :)\nBut please don't joke around too much, otherwise dev will get angry at me",
+      "tips": "Just include 'report bug' on your chat and I will report that ~ ",
+      "example": [
+         "Meg, report this bug : I'm not cool enough ~",
+         "Please report bug meg... I don't like my face... #slap",
+         "Meg, please report this bug, he just bite me... #pun",
+         "I think you should report this bug meg...This manual book isn't working as it suppose to ...",
+         "meg, don't forget to report to dev that this report bug thing is unusable... "
+      ]
+   },
+   "SW wiki": {
+      "description": "Summonerswar Wiki\n\nSince dev play this game a lot while building me, I got to know some (Well alot) Information about this game\nFell free to ask monster's stats, skills, review, or maybe ratings. ",
+      "tips": "Just include 'sw' or 'summonerswar' on your chat and I will search for that monster on sw wiki",
+      "example": [
+         "Meg, show me info about sw orion",
+         "Show me the skill of ganymede sw meg",
+         "meg, show info about sw 'feng yan'",
+         "I need the skill of anavel sw meg",
+         "meg, show bastet sw info please"
+      ]
+   },
+   "Send Invite": {
+      "description": "Send Invitation\n\nWell technically it isn't restricted to dev only, but I dont think you try to use this unless you really know what you are doing :3\nYou might invite wrong creatures and you are doomed...#JK",
+      "tips": "Try to say send invite to <participant list> and include <'header'> if you need it..",
+      "example": [
+         "Meg, send invite to dummy 'lets go out tonight' ",
+         "Send invite to dev meg ~",
+         "meg, please send invite to dummy ",
+         "Meg, send invite 'afaid?' to dummy ",
+         "meg Send invite to dummy : 'eat now?'"
+      ]
+   },
+   "Time & Date": {
+      "description": "Time & Date\n\nI wonder why dev teach me this,, but since I've learnt it, I will answer if you ask about time and date around the world right now..\n\nOh, I'm still memorizing country time zone, so maybe you can help me out by saying the timezone explicitly ? ",
+      "tips": "Try to ask what time or day or date is today, you can add the timezone if you want to.. \nI know.. sound's useless right... .-.",
+      "example": [
+         "What time is it in gmt+2 meg ?",
+         "Meg, what day is today ?",
+         "What time is it now meg ?",
+         "meg, what time is it in gmt-2 ?",
+         "tell me what time is it in gmt right now meg"
+      ]
+   },
+   "Translate": {
+      "description": "Translate\n\nFufufu :V :V megumi is ready to travel all around the world xD \nwell.. I'm not sure my language skill is very good, but at least I think it's usable~",
+      "tips": "Try to ask how do say <'something'> in <language>, or simply translate <'something'> to <language> ",
+      "example": [
+         "meg, how do you say 'wasabi power' in japanese ?",
+         "How do you say 'good morning' in german meg ?",
+         "What does 'tahu' mean in english meg ?",
+         "meg, translate 'Saya ingin begini ,saya ingin begitu' to japanese",
+         "meg, what does 'gutten morgan' means ?"
+      ]
+   },
+   "Weather forecast": {
+      "description": "Weather forecast\n\nI'm not a goddess who able to control weather, but I did watch and take note from this morning news... :> #JK",
+      "tips": "Try to ask how's the weather (or forecast) looks like, you can also specify the place ",
+      "example": [
+         "meg, what's the weather looks like ?",
+         "meg, show me weather forecast",
+         "meg, what's weather looks like in tokyo ?",
+         "Show me weather forecast for beijing meg",
+         "Show me weather condition in jakarta meg"
+      ]
+   },
+   "Wiki search": {
+      "description": "Wiki Search\n\nI learnt how to browse wiki to get information,..Typical of a student isn't it ?\nAnyway, try to add the keyword and wrap it in aposthrope, so I'm sure which one should I search for..",
+      "tips": "Try to say what is <'keyword'> ? or show information about <'something'> ,, This one is pretty flexible, try it your own :)",
+      "example": [
+         "meg, search for 'ganymede (moon)'",
+         "meg, what is 'Hatsune Miku'? ",
+         "meg, what is 'lumberjack' ?",
+         "meg, show info about 'intel'",
+         "meg, can you show me ganesha definition ? "
+      ]
+   },
+   "Youtube download": {
+      "description": "Youtube download\n\nWell.. I heard that youtube doesn't give access to download their videos.. But no worries, I'm here to help you out~ \nJust put in the video link, (and maybe format or size you want) and hopla... I have the video right there... ^^",
+      "tips": "Try to say download youtube <link>, you can specify the quality like <min 360p> or <mp4>,, try it out yourself ;) \n\nDev's note : I forgot how to use this to be honest, I always let meg to decide the format ;)",
+      "example": [
+         "meg, save this https://www.youtube.com/watch?v=i9OAv8-b3LY youtube video",
+         "meg, can you download this youtube video ?  https://www.youtube.com/watch?v=v1qjJuZV1H0",
+         "please download this youtube video : https://www.youtube.com/watch?v=V5BrhYHj2Vg meg",
+         "meg, can you download https://www.youtube.com/watch?v=3qa_czWTNIc (youtube video) ?",
+         "meg, can you download this youtube video ?  https://www.youtube.com/watch?v=v1qjJuZV1H0"
+      ]
+   }
 }
