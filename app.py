@@ -3361,12 +3361,12 @@ class Function:
             user_id = event.source.user_id
             user = userlist[user_id]
         except:
-            user_id = "id not available"
+            user_id = address
             user = "someone"
 
         # Send greetings when added
         report = Lines.added("added")
-        line_bot_api.push_message(address, TextSendMessage(text=report))
+        line_bot_api.push_message(user_id, TextSendMessage(text=report))
 
         # Send prompt to show megumi's manual
         report = Lines.show_manual("see manual?")
@@ -3377,8 +3377,7 @@ class Function:
             PostbackTemplateAction(label=ans_yes, text=ans_yes, data=command),
             MessageTemplateAction(label=ans_no, text=ans_no)])
         template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
-        line_bot_api.push_message(address, template_message)
-        print("SHOW MANUAL PROMPT SENT")
+        line_bot_api.push_message(user_id, template_message)
 
         # Send notice when someone added
         report = Lines.added("report") % (user, user_id)
