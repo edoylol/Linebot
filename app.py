@@ -3486,8 +3486,35 @@ class Function:
     def show_manual(cond="default"):
         """ Function to send other function manuals """
 
+        # If it's postback event
         if cond == "postback":
-            print(text)
+            requested_function = text[9:]
+
+            # Get the manual data
+            function_list = Database.functionlist
+            function_name = ""
+            for item in function_list:
+                if requested_function in item.lower():
+                    function_name = item
+            function_description = function_list[function_name]["description"]
+            function_tips = function_list[function_name]["tips"]
+            function_examples = function_list[function_name]["example"]
+
+            # Re-format the manuals
+            report = "{}\n\nTips : {}".format(function_description, function_tips)
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            # Generate confirmation to see example
+            report = Lines.show_manual("see example?")
+            ans_yes = Labels.confirmation("yes")
+            ans_no = Labels.confirmation("no")
+            confirm_template = ConfirmTemplate(text=report, actions=[
+                MessageTemplateAction(label=ans_yes, text=random.choice(function_examples)),
+                MessageTemplateAction(label=ans_no, text=ans_no)])
+
+            # Send the confirmation
+            template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+            line_bot_api.push_message(address, template_message)
 
         # Else send default manual
         else:
@@ -3496,15 +3523,15 @@ class Function:
             carousel_text = ["Some simple things I can do ~",
                              "Some information about our lovely planet",
                              "Most used function up until now..",
-                             "Some top secret about.."
+                             "Some top secret about..",
                              "Some other things I can help you with",
                              "Well... the title describe it already :3",
                              "Sorry,, this is for dev only"]
             function_list = [
                 ["Random number", "Choose one", "Echo"],
                 ["Time & Date", "Weather forecast", "Translate"],
-                ["Anime download link", "Cinema's schedule", "Wiki search" ],
-                ["Youtube download", "ITB-ARC Database", "SW wiki"],
+                ["Anime download link", "Cinema's schedule", "Youtube download"],
+                ["Wiki search", "ITB-ARC Database", "SW wiki"],
                 ["Default reply", "Manuals", "Report Bug"],
                 ["Convert", "Fact or Hoax", "News"],
                 ["Dev : Print userlist", "Dev : Set notifier", "Send Invite"]
