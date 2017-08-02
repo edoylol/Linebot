@@ -871,11 +871,11 @@ class Lines:  # class to store respond lines
     def stalk_instagram(cond):
 
         if cond == "header":  # Take 1 argument : keyword
-            lines = ["{} ? Wait a second.. I will try to stalk... :> ",
-                     "Sure.. Wait...trying to get {} information for you ",
-                     "Hmm... Stalking is not a good habit...\nBut who cares right ? :>",
-                     "Stalking {} .... Someone tried to stalk {}....\n#teehee...",
-                     "Megumi used 'stalk' to {}...\n.\n.\n.\nGotcha !!"]
+            lines = ["{0} ? Wait a second.. I will try to stalk... :> ",
+                     "Sure.. Wait...trying to get {0} information for you ",
+                     "Hmm... Stalking is not a good habit...\nBut who cares right ? :>\nStalking {0}",
+                     "Stalking {0} .... Someone tried to stalk {0}....\n#teehee...",
+                     "Megumi used 'stalk' to {0}...\n.\n.\n.\nGotcha !!"]
         elif cond == "private":
             lines = ["Oops... Seems the page is private :P",
                      "This page is private dude... Try other one...",
