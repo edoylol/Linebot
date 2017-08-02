@@ -854,6 +854,12 @@ class Lines:  # class to store respond lines
                      "Try it now ?",
                      "See example ?",
                      "Try this out ?"]
+        elif cond == "see manual?":
+            lines = ["Would you like to see Megumi's manual ?",
+                     "Wanna see Meg's manual ? :> ",
+                     "I can do some things to help you, wanna see ? :)",
+                     "Would you like to know what can I do? :)",
+                     "Do you want to know me better ? :)"]
 
         else:
             lines = [""]

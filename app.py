@@ -277,6 +277,7 @@ def handle_postback(event):
         elif all(word in text for word in ["stats"])                                    : Function.summonerswar_wiki("show stats")
         elif all(word in text for word in ["skills"])                                   : Function.summonerswar_wiki("show skills")
 
+    elif all(word in text for word in ["show megumi manual"])                       : Function.show_manual()
     elif all(word in text for word in ["manual : "])                                : Function.show_manual("postback")
 
     elif all(word in text for word in ["megumi dev mode print userlist"])           :
@@ -3360,11 +3361,23 @@ class Function:
             user_id = event.source.user_id
             user = userlist[user_id]
         except:
+            user_id = "id not available"
             user = "someone"
 
         # Send greetings when added
         report = Lines.added("added")
         line_bot_api.push_message(address, TextSendMessage(text=report))
+
+        # Send prompt to show megumi's manual
+        report = Lines.show_manual("see manual?")
+        ans_yes = Labels.confirmation("yes")
+        ans_no = Labels.confirmation("no")
+        command = "show megumi manual"
+        confirm_template = ConfirmTemplate(text=report, actions=[
+            PostbackTemplateAction(label=ans_yes, text=ans_yes, data=command),
+            MessageTemplateAction(label=ans_no, text=ans_no)])
+        template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+        line_bot_api.push_message(address, template_message)
 
         # Send notice when someone added
         report = Lines.added("report") % (user, user_id)
