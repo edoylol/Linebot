@@ -3550,8 +3550,13 @@ class Function:
                 ])
 
             template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
-            line_bot_api.push_message(address, template_message)
-
+            try:
+                line_bot_api.push_message(address, template_message)
+            except LineBotApiError as e:
+                print("")
+                print(e.status_code)
+                print(e.error.message)
+                print(e.error.details)
 
 class OtherUtil:
 
