@@ -3512,9 +3512,7 @@ class Function:
             command = "Manual : "
 
             # Create default manual header
-            report = [Lines.show_manual("header")]
-            report.append(Lines.show_manual("tips"))
-            report = "\n".join(report)
+            report = Lines.show_manual("header")+"\n"+Lines.show_manual("tips")
 
             # Send header
             line_bot_api.push_message(address, TextSendMessage(text=report))
@@ -3549,11 +3547,11 @@ class Function:
 
             # Generate manual extension pack
             carousel_template = CarouselTemplate(columns=[
-                CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
+                CarouselColumn(title=title[5], text=carousel_text[5][:60], actions=[
                     PostbackTemplateAction(label=function_list[5][0], data=str(command + function_list[5][0])),
                     PostbackTemplateAction(label=function_list[5][1], data=str(command + function_list[5][1])),
                     PostbackTemplateAction(label=function_list[5][2], data=str(command + function_list[5][2]))]),
-                CarouselColumn(title=title[1], text=carousel_text[1][:60], actions=[
+                CarouselColumn(title=title[6], text=carousel_text[6][:60], actions=[
                     PostbackTemplateAction(label=function_list[6][0], data=str(command + function_list[6][0])),
                     PostbackTemplateAction(label=function_list[6][1], data=str(command + function_list[6][1])),
                     PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))])
