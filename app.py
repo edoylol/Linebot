@@ -2663,8 +2663,8 @@ class Function:
                 report.append("Fullname : " + insta_fullname)
                 report.append("Instagram username: " + insta_username)
                 report.append("Biography : " + insta_biography)
-                report.append("Follower : " + insta_follower)
-                report.append("Following : " + insta_following)
+                report.append("Follower : " + str(insta_follower))
+                report.append("Following : " + str(insta_following))
             except:
                 pass
 
@@ -2684,15 +2684,15 @@ class Function:
 
                 # Format image caption
                 if len(insta_image_caption_list[i]) > 40:
-                    image_caption = "\"" + insta_image_caption_list[i][:40] + "...\""
+                    image_caption = str("\"" + insta_image_caption_list[i][:40] + "...\"")
                 else:
-                    image_caption = "\"" + insta_image_caption_list[i] + "\""
+                    image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
                 # Format image likes count
-                image_like_count = "Liked : " + insta_image_like_list[i]
+                image_like_count = "Liked : " + str(insta_image_like_list[i])
 
                 # Join them together and append to carousel text
-                carousel_text.append(str(image_caption + "\n" + image_like_count))
+                carousel_text.append(image_caption + "\n" + str(image_like_count))
 
                 # Append image link to header pic
                 header_pic.append(insta_image_link_list[i])
