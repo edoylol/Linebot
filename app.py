@@ -3524,7 +3524,7 @@ class Function:
                 CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
                     PostbackTemplateAction(label=function_list[0][0], data=str(command+function_list[0][0])),
                     PostbackTemplateAction(label=function_list[0][1], data=str(command+function_list[0][1])),
-                    PostbackTemplateAction(label=function_list[0][4], data=str(command+function_list[0][2]))]),
+                    PostbackTemplateAction(label=function_list[0][2], data=str(command+function_list[0][2]))]),
                 CarouselColumn(title=title[1], text=carousel_text[1][:60], actions=[
                     PostbackTemplateAction(label=function_list[1][0], data=str(command+function_list[1][0])),
                     PostbackTemplateAction(label=function_list[1][1], data=str(command+function_list[1][1])),
@@ -3543,20 +3543,23 @@ class Function:
                     PostbackTemplateAction(label=function_list[4][2], data=str(command+function_list[4][2]))])
                 ])
 
+            # Send default manual
             template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
+            # Generate manual extension pack
             carousel_template = CarouselTemplate(columns=[
                 CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
                     PostbackTemplateAction(label=function_list[5][0], data=str(command + function_list[5][0])),
                     PostbackTemplateAction(label=function_list[5][1], data=str(command + function_list[5][1])),
-                    PostbackTemplateAction(label=function_list[5][4], data=str(command + function_list[5][2]))]),
+                    PostbackTemplateAction(label=function_list[5][2], data=str(command + function_list[5][2]))]),
                 CarouselColumn(title=title[1], text=carousel_text[1][:60], actions=[
                     PostbackTemplateAction(label=function_list[6][0], data=str(command + function_list[6][0])),
                     PostbackTemplateAction(label=function_list[6][1], data=str(command + function_list[6][1])),
                     PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))])
             ])
 
+            # Send extension manual
             template_message = TemplateSendMessage(alt_text="Megumi's manual - extension ", template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
