@@ -195,7 +195,7 @@ def message_text(event):
             api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
             try:
                 megumi_action = api_ai_response["result"]["action"]
-                print("ACTION :", megumi_action,"BY MEGUMI II")
+                print("ACTION :", megumi_action, "BY MEGUMI II")
             except:
                 megumi_action = "Function_false"
 
@@ -4098,7 +4098,7 @@ class OtherUtil:
                 elif all(word in text for word in ["itb"]):
                     megumi_action = "Function_itb_arc_database"
 
-                elif any(word in text for word in ["mean", "wiki"]):
+                elif any(word in text for word in ["mean", "wiki", "is", "are", "?"]):
                     megumi_action = "Function_wiki_search"
 
                 elif any(word in text for word in ["in"]):
