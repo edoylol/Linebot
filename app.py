@@ -2708,6 +2708,7 @@ class Function:
 
                 # Format image likes count
                 image_like_count = "Liked : " + str(insta_image_like_list[i])
+                print(len(image_like_count))
 
                 # Format image caption
                 if len(insta_image_caption_list[i]) > len(image_like_count):

@@ -79,18 +79,3 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-"""
-url = 'https://hprimary.lelah.ga/analyze'
-
-sess = requests.Session()
-r = sess.options(url)
-print(r)
-print(r.headers)
-
-params = {'query': 'UKT ITB naik dua kali lipat'}
-s = sess.post(url, json=params)
-print(s)
-print(s.json())
-"""
-
-
