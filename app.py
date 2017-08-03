@@ -2710,8 +2710,8 @@ class Function:
                 image_like_count = str(insta_image_like_list[i])+" ♥"
 
                 # Format image caption
-                if len(insta_image_caption_list[i]) > 35:
-                    image_caption = str("\"" + insta_image_caption_list[i][:35] + "...\"")
+                if len(insta_image_caption_list[i]) > 45:
+                    image_caption = str("\"" + insta_image_caption_list[i][:45] + "...\"")
                 else:
                     image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
