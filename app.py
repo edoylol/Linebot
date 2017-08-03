@@ -2661,7 +2661,7 @@ class Function:
                         insta_image_like = item["likes"]["count"]
                         insta_image_like_list.append(insta_image_like)
                     except:
-                        insta_image_like_list.append("-")
+                        insta_image_like_list.append("0")
 
                 # If there's more than 5 item in image_link_list, stop it
                 else:
@@ -2707,16 +2707,16 @@ class Function:
             for i in range(0, image_count):
 
                 # Format image likes count
-                image_like_count = "Liked : " + str(insta_image_like_list[i])
+                image_like_count = str(insta_image_like_list[i])+" ♥"
 
                 # Format image caption
                 if len(insta_image_caption_list[i]) > len(image_like_count):
-                    image_caption = str("\"" + insta_image_caption_list[i][:52-len(image_like_count)] + "...\"")
+                    image_caption = str("\"" + insta_image_caption_list[i][:50-len(image_like_count)] + "...\"")
                 else:
                     image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
                 # Join them together and append to carousel text
-                carousel_text.append(str(image_like_count) + "\n" + image_caption)
+                carousel_text.append(str(image_like_count) + "\n\n" + image_caption)
 
                 # Append image link to header pic
                 header_pic.append(insta_image_link_list[i])
