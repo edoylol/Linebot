@@ -174,65 +174,65 @@ def message_text(event):
 
         if any(word in text for word in Lines.megumi()):
 
-        # Enable direct pass to rules mode
-        # megumi_bot_mode = "bot" in text[:5]
+            # Enable direct pass to rules mode
+            # megumi_bot_mode = "bot" in text[:5]
 
-        # Try to use rules type action-mapping
-        megumi_action = OtherUtil.function_rules_based_mapping(event)
-        OtherUtil.megumi_logger(megumi_action, "Rules")
-        print("ACTION :", megumi_action, "BY RULES")
+            # Try to use rules type action-mapping
+            megumi_action = OtherUtil.function_rules_based_mapping(event)
+            OtherUtil.megumi_logger(megumi_action, "Rules")
+            print("ACTION :", megumi_action, "BY RULES")
 
-        # Send the input text to API.AI for further natural language processing
-        if megumi_action == "Function_false":
-            api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
-            try:
-                megumi_action = api_ai_response["result"]["action"]
-                print("ACTION :", megumi_action)
-            except:
+            # Send the input text to API.AI for further natural language processing
+            if megumi_action == "Function_false":
+                api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
+                try:
+                    megumi_action = api_ai_response["result"]["action"]
+                    print("ACTION :", megumi_action)
+                except:
+                    megumi_action = "Function_false"
+
+                OtherUtil.megumi_logger(megumi_action, "AI")
+
+            else:
                 megumi_action = "Function_false"
+                OtherUtil.megumi_logger(megumi_action, "AI")
 
-            OtherUtil.megumi_logger(megumi_action, "AI")
+            # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
+            if megumi_action == "Function_false":
+                api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
+                try:
+                    megumi_action = api_ai_response["result"]["action"]
+                    print("ACTION :", megumi_action, "BY MEGUMI II")
+                except:
+                    megumi_action = "Function_false"
 
-        else:
-            megumi_action = "Function_false"
-            OtherUtil.megumi_logger(megumi_action, "AI")
+            # List of command available by sending text message
+            if megumi_action == "Function_random_integer"           : Function.rand_int()
+            elif megumi_action == "Function_choose_one"             : Function.choose_one_simple()
+            elif megumi_action == "Function_date_time"              : Function.time_date()
+            elif megumi_action == "Function_weather_forecast"       : Function.weather_forecast()
+            elif megumi_action == "Function_show_cinema_schedule"   : Function.show_cinema_movie_schedule()
+            elif megumi_action == "Function_anime_download_link"    : Function.anime_download_link()
+            elif megumi_action == "Function_summoners_war_wiki"     : Function.summonerswar_wiki()
+            elif megumi_action == "Function_itb_arc_database"       : Function.itb_arc_database()
+            elif megumi_action == "Function_translate"              : Function.translate_text()
+            elif megumi_action == "Function_wiki_search"            : Function.wiki_search()
+            elif megumi_action == "Function_show_manual"            : Function.show_manual()
+            elif megumi_action == "Function_download_youtube"       : Function.download_youtube()
+            elif megumi_action == "Function_echo"                   : Function.echo()
+            elif megumi_action == "Function_send_invite"            : Function.send_invite(event)
+            elif megumi_action == "Function_report_bug"             : Function.report_bug(event)
+            elif megumi_action == "Function_leave"                  : Function.leave(event)
+            elif megumi_action == "Function_stalk_instagram"        : Function.stalk_instagram()
 
-        # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
-        if megumi_action == "Function_false":
-            api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
-            try:
-                megumi_action = api_ai_response["result"]["action"]
-                print("ACTION :", megumi_action, "BY MEGUMI II")
-            except:
-                megumi_action = "Function_false"
+            elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check(event)
+            elif megumi_action == "Dev_mode_print_userlist"         :
+                if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
+            elif megumi_action == "Dev_mode_set_tag_notifier"       :
+                if Function.dev_authority_check(event)                  : Function.dev_mode_set_tag_notifier()
 
-        # List of command available by sending text message
-        if megumi_action == "Function_random_integer"           : Function.rand_int()
-        elif megumi_action == "Function_choose_one"             : Function.choose_one_simple()
-        elif megumi_action == "Function_date_time"              : Function.time_date()
-        elif megumi_action == "Function_weather_forecast"       : Function.weather_forecast()
-        elif megumi_action == "Function_show_cinema_schedule"   : Function.show_cinema_movie_schedule()
-        elif megumi_action == "Function_anime_download_link"    : Function.anime_download_link()
-        elif megumi_action == "Function_summoners_war_wiki"     : Function.summonerswar_wiki()
-        elif megumi_action == "Function_itb_arc_database"       : Function.itb_arc_database()
-        elif megumi_action == "Function_translate"              : Function.translate_text()
-        elif megumi_action == "Function_wiki_search"            : Function.wiki_search()
-        elif megumi_action == "Function_show_manual"            : Function.show_manual()
-        elif megumi_action == "Function_download_youtube"       : Function.download_youtube()
-        elif megumi_action == "Function_echo"                   : Function.echo()
-        elif megumi_action == "Function_send_invite"            : Function.send_invite(event)
-        elif megumi_action == "Function_report_bug"             : Function.report_bug(event)
-        elif megumi_action == "Function_leave"                  : Function.leave(event)
-        elif megumi_action == "Function_stalk_instagram"        : Function.stalk_instagram()
-
-        elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check(event)
-        elif megumi_action == "Dev_mode_print_userlist"         :
-            if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
-        elif megumi_action == "Dev_mode_set_tag_notifier"       :
-            if Function.dev_authority_check(event)                  : Function.dev_mode_set_tag_notifier()
-
-        elif megumi_action == "Function_false"                  : Function.false()
-        else                                                    : Function.send_default_reply()
+            elif megumi_action == "Function_false"                  : Function.false()
+            else                                                    : Function.send_default_reply()
 
     # If megumi's in partial offline mode ( for temp development )
     else:
