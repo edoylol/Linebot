@@ -2786,7 +2786,7 @@ class Function:
         page_url = "https://www.instagram.com/" + keyword + "/"
 
         # If the keyword is not found, stop the process
-        if page_url == "keyword not found":
+        if keyword == "keyword not found":
             report = Lines.general_lines("search fail") % "instagram id"
             line_bot_api.push_message(address, TextSendMessage(text=report))
             cont = False
