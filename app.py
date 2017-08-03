@@ -70,6 +70,7 @@ userlist = Database.userlist
 
 userlist_update_count = 0
 tag_notifier_on = True
+MEGUMI_ONLINE = True
 
 
 @app.route("/callback", methods=['POST'])
@@ -169,13 +170,17 @@ def message_text(event):
     update_user_list(event)
 
     # If the text contain calling
-    if any(word in text for word in Lines.megumi()):
+    if MEGUMI_ONLINE and any(word in text for word in Lines.megumi()):
 
         # Enable direct pass to rules mode
-        megumi_bot_mode = "bot" in text[:5]
+        # megumi_bot_mode = "bot" in text[:5]
+
+        # Try to use rules type action-mapping
+        megumi_action = OtherUtil.function_rules_based_mapping(event)
+        print("ACTION:", megumi_action, "BY RULES")
 
         # Send the input text to API.AI for further natural language processing
-        if not megumi_bot_mode:
+        if megumi_action == "Function_false":
             api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
             try:
                 megumi_action = api_ai_response["result"]["action"]
@@ -185,12 +190,7 @@ def message_text(event):
         else:
             megumi_action = "Function_false"
 
-        # If API.AI failed to specify the intent, use rules type action-mapping
-        if megumi_action == "Function_false":
-            megumi_action = OtherUtil.function_rules_based_mapping(event)
-            print("ACTION:", megumi_action, "BY RULES")
-
-        # If Rule based mapping failed again, try to check whether it's a default chat type input
+        # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
         if megumi_action == "Function_false":
             api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
             try:
