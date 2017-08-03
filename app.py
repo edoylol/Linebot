@@ -191,6 +191,7 @@ def message_text(event):
         # If API.AI failed to specify the intent for the second time, use rules type action-mapping
         if megumi_action == "Function_false":
             megumi_action = OtherUtil.function_rules_based_mapping(event)
+            print("ACTION:",megumi_action,"BY RULES")
 
         # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
@@ -3898,9 +3899,9 @@ class Function:
                     ["Random number", "Choose one", "Echo"],
                     ["Time & Date", "Weather forecast", "Translate"],
                     ["Anime download link", "Cinema's schedule", "Youtube download"],
-                    ["Wiki search", "ITB-ARC Database", "SW wiki"],
+                    ["Wiki search", "Stalk instagram", "SW wiki"],
                     ["Default reply", "Manuals", "Report Bug"],
-                    ["Stalk instagram", "Fact or Hoax", "News"],
+                    ["Convert", "Fact or Hoax", "News"],
                     ["Dev : Print userlist", "Dev : Set notifier", "Send Invite"],
                     ["ITB-ARC Database","<none>","<none>"]
                     ]
