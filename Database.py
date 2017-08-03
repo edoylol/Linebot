@@ -535,7 +535,7 @@ functionlist = {
       "tips": "Try to include the target username and Meg will do her magic~ \nps: I don't want to break the term of services, so you have to pay me more to stalk private page :P ",
       "example": [
          "Meg, stalk 'brigittatifanny' ",
-         "Meg, can you stalk 'aiai0131_official' please ?:> ",
+         "Meg, can you stalk 'finedininglovers' please ?:> ",
          "Stalk 'minami_kaede' please meg",
          "meg, I need you to stalk 'marutaro' ",
          "preview 'visitjapan' instagram meg "

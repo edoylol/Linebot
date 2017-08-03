@@ -2716,7 +2716,7 @@ class Function:
                     image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
                 # Join them together and append to carousel text
-                carousel_text.append(image_caption + "\n" + str(image_like_count))
+                carousel_text.append(str(image_like_count) + "\n" + image_caption)
 
                 # Append image link to header pic
                 header_pic.append(insta_image_link_list[i])
