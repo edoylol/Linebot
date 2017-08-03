@@ -2070,7 +2070,7 @@ class Function:
                 if cond == "from":
                     specific_keyword = ['from', 'fr']
                 elif cond == "to":
-                    specific_keyword = ['in', 'to']
+                    specific_keyword = ['in', 'to', 'into']
                 else:
                     specific_keyword = [""]
 
@@ -4147,7 +4147,7 @@ class OtherUtil:
             if Function.dev_authority_check(event):
 
                 if all(word in text for word in ["print", "userlist"]):
-                    megumi_action =
+                    megumi_action = "Dev_mode_print_userlist"
 
                 elif any(word in text for word in ["turn ", "able", "tag notifier", "notif"]):
                     megumi_action = "Dev_mode_set_tag_notifier"
