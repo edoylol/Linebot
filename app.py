@@ -169,9 +169,9 @@ def message_text(event):
     get_receiver_addr(event)
     update_user_list(event)
 
-    # If the text contain calling
     if MEGUMI_ONLINE:
 
+        # If the text contain calling
         if any(word in text for word in Lines.megumi()):
 
             # Enable direct pass to rules mode
@@ -190,11 +190,6 @@ def message_text(event):
                     print("ACTION :", megumi_action)
                 except:
                     megumi_action = "Function_false"
-
-                OtherUtil.megumi_logger(megumi_action, "AI")
-
-            else:
-                megumi_action = "Function_false"
                 OtherUtil.megumi_logger(megumi_action, "AI")
 
             # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
