@@ -170,7 +170,9 @@ def message_text(event):
     update_user_list(event)
 
     # If the text contain calling
-    if MEGUMI_ONLINE and any(word in text for word in Lines.megumi()):
+    if MEGUMI_ONLINE:
+
+        if any(word in text for word in Lines.megumi()):
 
         # Enable direct pass to rules mode
         # megumi_bot_mode = "bot" in text[:5]
