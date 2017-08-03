@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ccc0477-22e7-4a2c-b5cf-8af50e947efd" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
-    </list>
+    <list default="true" id="8ccc0477-22e7-4a2c-b5cf-8af50e947efd" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +37,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="202">
-              <caret line="2522" column="26" lean-forward="false" selection-start-line="2522" selection-start-column="26" selection-end-line="2522" selection-end-column="26" />
+            <state relative-caret-position="-337">
+              <caret line="154" column="47" lean-forward="true" selection-start-line="154" selection-start-column="47" selection-end-line="154" selection-end-column="47" />
               <folding>
                 <element signature="n#!!doc" expanded="false" />
                 <element signature="e#2348#2706#0" expanded="false" />
@@ -48,7 +46,6 @@
                 <element signature="e#3307#5265#0" expanded="false" />
                 <element signature="e#3517#5265#0" expanded="false" />
                 <element signature="e#4432#4547#0" expanded="false" />
-                <element signature="e#5345#9456#0" expanded="false" />
                 <element signature="e#6079#6343#0" expanded="false" />
                 <element signature="e#6174#6274#0" expanded="false" />
                 <element signature="e#6542#6659#0" expanded="false" />
@@ -565,7 +562,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="1" />
     <option name="width" value="1933" />
@@ -944,7 +941,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="1" width="1933" height="1087" extended-state="1" />
+    <frame x="-8" y="1" width="1933" height="1087" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1052,7 +1049,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -1512,7 +1508,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -1972,7 +1967,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -2432,7 +2426,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -2892,7 +2885,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -3359,7 +3351,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -3819,7 +3810,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -4286,7 +4276,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -4746,7 +4735,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
@@ -5695,8 +5683,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="202">
-          <caret line="2522" column="26" lean-forward="false" selection-start-line="2522" selection-start-column="26" selection-end-line="2522" selection-end-column="26" />
+        <state relative-caret-position="-337">
+          <caret line="154" column="47" lean-forward="true" selection-start-line="154" selection-start-column="47" selection-end-line="154" selection-end-column="47" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
             <element signature="e#2348#2706#0" expanded="false" />
@@ -5704,7 +5692,6 @@
             <element signature="e#3307#5265#0" expanded="false" />
             <element signature="e#3517#5265#0" expanded="false" />
             <element signature="e#4432#4547#0" expanded="false" />
-            <element signature="e#5345#9456#0" expanded="false" />
             <element signature="e#6079#6343#0" expanded="false" />
             <element signature="e#6174#6274#0" expanded="false" />
             <element signature="e#6542#6659#0" expanded="false" />
