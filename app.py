@@ -2651,7 +2651,7 @@ class Function:
 
                     # Get the media caption
                     try:
-                        insta_image_caption = item["caption"]
+                        insta_image_caption = item["caption"].strip()
                         insta_image_caption_list.append(insta_image_caption)
                     except:
                         insta_image_caption_list.append("-")
@@ -2681,9 +2681,12 @@ class Function:
             # Generate report about user information
             report = [Lines.stalk_instagram("user information header")]
             try:
+                report.append(" ")
                 report.append("Fullname : " + insta_fullname)
                 report.append("Instagram username: " + insta_username)
+                report.append(" ")
                 report.append("Biography : " + insta_biography)
+                report.append(" ")
                 report.append("Follower : " + str(insta_follower))
                 report.append("Following : " + str(insta_following))
             except:
@@ -2703,14 +2706,14 @@ class Function:
             # Generate and format the data used by carousel
             for i in range(0, image_count):
 
-                # Format image caption
-                if len(insta_image_caption_list[i]) > 40:
-                    image_caption = str("\"" + insta_image_caption_list[i][:40] + "...\"")
-                else:
-                    image_caption = str("\"" + insta_image_caption_list[i] + "\"")
-
                 # Format image likes count
                 image_like_count = "Liked : " + str(insta_image_like_list[i])
+
+                # Format image caption
+                if len(insta_image_caption_list[i]) > len(image_like_count):
+                    image_caption = str("\"" + insta_image_caption_list[i][:len(image_like_count)-8] + "...\"")
+                else:
+                    image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
                 # Join them together and append to carousel text
                 carousel_text.append(image_caption + "\n" + str(image_like_count))
