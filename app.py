@@ -170,28 +170,35 @@ def message_text(event):
 
     # If the text contain calling
     if any(word in text for word in Lines.megumi()):
+        # Enable direct pass to rules mode
+        megumi_bot_mode = "bot" in text[:5]
 
         # Send the input text to API.AI for further natural language processing
-        api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
-        try:
-            megumi_action = api_ai_response["result"]["action"]
-            print("ACTION :", megumi_action)
-        except:
-            megumi_action = "Function_false"
-
-        # If API.AI failed to specify the intent, try to check whether it's a default chat type input
-        if megumi_action == "Function_false":
-            api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
+        if not megumi_bot_mode:
+            api_ai_response = OtherUtil.api_ai(api_ai_access_token, text)
             try:
                 megumi_action = api_ai_response["result"]["action"]
                 print("ACTION :", megumi_action)
             except:
                 megumi_action = "Function_false"
+        else:
+            megumi_action = "Function_false"
 
-        # If API.AI failed to specify the intent for the second time, use rules type action-mapping
+        # If API.AI failed to specify the intent, use rules type action-mapping
         if megumi_action == "Function_false":
             megumi_action = OtherUtil.function_rules_based_mapping(event)
-            print("ACTION:",megumi_action,"BY RULES")
+            print("ACTION:", megumi_action, "BY RULES")
+
+        # If Rule based mapping failed again, try to check whether it's a default chat type input
+        if megumi_action == "Function_false":
+            api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
+            try:
+                megumi_action = api_ai_response["result"]["action"]
+                print("ACTION :", megumi_action,"BY MEGUMI II")
+            except:
+                megumi_action = "Function_false"
+
+
 
         # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
