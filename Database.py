@@ -538,7 +538,7 @@ functionlist = {
          "Meg, can you stalk 'aiai0131_official' please ?:> ",
          "Stalk 'minami_kaede' please meg",
          "meg, I need you to stalk 'marutaro' ",
-         "preview 'cats__cute' instagram meg "
+         "preview 'visitjapan' instagram meg "
       ]
    },
    "Time & Date": {

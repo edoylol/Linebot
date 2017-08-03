@@ -170,6 +170,7 @@ def message_text(event):
 
     # If the text contain calling
     if any(word in text for word in Lines.megumi()):
+
         # Enable direct pass to rules mode
         megumi_bot_mode = "bot" in text[:5]
 
@@ -197,8 +198,6 @@ def message_text(event):
                 print("ACTION :", megumi_action,"BY MEGUMI II")
             except:
                 megumi_action = "Function_false"
-
-
 
         # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
@@ -4080,7 +4079,7 @@ class OtherUtil:
 
             elif any(word in text for word in ["movie ", "movies", "film ", "films"]):
 
-                if any(word in text for word in ["showing", "list","playing", "schedule"]):
+                if any(word in text for word in ["showing", "list", "playing", "schedule"]):
                     megumi_action = "Function_show_cinema_schedule"
 
             elif all(word in text for word in ["anime"]):
