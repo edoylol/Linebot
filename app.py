@@ -227,6 +227,11 @@ def message_text(event):
         elif megumi_action == "Function_false"                  : Function.false()
         else                                                    : Function.send_default_reply()
 
+    # If megumi's in partial offline mode ( for temp development )
+    else:
+        report = Lines.general_lines("offline")
+        line_bot_api.push_message(address, TextSendMessage(text=report))
+
     # Special tag / mention function
     if tag_notifier_on:
         Function.tag_notifier(event)
@@ -281,31 +286,38 @@ def handle_postback(event):
     update_user_list(event)
 
     # List of command that is available for postback event
-    if original_text == 'ping':
-        line_bot_api.reply_message(token, TextSendMessage(text='pong'))
+    if MEGUMI_ONLINE:
 
-    elif all(word in text for word in ["confirmation invitation"]):
-        if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event, "yes")
-        elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event, "no")
-        elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event, "pending")
+        if original_text == 'ping':
+            line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
-    elif all(word in text for word in ["request", "cinema list please"])            :
-        if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
-        elif all(word in text for word in ["cgv"])                                      : Function.show_cinema_list("cgv")
+        elif all(word in text for word in ["confirmation invitation"]):
+            if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event, "yes")
+            elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event, "no")
+            elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event, "pending")
 
-    elif all(word in text for word in ["summoners_war_wiki"])                       :
-        if all(word in text for word in ["overview"])                                   : Function.summonerswar_wiki("overview")
-        elif all(word in text for word in ["ratings"])                                  : Function.summonerswar_wiki("show ratings")
-        elif all(word in text for word in ["stats"])                                    : Function.summonerswar_wiki("show stats")
-        elif all(word in text for word in ["skills"])                                   : Function.summonerswar_wiki("show skills")
+        elif all(word in text for word in ["request", "cinema list please"])            :
+            if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
+            elif all(word in text for word in ["cgv"])                                      : Function.show_cinema_list("cgv")
 
-    elif all(word in text for word in ["show megumi manual"])                       : Function.show_manual()
-    elif all(word in text for word in ["manual : "])                                : Function.show_manual("postback")
+        elif all(word in text for word in ["summoners_war_wiki"])                       :
+            if all(word in text for word in ["overview"])                                   : Function.summonerswar_wiki("overview")
+            elif all(word in text for word in ["ratings"])                                  : Function.summonerswar_wiki("show ratings")
+            elif all(word in text for word in ["stats"])                                    : Function.summonerswar_wiki("show stats")
+            elif all(word in text for word in ["skills"])                                   : Function.summonerswar_wiki("show skills")
 
-    elif all(word in text for word in ["megumi dev mode print userlist"])           :
-        if Function.dev_authority_check(event)                                          :
-            if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
-            else                                                                            : Function.false()
+        elif all(word in text for word in ["show megumi manual"])                       : Function.show_manual()
+        elif all(word in text for word in ["manual : "])                                : Function.show_manual("postback")
+
+        elif all(word in text for word in ["megumi dev mode print userlist"])           :
+            if Function.dev_authority_check(event)                                          :
+                if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
+                else                                                                            : Function.false()
+
+    # If megumi's in partial offline mode ( for temp development )
+    else:
+        report = Lines.general_lines("offline")
+        line_bot_api.push_message(address, TextSendMessage(text=report))
 
 
 @handler.add(JoinEvent)
