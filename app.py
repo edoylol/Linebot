@@ -2521,12 +2521,6 @@ class Function:
 
     @staticmethod
     def stalk_instagram():
-        git
-        push
-        origin
-        master
-
-
         """ Function to stalk instagram account and return user profile and top 5 pic """
 
         def get_instagram_page_keyword():
