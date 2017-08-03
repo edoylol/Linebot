@@ -2710,13 +2710,13 @@ class Function:
                 image_like_count = str(insta_image_like_list[i])+" ♥"
 
                 # Format image caption
-                if len(insta_image_caption_list[i]) > len(image_like_count):
-                    image_caption = str("\"" + insta_image_caption_list[i][:50-len(image_like_count)] + "...\"")
+                if len(insta_image_caption_list[i]) > 35:
+                    image_caption = str("\"" + insta_image_caption_list[i][:35] + "...\"")
                 else:
                     image_caption = str("\"" + insta_image_caption_list[i] + "\"")
 
                 # Join them together and append to carousel text
-                carousel_text.append(str(image_like_count) + "\n\n" + image_caption)
+                carousel_text.append(str(image_like_count) + "\n" + image_caption)
 
                 # Append image link to header pic
                 header_pic.append(insta_image_link_list[i])
