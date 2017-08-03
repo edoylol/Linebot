@@ -24,6 +24,12 @@ class Lines:  # class to store respond lines
                      "I don't see any %s ._. ",
                      "How about try again with %s included ?",
                      "Have you put in the %s already ? .-. "]
+        elif cond == "offline":
+            lines = ["Gomen, Megumi's currently unable to play with you :>",
+                     "Gomen, Megumi will be back soon",
+                     "Gomen, I'm having a date right now ..see ya later..",
+                     "Gomen, Megumi's taking her break time...",
+                     "Megumi will be back shortly ~ "]
         else:
             lines = [""]
 

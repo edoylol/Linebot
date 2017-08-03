@@ -177,7 +177,8 @@ def message_text(event):
 
         # Try to use rules type action-mapping
         megumi_action = OtherUtil.function_rules_based_mapping(event)
-        print("ACTION:", megumi_action, "BY RULES")
+        OtherUtil.megumi_logger(megumi_action, "Rules")
+        print("ACTION :", megumi_action, "BY RULES")
 
         # Send the input text to API.AI for further natural language processing
         if megumi_action == "Function_false":
@@ -187,8 +188,12 @@ def message_text(event):
                 print("ACTION :", megumi_action)
             except:
                 megumi_action = "Function_false"
+
+            OtherUtil.megumi_logger(megumi_action, "AI")
+
         else:
             megumi_action = "Function_false"
+            OtherUtil.megumi_logger(megumi_action, "AI")
 
         # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
         if megumi_action == "Function_false":
@@ -4073,6 +4078,13 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    @staticmethod
+    def megumi_logger(megumi_action, cond):
+        """ Function to log every input by user """
+
+        with open(str("Logger_" + cond + "_" + megumi_action + ".txt"), "a") as megumi_logger:
+            megumi_logger.write(original_text + "\n")
 
     @staticmethod
     def function_rules_based_mapping(event):
