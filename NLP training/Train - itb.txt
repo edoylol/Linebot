@@ -1,0 +1,9 @@
+meg, who has '1636123' nim in itb ?
+meg, show me information about itb students 'ozora'
+meg, show me students with name begin with 'kevin' in itb
+meg, show me students with name begin with kevin in itb
+meg, show me students with last name 'sihombing' in itb
+meg, do you have information about itb students 'riona' ? :>
+meg, who has '16316123' nim in itb ?
+meg, show me information about itb students 'ozora'
+meg, show me students with last name 'wijaya' in itb

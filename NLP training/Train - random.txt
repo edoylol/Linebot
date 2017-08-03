@@ -1,0 +1,10 @@
+meg, 123 ro 222 choose one
+meg, 123 - 222 choose one
+meg, choose one number between 11 to 23
+
+choose one from 1 to 15 meg
+
+meg, 11 to 15, which one ?
+
+from 1 to 12 which one do you like meg ?
+pick one number between 55 to 99 meg

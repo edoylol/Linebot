@@ -1,0 +1,10 @@
+show me today's date
+tell me what time is it in gmt right now meg
+what time is it now meg ?
+meg, what time is it in gmt-2 ?
+what time is it now meg ?
+what time is it in gmt+2 meg ?
+meg, what time is it in utc-2 ?
+meg, what day is today ?
+what time is it now meg ?
+meg, what time is it in gmt-2 ?

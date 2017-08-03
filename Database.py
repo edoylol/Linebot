@@ -366,7 +366,7 @@ anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupl
                   "datafilehost": 84, "uptobox": 42, "katfile": 100}
 
 """ DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
-# Last updated 2 August 2017 : 21 Function listed
+# Last updated 3 August 2017 : 22 Function listed
 functionlist = {
    "Anime download link": {
       "description": "Anime download link\n\nI can help you gather the anime download links as long it's listed in the cyber12 2016-2017 database\nAnyway, I use zippyshare as default, but you can request your favourite host like solidfiles, dropjify, etc.\nYou can also specify which episode to start with :>\n\nDon't worry, I will try my best to help you out \nLong Live WEEBS~ ",
@@ -528,6 +528,17 @@ functionlist = {
          "meg, please send invite to dummy ",
          "Meg, send invite 'afaid?' to dummy ",
          "meg Send invite to dummy : 'eat now?'"
+      ]
+   },
+   "Stalk instagram": {
+      "description": "Stalk Instagram\n\nGood news to all people who like to stalk instagram,, now Megumi is able to stalk them faster than you, and leave no trace at all !\nBut since stalking is not a good habit, use it wisely kay ? :> ",
+      "tips": "Try to include the target username and Meg will do her magic~ \nps: I don't want to break the term of services, so you have to pay me more to stalk private page :P ",
+      "example": [
+         "Meg, stalk 'brigittatifanny' ",
+         "Meg, can you stalk 'aiai0131_official' please ?:> ",
+         "Stalk 'minami_kaede' please meg",
+         "meg, I need you to stalk 'marutaro' ",
+         "preview 'cats__cute' instagram meg "
       ]
    },
    "Time & Date": {

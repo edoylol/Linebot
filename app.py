@@ -62,6 +62,7 @@ app = Flask(__name__)
 channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
 channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
 api_ai_access_token = '4ead94fa71234f82af81f8e92e72962a'
+api_ai_access_token_megumi_II = "0e51518979fe4d7eba6b09d4d5ae0d41"
 line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
@@ -178,8 +179,18 @@ def message_text(event):
         except:
             megumi_action = "Function_false"
 
-        if any(word in text for word in ["stalk","instagram","insta"]):
-            megumi_action = "Function_stalk_instagram"
+        # If API.AI failed to specify the intent, try to check whether it's a default chat type input
+        if megumi_action == "Function_false":
+            api_ai_response = OtherUtil.api_ai(api_ai_access_token_megumi_II, text)
+            try:
+                megumi_action = api_ai_response["result"]["action"]
+                print("ACTION :", megumi_action)
+            except:
+                megumi_action = "Function_false"
+
+        # If API.AI failed to specify the intent for the second time, use rules type action-mapping
+        if megumi_action == "Function_false":
+            megumi_action = OtherUtil.function_rules_based_mapping(event)
 
         # List of command available by sending text message
         if megumi_action == "Function_random_integer"           : Function.rand_int()
@@ -2798,7 +2809,7 @@ class Function:
             insta_image_link_list, insta_image_caption_list, insta_image_like_list = get_insta_media_data(json_rawdata)
             send_insta_user_pic(insta_image_link_list, insta_image_caption_list, insta_image_like_list)
 
-    """ ==========  1 August 2017 last update ============== """
+    """ ==========  3 August 2017 last update ============== """
 
     @staticmethod
     def summonerswar_wiki(cond="default"):
@@ -3402,12 +3413,20 @@ class Function:
 
         try:
             def get_keyword():
+                """ Function to return keyword found in text """
 
-                index_start = text.find("'")+1
-                index_end = text.rfind("'")
-                keyword = text[index_start:index_end]
+                # Find the index of apostrophe
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
 
-                return keyword
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
+                if text_available:
+                    keyword = text[index_start:index_stop]
+                    return keyword
+
+                else:
+                    return "keyword not found"
 
             def get_category():
                 is_default_category = False
@@ -3480,9 +3499,9 @@ class Function:
                 search_result.append(Lines.itb_arc_database("footer"))
 
             def send_header():
-                report = []
+                """ Function to create headers """
 
-                report.append(Lines.itb_arc_database("header") % itb_keyword)
+                report = [Lines.itb_arc_database("header") % itb_keyword]
                 if is_default_category:
                     report.append(" ")
                     report.append(Lines.itb_arc_database("default category"))
@@ -3513,16 +3532,22 @@ class Function:
             cont = True  # default flag
 
             itb_keyword = get_keyword()
-            search_category, is_default_category = get_category()
-
-            ARC_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
-            try :
-                ARC_ITB_api_data = requests.get(ARC_api_call).json()
-                search_result_count = ARC_ITB_api_data['totalCount']  # get the total result count
-            except :
-                report = Lines.itb_arc_database("database unreachable")
+            if itb_keyword == "keyword not found":
+                report = Lines.general_lines("search fail") % "itb keyword"
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 cont = False
+
+            if cont:
+                search_category, is_default_category = get_category()
+
+                ARC_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
+                try :
+                    ARC_ITB_api_data = requests.get(ARC_api_call).json()
+                    search_result_count = ARC_ITB_api_data['totalCount']  # get the total result count
+                except :
+                    report = Lines.itb_arc_database("database unreachable")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    cont = False
 
             # If the data is successfully retrieved
             if cont :
@@ -3856,22 +3881,28 @@ class Function:
                     return False
 
                 # Base data to fill the manual
-                title = ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities", "Still learning~", "Dev only :>"]
+                title = ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities",
+                         "Still learning~", "Dev only :>", "Sorry, this is unavailable right now ~"]
+
                 carousel_text = ["Some simple things I can do ~",
                                  "Some information about our lovely planet",
                                  "Most used function up until now..",
                                  "Some top secret about..",
                                  "Some other things I can help you with",
                                  "Well... the title describe it already :3",
-                                 "Sorry,, this is for dev only"]
+                                 "Sorry,, this is for dev only",
+                                 "Function that is unavailable right now"]
+
+                # Format manual display here... Append new function here...
                 function_list = [
                     ["Random number", "Choose one", "Echo"],
                     ["Time & Date", "Weather forecast", "Translate"],
                     ["Anime download link", "Cinema's schedule", "Youtube download"],
                     ["Wiki search", "ITB-ARC Database", "SW wiki"],
                     ["Default reply", "Manuals", "Report Bug"],
-                    ["Convert", "Fact or Hoax", "News"],
-                    ["Dev : Print userlist", "Dev : Set notifier", "Send Invite"]
+                    ["Stalk instagram", "Fact or Hoax", "News"],
+                    ["Dev : Print userlist", "Dev : Set notifier", "Send Invite"],
+                    ["ITB-ARC Database","<none>","<none>"]
                     ]
                 command = "Manual : "
 
@@ -3920,7 +3951,11 @@ class Function:
                         CarouselColumn(title=title[6], text=carousel_text[6][:60], actions=[
                             PostbackTemplateAction(label=function_list[6][0], data=str(command + function_list[6][0])),
                             PostbackTemplateAction(label=function_list[6][1], data=str(command + function_list[6][1])),
-                            PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))])
+                            PostbackTemplateAction(label=function_list[6][2], data=str(command + function_list[6][2]))]),
+                        CarouselColumn(title=title[7], text=carousel_text[7][:60], actions=[
+                            PostbackTemplateAction(label=function_list[7][0], data=str(command + function_list[7][0])),
+                            PostbackTemplateAction(label=function_list[7][1], data=str(command + function_list[7][1])),
+                            PostbackTemplateAction(label=function_list[7][2], data=str(command + function_list[7][2]))])
                     ])
 
                     # Send extension manual
@@ -4016,6 +4051,108 @@ class OtherUtil:
         if address != jessin_userid:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+    @staticmethod
+    def function_rules_based_mapping(event):
+        """ Function to provide manual mapping of action if NLP API.AI fail to detect the intent """
+
+        megumi_action = "Function_false"
+
+        # List of Rule based action tree
+        if any(word in text for word in ["what ", "show "]):
+
+            if any(word in text for word in ["date", "time", "day "]):
+                megumi_action = "Function_date_time"
+
+            elif any(word in text for word in ["manual", "help"]):
+                megumi_action = "Function_show_manual"
+
+            elif any(word in text for word in ["weather", "forecast"]):
+                megumi_action = "Function_weather_forecast"
+
+            elif any(word in text for word in ["movie ", "movies", "film ", "films"]):
+
+                if any(word in text for word in ["showing", "list","playing", "schedule"]):
+                    megumi_action = "Function_show_cinema_schedule"
+
+            elif all(word in text for word in ["anime"]):
+
+                if any(word in text for word in ["download", "link"]):
+                    megumi_action = "Function_anime_download_link"
+
+            elif any(word in text for word in ["is", "are", "info", "?", "about", "search"]):
+
+                if any(word in text for word in ["sw", "summonerswar", "summoner"]):
+                    megumi_action = "Function_summoners_war_wiki"
+
+                elif all(word in text for word in ["itb"]):
+                    megumi_action = "Function_itb_arc_database"
+
+                elif any(word in text for word in ["mean", "wiki"]):
+                    megumi_action = "Function_wiki_search"
+
+                elif any(word in text for word in ["in"]):
+                    megumi_action = "Function_translate"
+
+        elif any(word in text for word in ["how"]):
+
+            if any(word in text for word in ["weather", "forecast"]):
+                megumi_action = "Function_weather_forecast"
+
+            elif any(word in text for word in ["say"]):
+                megumi_action = "Function_translate"
+
+        elif all(word in text for word in ["who"]):
+
+            if all(word in text for word in ["itb"]):
+                megumi_action = "Function_itb_arc_database"
+
+            elif any(word in text for word in ["is", "?"]):
+                megumi_action = "Function_wiki_search"
+
+        elif any(word in text for word in ["download ", "save "]):
+
+            if any(word in text for word in ["youtube", "video"]):
+                megumi_action = "Function_download_youtube"
+
+            elif any(word in text for word in ["anime"]):
+                megumi_action = "Function_anime_download_link"
+
+        elif any(word in text for word in ["stalk", "instagram", "insta"]):
+            megumi_action = "Function_stalk_instagram"
+
+        elif all(word in text for word in ["pick ", "num"]):
+            megumi_action = "Function_random_integer"
+
+        elif any(word in text for word in ["choose ", "which one"]):
+            megumi_action = "Function_choose_one"
+
+        elif any(word in text for word in ["translate"]):
+            megumi_action = "Function_translate"
+
+        elif any(word in text for word in ["say "]):
+            megumi_action = "Function_echo"
+
+        elif all(word in text for word in ["send ", "invite"]):
+            megumi_action = "Function_send_invite"
+
+        elif all(word in text for word in ["report", "bug"]):
+            megumi_action = "Function_report_bug"
+
+        elif any(word in text for word in ["please leave, megumi"]):
+            megumi_action = "Function_leave"
+
+        elif all(word in text for word in ["dev", "mode"]):
+
+            if Function.dev_authority_check(event):
+
+                if all(word in text for word in ["print", "userlist"]):
+                    megumi_action =
+
+                elif any(word in text for word in ["turn ", "able", "tag notifier", "notif"]):
+                    megumi_action = "Dev_mode_set_tag_notifier"
+
+        return megumi_action
 
 """========================================== End of Function List ================================================"""
 
