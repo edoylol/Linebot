@@ -2634,7 +2634,6 @@ class Function:
                 insta_private = "no data"
 
             # Return all the data found
-            print(insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private)
             return insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private
 
         def get_insta_media_data(json_rawdata):
@@ -2697,10 +2696,10 @@ class Function:
             report = [Lines.stalk_instagram("user information header")]
             try:
                 report.append(" ")
-                report.append("Fullname : " + insta_fullname)
-                report.append("Instagram username: " + insta_username)
+                report.append("Fullname : " + str(insta_fullname))
+                report.append("Instagram username: " + str(insta_username))
                 report.append(" ")
-                report.append("Biography : " + insta_biography)
+                report.append("Biography : " + str(insta_biography))
                 report.append(" ")
                 report.append("Follower : " + str(insta_follower))
                 report.append("Following : " + str(insta_following))
