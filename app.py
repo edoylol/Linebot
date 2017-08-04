@@ -4083,6 +4083,10 @@ class OtherUtil:
         with open(str("Logger_" + cond + "_" + megumi_action + ".txt"), "a") as megumi_logger:
             megumi_logger.write(original_text + "\n")
 
+        with open(str("Logger_" + cond + "_" + megumi_action + ".txt"), "r") as megumi_logger:
+            for input_text in megumi_logger:
+                print(input_text.strip())
+
     @staticmethod
     def function_rules_based_mapping(event):
         """ Function to provide manual mapping of action if NLP API.AI fail to detect the intent """
