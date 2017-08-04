@@ -79,13 +79,15 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-cond = "rules"
-megumi_action = "Function_false"
-original_text = "meg, print alskdjflaskdfjalkdj"
+"""
+url = 'https://hprimary.lelah.ga/analyze'
 
-with open(str("D:\\Logger_" + cond + "_" + megumi_action + ".txt"), "a") as megumi_logger:
-    megumi_logger.write(original_text + "\n")
+sess = requests.Session()
+r = sess.options(url)
+print(r)
+print(r.headers)
 
-with open(str("D:\\Logger_" + cond + "_" + megumi_action + ".txt"), "r") as megumi_logger:
-    for x in megumi_logger:
-        print(x.strip())
+params = {'query':'UKT ITB naik dua kali lipat'}
+s = sess.post(url, json=params)
+print(s)
+print(s.json())""" # FACT OR HOAX
