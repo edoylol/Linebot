@@ -3629,7 +3629,7 @@ class Function:
                     # Try to re-format the data, only pick top 5 data
                     found_count = 0
                     i = 0
-                    while (found_count <= 5) and (i in range(0, len(raw_datas))):
+                    for i in range(0, len(raw_datas)):
                         if len(str(raw_datas[i])) < 250:
                             raw_data = raw_datas[i].text.strip().split("\n")
 
@@ -3645,7 +3645,6 @@ class Function:
                                 search_result.append(" ")
 
                             found_count += 1
-                        i += 1
 
                 except:
                     report = Lines.general_lines("formatting error") % "student's data"
