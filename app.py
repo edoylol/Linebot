@@ -3610,7 +3610,6 @@ class Function:
 
                 # Try to open the page
                 page_url = str("http://carinim.cf/nim.php?nama=" + keyword_nama + "&nim=" + keyword_nim)
-                print(page_url)
                 try:
                     req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                     con = urllib.request.urlopen(req)
@@ -3679,8 +3678,8 @@ class Function:
                     # Try to use sub database
                     try:
                         backup_itb_data(itb_keyword)
-                    except:
-                        report = Lines.itb_arc_database("sub database unreachable")
+                    except Exception as e:
+                        report = (Lines.itb_arc_database("sub database unreachable")+"\n\n"+e)
                         line_bot_api.push_message(address, TextSendMessage(text=report))
 
                     cont = False
