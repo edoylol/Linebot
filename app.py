@@ -3494,7 +3494,6 @@ class Function:
                         student_major_year = arc_itb_api_data['result'][i]['year']
                         student_faculty = arc_itb_api_data['result'][i]['major']['faculty']['title']
 
-
                         search_result.append("NIM : " + str(student_nim))
                         search_result.append(student_name)
                         search_result.append(student_major + " [ " + str(student_major_year) + " ]")
@@ -3595,7 +3594,8 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
             def backup_itb_data(keyword):
-                """ Function to run backup search on carinim.cf as a backup database """
+                """ Function to run backup search on carinim.cf as a backup database
+                nb : It's not modular programming instead of bulk part of code due to laziness... (my bad)"""
 
                 search_result = []
                 send_header()
@@ -3628,7 +3628,8 @@ class Function:
 
                     # Try to re-format the data, only pick top 5 data
                     found_count = 0
-                    for i in range(0, len(raw_datas)):
+                    i = 0
+                    while (found_count <= 5) and (i in range(0, len(raw_datas))):
                         if len(str(raw_datas[i])) < 250:
                             raw_data = raw_datas[i].text.strip().split("\n")
 
@@ -3637,11 +3638,14 @@ class Function:
                             student_major = raw_data[3]
                             student_major_year = str("20" + str(student_nim[3:5]))
 
-                            search_result.append("NIM : " + str(student_nim))
-                            search_result.append(student_name)
-                            search_result.append(student_major + " [ " + str(student_major_year) + " ]")
-                            search_result.append(" ")
+                            if found_count < 5:
+                                search_result.append("NIM : " + str(student_nim))
+                                search_result.append(student_name)
+                                search_result.append(student_major + " [ " + str(student_major_year) + " ]")
+                                search_result.append(" ")
+
                             found_count += 1
+                        i += 1
 
                 except:
                     report = Lines.general_lines("formatting error") % "student's data"
