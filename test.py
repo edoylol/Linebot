@@ -81,13 +81,21 @@ class OtherUtil:
 
 """
 url = 'https://hprimary.lelah.ga/analyze'
+text = 'animonstar is bankrupt'
+
 
 sess = requests.Session()
 r = sess.options(url)
-print(r)
-print(r.headers)
 
-params = {'query':'UKT ITB naik dua kali lipat'}
+params = {'query': text}
 s = sess.post(url, json=params)
-print(s)
-print(s.json())""" # FACT OR HOAX
+clean_json = s.json()
+
+conclusion = clean_json["conclusi on"]
+fact_point = clean_json["scores"][1]
+hoax_point = clean_json["scores"][2]
+unkw_point = clean_json["scores"][3]
+percentage = max(fact_point, hoax_point, unkw_point)/(fact_point+ hoax_point+unkw_point) *100
+
+print(conclusion, percentage, "%")
+""" #HOAX

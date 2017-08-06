@@ -190,7 +190,7 @@ def message_text(event):
                     print("ACTION :", megumi_action)
                 except:
                     megumi_action = "Function_false"
-                OtherUtil.megumi_logger(megumi_action, "AI")
+                OtherUtil.megumi_logger(megumi_action, "AIAPI")
 
             # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
             if megumi_action == "Function_false":
@@ -225,6 +225,8 @@ def message_text(event):
                 if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
             elif megumi_action == "Dev_mode_set_tag_notifier"       :
                 if Function.dev_authority_check(event)                  : Function.dev_mode_set_tag_notifier()
+            elif megumi_action == "Dev_mode_print_logger"       :
+                if Function.dev_authority_check(event)                  : Function.dev_print_megumi_logger()
 
             elif megumi_action == "Function_false"                  : Function.false()
             else                                                    : Function.send_default_reply()
@@ -3840,6 +3842,35 @@ class Function:
             return False
 
     @staticmethod
+    def dev_print_megumi_logger():
+        """ Function to print log of input by user """
+
+        try:
+
+            report = Lines.dev_print_megumi_logger("header")
+            for dev_user in Database.devlist:
+                line_bot_api.push_message(dev_user, TextSendMessage(text=report))
+
+            print("=================================== NEW LOGGER ===================================\n")
+            with open("Megumi_Logger.txt", "r") as megumi_logger:
+
+                count_log = 0
+                for item in megumi_logger:
+                    print(item)
+                    count_log += 1
+
+            time.sleep(5)
+            print("\n================================= END OF LOGGER =================================")
+
+            report = (Lines.dev_print_megumi_logger("success")).format(count_log)
+            for dev_user in Database.devlist:
+                line_bot_api.push_message(dev_user, TextSendMessage(text=report))
+
+        except Exception as exception_detail:
+            function_name = "Dev mode print logger"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    @staticmethod
     def send_default_reply():
         """ Function to send default API.AI response for general chat """
 
@@ -3905,29 +3936,13 @@ class Function:
                     return False
 
                 # Base data to fill the manual
-                title = ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities",
-                         "Still learning~", "Dev only :>", "Sorry, this is unavailable right now ~"]
+                title = Database.manual["title"]
 
-                carousel_text = ["Some simple things I can do ~",
-                                 "Some information about our lovely planet",
-                                 "Most used function up until now..",
-                                 "Some top secret about..",
-                                 "Some other things I can help you with",
-                                 "Well... the title describe it already :3",
-                                 "Sorry,, this is for dev only",
-                                 "Function that is unavailable right now"]
+                carousel_text = Database.manual["description"]
 
                 # Format manual display here... Append new function here...
-                function_list = [
-                    ["Random number", "Choose one", "Echo"],
-                    ["Time & Date", "Weather forecast", "Translate"],
-                    ["Anime download link", "Cinema's schedule", "Youtube download"],
-                    ["Wiki search", "Stalk instagram", "SW wiki"],
-                    ["Default reply", "Manuals", "Report Bug"],
-                    ["Convert", "Fact or Hoax", "News"],
-                    ["Dev : Print userlist", "Dev : Set notifier", "Send Invite"],
-                    ["ITB-ARC Database","<none>","<none>"]
-                    ]
+                function_list = Database.manual["function layout"]
+
                 command = "Manual : "
 
                 # Create default manual header
@@ -4072,16 +4087,16 @@ class OtherUtil:
         line_bot_api.push_message(address, TextSendMessage(text=report))
 
         # Send back up notification to Dev, to let Dev know that something unexpected happened
-        if address != jessin_userid:
-            report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+        report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
+        for dev_user in Database.devlist:
+            line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
     @staticmethod
     def megumi_logger(megumi_action, cond):
         """ Function to log every input by user """
 
-        with open(str("Logger_" + cond + "_" + megumi_action + ".txt"), "a") as megumi_logger:
-            megumi_logger.write(original_text + "\n")
+        with open("Megumi_Logger.txt", "a") as megumi_logger:
+            megumi_logger.write(cond + "_" + megumi_action + " : " + original_text + "\n")
 
     @staticmethod
     def function_rules_based_mapping(event):
@@ -4119,7 +4134,7 @@ class OtherUtil:
                 elif all(word in text for word in ["itb"]):
                     megumi_action = "Function_itb_arc_database"
 
-                elif any(word in text for word in ["mean", "wiki", "is", "are", "?"]):
+                elif any(word in text for word in ["mean", "wiki", "is", "are", "about"]):
                     megumi_action = "Function_wiki_search"
 
                 elif any(word in text for word in ["in"]):
@@ -4179,6 +4194,9 @@ class OtherUtil:
 
                 if all(word in text for word in ["print", "userlist"]):
                     megumi_action = "Dev_mode_print_userlist"
+
+                elif any(word in text for word in ["print", "log"]):
+                    megumi_action = "Dev_mode_print_logger"
 
                 elif any(word in text for word in ["turn ", "able", "tag notifier", "notif"]):
                     megumi_action = "Dev_mode_set_tag_notifier"

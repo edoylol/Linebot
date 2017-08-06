@@ -367,6 +367,29 @@ anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupl
 
 """ DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
 # Last updated 3 August 2017 : 22 Function listed
+
+manual = {"title": ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities",
+                    "Still learning~", "Dev only :>", "Sorry, this is unavailable right now ~"],
+          "description": ["Some simple things I can do ~",
+                          "Some information about our lovely planet",
+                          "Most used function up until now..",
+                          "Some top secret about..",
+                          "Some other things I can help you with",
+                          "Well... the title describe it already :3",
+                          "Sorry,, this is for dev only",
+                          "Function that is unavailable right now"],
+          "function layout": [
+                    ["Random number", "Choose one", "Echo"],
+                    ["Time & Date", "Weather forecast", "Translate"],
+                    ["Anime download link", "Cinema's schedule", "Youtube download"],
+                    ["Wiki search", "Stalk instagram", "SW wiki"],
+                    ["Default reply", "Manuals", "Report Bug"],
+                    ["Convert", "Fact or Hoax", "News"],
+                    ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],
+                    ["ITB-ARC Database", "Send Invite", "<none>"]
+                    ]
+          }
+
 functionlist = {
    "Anime download link": {
       "description": "Anime download link\n\nI can help you gather the anime download links as long it's listed in the cyber12 2016-2017 database\nAnyway, I use zippyshare as default, but you can request your favourite host like solidfiles, dropjify, etc.\nYou can also specify which episode to start with :>\n\nDon't worry, I will try my best to help you out \nLong Live WEEBS~ ",
@@ -430,6 +453,10 @@ functionlist = {
    "Dev : Set notifier": {
       "description": "Dev : Enable/disable notifier\n<Developer only>\nMegumi will tell dev when their name is being called \nHow about trying to call him here ? :p",
       "tips": "Try to say Dev mode enable / disable notifier (only available in dev mode)"
+   },
+   "Dev : Print logger": {
+      "description": "Dev : Print input logs\n<Developer only>\nMegumi will print all input logs for further NLP training...",
+      "tips": "Try to say Dev mode print logger (only available in dev mode)"
    },
    "Echo": {
       "description": "Echo\n\nWell.. you should know what I will do here right ? XD \nI will say anything you put between aphostrhope ",
@@ -582,7 +609,7 @@ functionlist = {
          "meg, what is 'Hatsune Miku'? ",
          "meg, what is 'lumberjack' ?",
          "meg, show info about 'intel'",
-         "meg, can you show me ganesha definition ? "
+         "meg, can you show me 'ganesha' definition ? "
       ]
    },
    "Youtube download": {

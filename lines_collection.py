@@ -889,9 +889,9 @@ class Lines:  # class to store respond lines
                      "I have it already... But you have to pay me some moneh for this :P\n\n#JK.. Its private..",
                      "Seems I can't stalk this page...They rejected my request to stalk .-. \n\nI did politely ask 'can I stalk here?'... "]
         elif cond == "user information header":
-            lines = ["Here's some information about him/her...\n",
-                     "Here you go... \n",
-                     "I'm back ~ \n",
+            lines = ["Here's some information about him/her...",
+                     "Here you go... ",
+                     "I'm back ~ ",
                      "I'm back with something you want :)",
                      "Stalk operation success ! :> "]
 
@@ -1203,6 +1203,27 @@ class Lines:  # class to store respond lines
                      "I think you should take a look at this..\nError with : %s\n\nHere's the detail : \n%s",
                      "Mastah, seems you need to check this out..\nError with : %s\n\nHere's the detail : \n%s",
                      "Mastah, help me with this...\nError with : %s\n\nHere's the detail : \n%s"]
+        else:
+            lines = [""]
+
+        return random.choice(lines)
+
+    @staticmethod
+    def dev_print_megumi_logger(cond):
+
+        if cond == "header":
+            lines = ["Preparing logs to print...",
+                     "Wait a second, preparing files to print...",
+                     "Printing command understood :>",
+                     "Wait a second, printing logs...",
+                     "Printing logs on process.."]
+
+        elif cond == "success":  # Take 1 argument : log count
+            lines = ["Printing Megumi's log succeed, {} logs printed...",
+                     "Megumi's log printed out, {} logs successfully printed",
+                     "{} logs successfully printed...",
+                     "Megumi printed out {} logs...",
+                     "Printing Megumi's log succeed, {} new entries... "]
         else:
             lines = [""]
 
