@@ -913,6 +913,31 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     @staticmethod
+    def hoax_or_fact(cond):
+
+        if cond == "fact":  # Take 2 argument : percentage, query
+            lines = ["I think '{1}' is true...\n\nAbout {0}%...",
+                     "It's true.. \nI can guarantee {0}% :> ",
+                     "Yea, it's true...\nI'm {0}% sure about that :>",
+                     "I think '{1}' is {0}% true...",
+                     "{0}% fact..., and the rest is made up..."]
+
+        elif cond == "hoax":  # Take 2 argument : percentage, query
+            lines = ["Nah.. that's just bullsh*t...\nI can guarantee {0}%",
+                     "I'm {0}% sure that '{1}' is not true at all...",
+                     "Nah, {0}% sure it's not true at all...",
+                     "'{1}' is hoax...I'm {0}% sure about that",
+                     "'{1}' proven as hoax... "]
+        else:
+            lines = ["I'm not sure about that either...",
+                     "Dunno.. maybe yes maybe no...",
+                     "Nah, I'm not sure about that..",
+                     "Seems It need more further investigation...",
+                     "Dunno... Not sure either..."]
+
+        return random.choice(lines)
+
+    @staticmethod
     def join(cond):
 
         if cond == "join":

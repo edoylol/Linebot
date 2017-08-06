@@ -382,11 +382,11 @@ manual = {"title": ["Simpler better", "About the world..", "Most used", "Informa
                     ["Random number", "Choose one", "Echo"],
                     ["Time & Date", "Weather forecast", "Translate"],
                     ["Anime download link", "Cinema's schedule", "Youtube download"],
-                    ["Wiki search", "Stalk instagram", "SW wiki"],
+                    ["Wiki search", "Fact or Hoax", "SW wiki"],
                     ["Default reply", "Manuals", "Report Bug"],
-                    ["Convert", "Fact or Hoax", "News"],
+                    ["ITB-ARC Database", "Stalk instagram", "Send Invite"],
                     ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],
-                    ["ITB-ARC Database", "Send Invite", "<none>"]
+                    ["ITB-ARC Database", "Send Invite", "<Convert>"]
                     ]
           }
 
@@ -470,14 +470,14 @@ functionlist = {
       ]
    },
    "Fact or Hoax": {
-      "description": "Ssstt...I'm spying flat earth community to prove them that earth is not flat ! NYAHAHAHA\n\n\n....oops... ",
-      "tips": "Not yet available",
+      "description": "Fact or ... \n\nYes... Megumi has learnt various skills to detect lies in your text! You can check whether a phrase is trustworthy or not.. ",
+      "tips": "Try to say like is it true that <'sentence'> ? you can say it in various format and in any language :) ",
       "example": [
-         "touch~",
-         "touch~",
-         "touch~",
-         "touch~",
-         "touch~"
+         "meg, is it true that 'I'm going to get married before 24 years old' ? ~",
+         "'the earth is flat' is it true meg ?",
+         "meg, 'snake actually has feet' is it true ?",
+         "meg, how do you think about 'Bananas are curved because they grow towards the sun' ?",
+         "is it true that 'women blink about twice as often as men' meg ? "
       ]
    },
    "ITB-ARC Database": {

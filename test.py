@@ -79,23 +79,76 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-"""
-url = 'https://hprimary.lelah.ga/analyze'
-text = 'animonstar is bankrupt'
+text = "sdfasdf'nadya rianty will love me back'sdfas"
 
+def hoax_or_fact():
+    """ Function to check whether a part of text is truth or lie """
 
-sess = requests.Session()
-r = sess.options(url)
+    def get_keyword():
+        """ Function to crop keyword from text """
+        # Find the index of apostrophe
+        index_start = text.find("'") + 1
+        index_stop = text.rfind("'")
 
-params = {'query': text}
-s = sess.post(url, json=params)
-clean_json = s.json()
+        # Determine whether 2 apostrophe are exist and the text exist
+        text_available = (index_stop - index_start) >= 1
+        if text_available:
+            keyword = text[index_start:index_stop]
+            return keyword
+        else:
+            return "keyword not found"
 
-conclusion = clean_json["conclusi on"]
-fact_point = clean_json["scores"][1]
-hoax_point = clean_json["scores"][2]
-unkw_point = clean_json["scores"][3]
-percentage = max(fact_point, hoax_point, unkw_point)/(fact_point+ hoax_point+unkw_point) *100
+    def get_analyser_result(keyword):
+        """ Function to return result from hoax analyser """
 
-print(conclusion, percentage, "%")
-""" #HOAX
+        page_url = 'https://hprimary.lelah.ga/analyze'
+        # Try to open the page and input query to analyze
+        try:
+            sess = requests.Session()
+            r = sess.options(page_url)
+            params = {'query': keyword}
+            s = sess.post(page_url, json=params)
+            clean_json = s.json()
+        except:
+            report = Lines.general_lines("failed to open page") % page_url
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+            raise
+
+        # Try to re-format the raw data
+        try:
+            conclusion = clean_json["conclusion"]
+            fact_point = clean_json["scores"][1]
+            hoax_point = clean_json["scores"][2]
+            unkw_point = clean_json["scores"][3]
+
+            # Count the percentage of hoax / truth / unknown...
+            percentage = max(fact_point, hoax_point, unkw_point) / (fact_point + hoax_point + unkw_point) * 100
+            percentage = str(percentage)[:4]
+            return conclusion, percentage
+
+        except:
+            report = Lines.general_lines("formatting error") % "analyzer data"
+            line_bot_api.push_message(address, TextSendMessage(text=report))
+            raise
+
+    cont = True
+    keyword = get_keyword()
+    # Check whether keyword available
+    if keyword == "keyword not found":
+        report = Lines.general_lines("search fail") % 'query'
+        line_bot_api.push_message(address, TextSendMessage(text=report))
+        cont = False
+
+    # If keyword is available
+    if cont:
+        conclusion, percentage = get_analyser_result(keyword)
+
+        # Differentiate result base on conclusion
+        if conclusion == "fact":
+            report = (Lines.hoax_or_fact("fact").format(percentage, keyword))
+        elif conclusion == "hoax":
+            report = (Lines.hoax_or_fact("hoax").format(percentage, keyword))
+        else:
+            report = Lines.hoax_or_fact("else")
+
+        line_bot_api.push_message(address, TextSendMessage(text=report))
