@@ -3626,10 +3626,12 @@ class Function:
                     raw_data_tables = BeautifulSoup(str(mod_page.findAll("table")), "html.parser")
                     raw_datas = raw_data_tables.findAll("tr")
 
-                    # Try to re-format the data
-                    for item in raw_datas:
-                        if len(str(item)) < 250:
-                            raw_data = item.text.strip().split("\n")
+                    # Try to re-format the data, only pick top 5 data
+                    found_count = 0
+                    i = 0
+                    while (found_count < 5) and (i in range(0, len(raw_datas))):
+                        if len(str(raw_datas[i])) < 250:
+                            raw_data = raw_datas[i].text.strip().split("\n")
 
                             student_nim = raw_data[2]
                             student_name = raw_data[1]
@@ -3640,15 +3642,34 @@ class Function:
                             search_result.append(student_name)
                             search_result.append(student_major + " [ " + str(student_major_year) + " ]")
                             search_result.append(" ")
-
-                    # If the data is successfully gathered, send it to user
-                    report = "\n".join(search_result)
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                            found_count += 1
+                        i += 1
 
                 except:
                     report = Lines.general_lines("formatting error") % "student's data"
                     line_bot_api.push_message(address, TextSendMessage(text=report))
                     raise
+
+                # Differentiate if the data found is singular or plural
+                report = []
+                if found_count > 1:
+                    report.append(Lines.itb_arc_database("count result plural") % (str(found_count)))
+                    if search_result_count > 5:
+                        report.append(" ")
+                        report.append(Lines.itb_arc_database("only send top 5"))
+                elif found_count == 1:
+                    report.append(Lines.itb_arc_database("count result one"))
+                else:
+                    report.append(Lines.itb_arc_database("not found"))
+
+                # Send pre-result header
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                # If the data is found and successfully gathered, send it to user
+                if found_count >= 1:
+                    report = "\n".join(search_result)
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
 
             cont = True  
             itb_keyword = get_keyword()
