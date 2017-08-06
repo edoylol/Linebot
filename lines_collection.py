@@ -620,11 +620,17 @@ class Lines:  # class to store respond lines
                      "%s?? Wait... let me check..."
                      ]
         elif cond == "database unreachable":
-            lines = ["I think there's some problem with the database right now...",
-                     "Seems ARC-ITB database is down or unreachable...",
-                     "I can't access the database right now...",
-                     "I wonder if the ARC-ITB database is down or under maintenance...",
-                     "Seems the database is offline right now.."]
+            lines = ["I think there's some problem with the database right now...\nI will try to use sub-database...",
+                     "Seems ARC-ITB database is down or unreachable...\nI will try to search on sub-database",
+                     "I can't access the database right now...\nNo worries, I will try searching in sub-database",
+                     "I wonder if the ARC-ITB database is down or under maintenance...\nI will try to use sub-database...",
+                     "Seems the database is offline right now..\nNo worries, I will try searching in sub-database"]
+        elif cond == "sub database unreachable":
+            lines = ["Sorry,..\nI think there's some problem here too...",
+                     "Sorry,..\nSeems all database is down or unreachable...",
+                     "Sorry,..\nI can't access the sub-database as well...",
+                     "Sorry,..\nNo result as well...",
+                     "Sorry,..\nSeems all the database are offline right now.."]
         elif cond == "default category":
             lines = ["I'm searching under 'students' category, since you didn't specify the category..",
                      "Btw, I'm searching for the keyword under 'students' category..",

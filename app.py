@@ -3436,6 +3436,7 @@ class Function:
 
     @staticmethod
     def itb_arc_database():
+        """ Function to search for ITB students information based on internal database """
 
         try:
             def get_keyword():
@@ -3455,14 +3456,20 @@ class Function:
                     return "keyword not found"
 
             def get_category():
+                """ Function to return search category found on text, and 'is default' boolean """
+
                 is_default_category = False
 
+                # Check for several keyword which represent each category
                 if any(word in text for word in ["student", "students", "stud", "std", "stds", "studnt", "stdnt"]):
                     category = "student"
+
                 elif any(word in text for word in ["lecturer", "lecture", "prof", "professor", "lctrer", "lctr", "dr"]):
                     category = "lecturer"
+
                 elif any(word in text for word in ["major", "faculty", "fclty", "fclt", "mjr", "maj", "fac", "fac"]):
                     category = "major"
+
                 else:
                     category = "student"
                     is_default_category = True
@@ -3470,59 +3477,87 @@ class Function:
                 return category, is_default_category
 
             def get_student_info():
+                """ Function to crawl ARC - ITB database and get student information """
 
+                # Maximum data shown is 5, nb : search_result_count is a main function variable
                 if search_result_count > 5:
                     max_data = 5
                 else:
                     max_data = search_result_count
 
-                for i in range(0, max_data):
-                    student_name = ARC_ITB_api_data['result'][i]['fullname']
-                    student_nim = ARC_ITB_api_data['result'][i]['nim']
-                    student_major = ARC_ITB_api_data['result'][i]['major']['title']
-                    student_faculty = ARC_ITB_api_data['result'][i]['major']['faculty']['title']
-                    student_major_year = ARC_ITB_api_data['result'][i]['year']
+                # iterate raw data to re-format and gather the needed data
+                try:
+                    for i in range(0, max_data):
+                        student_nim = arc_itb_api_data['result'][i]['nim']
+                        student_name = arc_itb_api_data['result'][i]['fullname']
+                        student_major = arc_itb_api_data['result'][i]['major']['title']
+                        student_major_year = arc_itb_api_data['result'][i]['year']
+                        student_faculty = arc_itb_api_data['result'][i]['major']['faculty']['title']
 
-                    search_result.append("NIM : " + str(student_nim))
-                    search_result.append(student_name)
-                    search_result.append(student_major + " [ " + str(student_major_year) + " ]")
-                    search_result.append(student_faculty)
-                    search_result.append(" ")
 
-                search_result.append(Lines.itb_arc_database("footer"))
+                        search_result.append("NIM : " + str(student_nim))
+                        search_result.append(student_name)
+                        search_result.append(student_major + " [ " + str(student_major_year) + " ]")
+                        search_result.append(student_faculty)
+                        search_result.append(" ")
+
+                    search_result.append(Lines.itb_arc_database("footer"))
+
+                except:
+                    report = Lines.general_lines("formatting error") % "student's information"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
             def get_lecturer_info():
+                """ Function to crawl ARC - ITB database and get lecturer information """
 
+                # Maximum data shown is 5, nb : search_result_count is a main function variable
                 if search_result_count > 5:
                     max_data = 5
                 else:
                     max_data = search_result_count
 
-                for i in range(0, max_data):
-                    lecturer_name = ARC_ITB_api_data['result'][i]['fullname']
-                    lecturer_nip = ARC_ITB_api_data['result'][i]['nip']
+                # iterate raw data to re-format and gather the needed data
+                try:
 
-                    search_result.append(lecturer_name)
-                    search_result.append("NIP : " + str(lecturer_nip))
-                    search_result.append(" ")
-                search_result.append(Lines.itb_arc_database("footer"))
+                    for i in range(0, max_data):
+                        lecturer_name = arc_itb_api_data['result'][i]['fullname']
+                        lecturer_nip = arc_itb_api_data['result'][i]['nip']
+
+                        search_result.append(lecturer_name)
+                        search_result.append("NIP : " + str(lecturer_nip))
+                        search_result.append(" ")
+                    search_result.append(Lines.itb_arc_database("footer"))
+
+                except:
+                    report = Lines.general_lines("formatting error") % "lecturer's information"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
             def get_major_info():
+                """ Function to crawl ARC - ITB database and get major information """
 
+                # Maximum data shown is 5, nb : search_result_count is a main function variable
                 if search_result_count > 5:
                     max_data = 5
                 else:
                     max_data = search_result_count
 
-                for i in range(0, max_data):
-                    major_name = ARC_ITB_api_data['result'][i]['title']
-                    major_code = ARC_ITB_api_data['result'][i]['code']
-                    major_faculty = ARC_ITB_api_data['result'][i]['faculty']['title']
+                # iterate raw data to re-format and gather the needed data
+                try:
+                    for i in range(0, max_data):
+                        major_name = arc_itb_api_data['result'][i]['title']
+                        major_code = arc_itb_api_data['result'][i]['code']
+                        major_faculty = arc_itb_api_data['result'][i]['faculty']['title']
 
-                    search_result.append("[ " + str(major_code) + " ] " + major_name)
-                    search_result.append(major_faculty)
-                    search_result.append(" ")
-                search_result.append(Lines.itb_arc_database("footer"))
+                        search_result.append("[ " + str(major_code) + " ] " + major_name)
+                        search_result.append(major_faculty)
+                        search_result.append(" ")
+                    search_result.append(Lines.itb_arc_database("footer"))
+                except:
+                    report = Lines.general_lines("formatting error") % "major's information"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
             def send_header():
                 """ Function to create headers """
@@ -3536,8 +3571,10 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
             def send_result_count():
+                """ Function to send main result found count (still a part of header) """
                 report = []
 
+                # Differentiate if the data found is singular or plural
                 if search_result_count > 1:
                     report.append(Lines.itb_arc_database("count result plural") % (str(search_result_count)))
                     if search_result_count > 5:
@@ -3552,31 +3589,103 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
             def send_detail_info():
+                """ Function to send all detailed result """
+                
                 report = "\n".join(search_result)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            cont = True  # default flag
+            def backup_itb_data(keyword):
+                """ Function to run backup search on carinim.cf as a backup database """
 
+                search_result = []
+                send_header()
+
+                # Determine whether keyword is name or nim
+                try:
+                    keyword_nim = str(int(keyword))
+                    keyword_nama = ""
+                except:
+                    keyword_nim = ""
+                    keyword_nama = keyword
+
+                # Try to open the page
+                page_url = str("http://carinim.cf/nim.php?nama=" + keyword_nama + "&nim=" + keyword_nim)
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Try to crawl the data needed
+                try:
+                    raw_data_tables = BeautifulSoup(str(mod_page.findAll("table")), "html.parser")
+                    raw_datas = raw_data_tables.findAll("tr")
+
+                    # Try to re-format the data
+                    for item in raw_datas:
+                        if len(str(item)) < 250:
+                            raw_data = item.text.strip().split("\n")
+
+                            student_nim = raw_data[2]
+                            student_name = raw_data[1]
+                            student_major = raw_data[3]
+                            student_major_year = str("20" + str(student_nim[3:5]))
+
+                            search_result.append("NIM : " + str(student_nim))
+                            search_result.append(student_name)
+                            search_result.append(student_major + " [ " + str(student_major_year) + " ]")
+                            search_result.append(" ")
+
+                    # If the data is successfully gathered, send it to user
+                    send_detail_info()
+
+                except:
+                    report = Lines.general_lines("formatting error") % "student's data"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+            cont = True  
             itb_keyword = get_keyword()
+            search_category = "student"
+            search_result_count = 0
+            
+            # Check whether ITB keyword is found, if it's not, then stop the process and report to user
             if itb_keyword == "keyword not found":
                 report = Lines.general_lines("search fail") % "itb keyword"
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 cont = False
 
+            # If the keyword is found, try to search for the data
             if cont:
                 search_category, is_default_category = get_category()
+                arc_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
 
-                ARC_api_call = "https://nim.arc.itb.ac.id/api//search/" + search_category + "/?keyword=" + itb_keyword + "&page=1&count=30"
-                try :
-                    ARC_ITB_api_data = requests.get(ARC_api_call).json()
-                    search_result_count = ARC_ITB_api_data['totalCount']  # get the total result count
-                except :
+                # Try to use default ARC-ITB database
+                try:
+                    arc_itb_api_data = requests.get(arc_api_call).json()
+                    search_result_count = arc_itb_api_data['totalCount']  # get the total result count
+
+                # If it's failed, send notice and try to use sub database (carinim.cf)
+                except:
                     report = Lines.itb_arc_database("database unreachable")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                    # Try to use sub database
+                    try:
+                        backup_itb_data(itb_keyword)
+                    except:
+                        report = Lines.itb_arc_database("sub database unreachable")
+                        line_bot_api.push_message(address, TextSendMessage(text=report))
+
                     cont = False
 
             # If the data is successfully retrieved
-            if cont :
+            if cont:
                 search_result = []
                 send_header()
                 send_result_count()
@@ -3584,8 +3693,8 @@ class Function:
                 # continue only if the result is available
                 if search_result_count > 0:
 
-                    # re - format the data to make it more beautiful
-                    try :
+                    # re-format the data
+                    try:
                         if search_category == "student":
                             get_student_info()
                         elif search_category == "lecturer":
@@ -3594,14 +3703,14 @@ class Function:
                             get_major_info()
                         send_detail_info()
 
-                    except :
+                    # If there's error in formatting process, send a report to user
+                    except:
                         report = Lines.itb_arc_database("data formatting failed")
                         line_bot_api.push_message(address, TextSendMessage(text=report))
 
-
         except Exception as exception_detail:
             function_name = "ITB ARC database"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     """====================== Sub Function List ============================="""
 
