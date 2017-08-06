@@ -219,6 +219,7 @@ def message_text(event):
             elif megumi_action == "Function_report_bug"             : Function.report_bug(event)
             elif megumi_action == "Function_leave"                  : Function.leave(event)
             elif megumi_action == "Function_stalk_instagram"        : Function.stalk_instagram()
+            elif megumi_action == "Function_hoax_analyser"          : Function.hoax_or_fact()
 
             elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check(event)
             elif megumi_action == "Dev_mode_print_userlist"         :
