@@ -382,11 +382,11 @@ manual = {"title": ["Simpler better", "About the world..", "Most used", "Informa
                     ["Random number", "Choose one", "Echo"],
                     ["Time & Date", "Weather forecast", "Translate"],
                     ["Anime download link", "Cinema's schedule", "Youtube download"],
-                    ["Wiki search", "Fact or Hoax", "SW wiki"],
+                    ["Wiki search", "Fact or Hoax", "Stalk instagram"],
                     ["Default reply", "Manuals", "Report Bug"],
-                    ["ITB-ARC Database", "Stalk instagram", "Send Invite"],
+                    ["ITB-ARC Database", "SW wiki", "Send Invite"],
                     ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],
-                    ["ITB-ARC Database", "Send Invite", "<Convert>"]
+                    ["<News>", "<something>", "<Convert>"]
                     ]
           }
 
