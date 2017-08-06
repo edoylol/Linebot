@@ -3642,6 +3642,7 @@ class Function:
                             search_result.append(" ")
 
                     # If the data is successfully gathered, send it to user
+                    print("BINGO")
                     send_detail_info()
 
                 except:
