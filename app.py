@@ -3860,8 +3860,8 @@ class Function:
                     count_log += 1
 
             time.sleep(5)
-            print("========================== NEW LOGGER : APIAI ==========================\n")
-            with open("Megumi_Logger_APIAI.txt", "r") as megumi_logger:
+            print("========================== NEW LOGGER : AIAPI ==========================\n")
+            with open("Megumi_Logger_AIAPI.txt", "r") as megumi_logger:
 
                 for item in megumi_logger:
                     print(item.strip())
