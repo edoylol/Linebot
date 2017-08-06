@@ -77,8 +77,7 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-keyword = "louise"
-
+keyword = "16516387"
 try:
     keyword_nim = str(int(keyword))
     keyword_nama = ""
@@ -86,38 +85,16 @@ except:
     keyword_nim = ""
     keyword_nama = keyword
 
-page_url = str("http://carinim.cf/nim.php?nama="+keyword_nama+"&nim="+keyword_nim)
+# Try to open the page
+page_url = str("http://carinim.cf/nim.php?nama=" + keyword_nama + "&nim=" + keyword_nim)
 try:
     req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
     con = urllib.request.urlopen(req)
     page_source_code_text = con.read()
     mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
 except:
     report = Lines.general_lines("failed to open page") % page_url
-    line_bot_api.push_message(address, TextSendMessage(text=report))
-    raise
 
-try:
-    raw_data_tables = BeautifulSoup(str(mod_page.findAll("table")), "html.parser")
-    raw_datas = raw_data_tables.findAll("tr")
-
-    search_result = []
-    for item in raw_datas:
-        if len(str(item)) < 250:
-            raw_data = item.text.strip().split("\n")
-
-            student_nim = raw_data[2]
-            student_name = raw_data[1]
-            student_major = raw_data[3]
-            student_major_year = str("20" + str(student_nim[3:5]))
-
-            search_result.append("NIM : " + str(student_nim))
-            search_result.append(student_name)
-            search_result.append(student_major + " [ " + str(student_major_year) + " ]")
-            search_result.append(" ")
-except:
-    report = Lines.general_lines("formatting error") % "student's data"
-    line_bot_api.push_message(address, TextSendMessage(text=report))
-    raise
-
+    print(report)
 

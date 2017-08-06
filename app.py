@@ -3610,6 +3610,7 @@ class Function:
 
                 # Try to open the page
                 page_url = str("http://carinim.cf/nim.php?nama=" + keyword_nama + "&nim=" + keyword_nim)
+                print(page_url)
                 try:
                     req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                     con = urllib.request.urlopen(req)
