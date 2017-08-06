@@ -3642,8 +3642,8 @@ class Function:
                             search_result.append(" ")
 
                     # If the data is successfully gathered, send it to user
-                    print("BINGO")
-                    send_detail_info()
+                    report = "\n".join(search_result)
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
 
                 except:
                     report = Lines.general_lines("formatting error") % "student's data"
