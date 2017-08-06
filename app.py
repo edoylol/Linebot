@@ -3851,16 +3851,24 @@ class Function:
             for dev_user in Database.devlist:
                 line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
-            print("=================================== NEW LOGGER ===================================\n")
-            with open("Megumi_Logger.txt", "r") as megumi_logger:
+            print("========================== NEW LOGGER : Rules ==========================\n")
+            with open("Megumi_Logger_Rules.txt", "r") as megumi_logger:
 
                 count_log = 0
                 for item in megumi_logger:
-                    print(item)
+                    print(item.strip())
                     count_log += 1
 
             time.sleep(5)
-            print("\n================================= END OF LOGGER =================================")
+            print("========================== NEW LOGGER : APIAI ==========================\n")
+            with open("Megumi_Logger_APIAI.txt", "r") as megumi_logger:
+
+                for item in megumi_logger:
+                    print(item.strip())
+                    count_log += 1
+
+            time.sleep(5)
+            print("\n=========================== END OF LOGGER ===========================")
 
             report = (Lines.dev_print_megumi_logger("success")).format(count_log)
             for dev_user in Database.devlist:
@@ -4095,7 +4103,7 @@ class OtherUtil:
     def megumi_logger(megumi_action, cond):
         """ Function to log every input by user """
 
-        with open("Megumi_Logger.txt", "a") as megumi_logger:
+        with open(str("Megumi_Logger_"+cond+".txt"), "a") as megumi_logger:
             megumi_logger.write(cond + "_" + megumi_action + " : " + original_text + "\n")
 
     @staticmethod
