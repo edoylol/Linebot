@@ -2841,374 +2841,385 @@ class Function:
     def stalk_instagram():
         """ Function to stalk instagram account and return user profile and top 5 pic """
 
-        def get_instagram_page_keyword():
-            """ Function to return full instagram page link """
+        try:
+            def get_instagram_page_keyword():
+                """ Function to return full instagram page link """
 
-            # Find the index of apostrophe
-            index_start = text.find("'") + 1
-            index_stop = text.rfind("'")
+                # Find the index of apostrophe
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
 
-            # Determine whether 2 apostrophe are exist and the text exist
-            text_available = (index_stop - index_start) >= 1
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
 
-            # If user (keyword) exist, crop it
-            if text_available:
-                keyword = text[index_start:index_stop]
-                return keyword
+                # If user (keyword) exist, crop it
+                if text_available:
+                    keyword = text[index_start:index_stop]
+                    return keyword
 
-            else:
-                return "keyword not found"
+                else:
+                    return "keyword not found"
 
-        def get_insta_raw_data(page_url):
-            """ Function to crawl instagram page to get various data about someone """
+            def get_insta_raw_data(page_url):
+                """ Function to crawl instagram page to get various data about someone """
 
-            # Try to open instagram page
-            try:
-                req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                con = urllib.request.urlopen(req)
-                page_source_code_text = con.read()
-                mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+                # Try to open instagram page
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
-            except:
-                report = Lines.general_lines("failed to open page") % page_url
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
-            # Parse the raw data, get the script part , select the longest one
-            try:
-                rawdatas = mod_page.find_all("script")
-                temp = []
-                for x in rawdatas:
-                    temp.append(str(x))
-                rawdatas = max(temp, key=len)
+                # Parse the raw data, get the script part , select the longest one
+                try:
+                    rawdatas = mod_page.find_all("script")
+                    temp = []
+                    for x in rawdatas:
+                        temp.append(str(x))
+                    rawdatas = max(temp, key=len)
 
-                # Crop the pre-json part
-                text = rawdatas
-                index_start = text.find("{")
-                index_stop = text.rfind("}") + 1
-                rawdatas = str(text[index_start:index_stop])
+                    # Crop the pre-json part
+                    text = rawdatas
+                    index_start = text.find("{")
+                    index_stop = text.rfind("}") + 1
+                    rawdatas = str(text[index_start:index_stop])
 
-            except:
-                report = Lines.general_lines("formatting error") % "instagram's page"
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
+                except:
+                    report = Lines.general_lines("formatting error") % "instagram's page"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
-            # Convert to JSON data
-            json_rawdata = json.loads(rawdatas)
+                # Convert to JSON data
+                json_rawdata = json.loads(rawdatas)
 
-            return json_rawdata
+                return json_rawdata
 
-        def get_insta_user_data(json_rawdata):
-            """ Function to get insta user data """
+            def get_insta_user_data(json_rawdata):
+                """ Function to get insta user data """
 
-            # Get user fullname
-            try:
-                insta_fullname = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["full_name"]
-            except:
-                insta_fullname = "no data"
+                # Get user fullname
+                try:
+                    insta_fullname = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["full_name"]
+                except:
+                    insta_fullname = "no data"
 
-            # Get user username
-            try:
-                insta_username = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["username"]
-            except:
-                insta_username = "no data"
+                # Get user username
+                try:
+                    insta_username = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["username"]
+                except:
+                    insta_username = "no data"
 
-            # Get user biography
-            try:
-                insta_biography = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["biography"]
-            except:
-                insta_biography = "no data"
+                # Get user biography
+                try:
+                    insta_biography = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["biography"]
+                except:
+                    insta_biography = "no data"
 
-            # Get user follower count
-            try:
-                insta_follower = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["followed_by"]["count"]
-            except:
-                insta_follower = "no data"
+                # Get user follower count
+                try:
+                    insta_follower = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["followed_by"]["count"]
+                except:
+                    insta_follower = "no data"
 
-            # Get user following count
-            try:
-                insta_following = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["follows"]["count"]
-            except:
-                insta_following = "no data"
+                # Get user following count
+                try:
+                    insta_following = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["follows"]["count"]
+                except:
+                    insta_following = "no data"
 
-            # Get user privacy status
-            try:
-                insta_private = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["is_private"]
-            except:
-                insta_private = "no data"
+                # Get user privacy status
+                try:
+                    insta_private = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["is_private"]
+                except:
+                    insta_private = "no data"
 
-            # Return all the data found
-            return insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private
+                # Return all the data found
+                return insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private
 
-        def get_insta_media_data(json_rawdata):
-            """ Function to get insta media data """
+            def get_insta_media_data(json_rawdata):
+                """ Function to get insta media data """
 
-            # Try to get the medias data
-            try:
-                insta_media = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["media"]["nodes"]
-            except:
-                report = Lines.general_lines("formatting error") % "posted-media's"
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
+                # Try to get the medias data
+                try:
+                    insta_media = json_rawdata["entry_data"]["ProfilePage"][0]["user"]["media"]["nodes"]
+                except:
+                    report = Lines.general_lines("formatting error") % "posted-media's"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
-            # Set default value
-            insta_image_link_list = []
-            insta_image_caption_list = []
-            insta_image_like_list = []
+                # Set default value
+                insta_image_link_list = []
+                insta_image_caption_list = []
+                insta_image_like_list = []
 
-            # Get top 5 image / video data
-            for item in insta_media:
-                if len(insta_image_link_list) < 5:
+                # Get top 5 image / video data
+                for item in insta_media:
+                    if len(insta_image_link_list) < 5:
 
-                    # Get the media link
-                    try:
-                        insta_image = item["thumbnail_src"]
-                        insta_image_link_list.append(insta_image)
-                    except:
+                        # Get the media link
+                        try:
+                            insta_image = item["thumbnail_src"]
+                            insta_image_link_list.append(insta_image)
+                        except:
+                            break
+
+                        # Get the media caption
+                        try:
+                            insta_image_caption = str(item["caption"]).strip()
+                            insta_image_caption_list.append(insta_image_caption)
+                        except:
+                            insta_image_caption_list.append("-")
+
+                        # Get the media like count
+                        try:
+                            insta_image_like = item["likes"]["count"]
+                            insta_image_like_list.append(insta_image_like)
+                        except:
+                            insta_image_like_list.append("0")
+
+                    # If there's more than 5 item in image_link_list, stop it
+                    else:
                         break
 
-                    # Get the media caption
-                    try:
-                        insta_image_caption = str(item["caption"]).strip()
-                        insta_image_caption_list.append(insta_image_caption)
-                    except:
-                        insta_image_caption_list.append("-")
+                return insta_image_link_list, insta_image_caption_list, insta_image_like_list
 
-                    # Get the media like count
-                    try:
-                        insta_image_like = item["likes"]["count"]
-                        insta_image_like_list.append(insta_image_like)
-                    except:
-                        insta_image_like_list.append("0")
+            def send_header():
+                """ Function to send header , confirmation that stalking on the way """
 
-                # If there's more than 5 item in image_link_list, stop it
-                else:
-                    break
-
-            return insta_image_link_list, insta_image_caption_list, insta_image_like_list
-
-        def send_header():
-            """ Function to send header , confirmation that stalking on the way """
-
-            report = (Lines.stalk_instagram("header")).format(keyword)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-        def send_insta_user_info(insta_fullname, insta_username, insta_biography, insta_follower, insta_following):
-            """ Function to send instagram page user information """
-
-            # Generate report about user information
-            report = [Lines.stalk_instagram("user information header")]
-            try:
-                report.append(" ")
-                report.append("Fullname : " + str(insta_fullname))
-                report.append("Instagram username: " + str(insta_username))
-                report.append(" ")
-                report.append("Biography : " + str(insta_biography))
-                report.append(" ")
-                report.append("Follower : " + str(insta_follower))
-                report.append("Following : " + str(insta_following))
-            except:
-                pass
-
-            report = "\n".join(report)
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-
-        def send_insta_user_pic(insta_image_link_list, insta_image_caption_list, insta_image_like_list):
-            """ Function to send instagram page media (up to 5) """
-
-            image_count = len(insta_image_link_list)
-
-            carousel_text = []
-            header_pic = []
-            alt_text = ("Stalking " + keyword + "'s instagram...")
-            # Generate and format the data used by carousel
-            for i in range(0, image_count):
-
-                # Format image likes count
-                image_like_count = str(insta_image_like_list[i])+" ♥"
-
-                # Format image caption
-                if len(insta_image_caption_list[i]) > 45:
-                    image_caption = str("\"" + insta_image_caption_list[i][:45] + "...\"")
-                else:
-                    image_caption = str("\"" + insta_image_caption_list[i] + "\"")
-
-                # Join them together and append to carousel text
-                carousel_text.append(str(image_like_count) + "\n" + image_caption)
-
-                # Append image link to header pic
-                header_pic.append(insta_image_link_list[i])
-
-            if image_count == 0:
-                report = Lines.stalk_instagram("picture count 0")
+                report = (Lines.stalk_instagram("header")).format(keyword)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            else:
+            def send_insta_user_info(insta_fullname, insta_username, insta_biography, insta_follower, insta_following):
+                """ Function to send instagram page user information """
 
-                if image_count == 1:
-                    carousel_template = CarouselTemplate(columns=[
-                        CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[0])]),
-                    ])
-                elif image_count == 2:
-                    carousel_template = CarouselTemplate(columns=[
-                        CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[0])]),
-                        CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[1])]),
-                    ])
-                elif image_count == 3:
-                    carousel_template = CarouselTemplate(columns=[
-                        CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[0])]),
-                        CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[1])]),
-                        CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[2])]),
-                    ])
-                elif image_count == 4:
-                    carousel_template = CarouselTemplate(columns=[
-                        CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[0])]),
-                        CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[1])]),
-                        CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[2])]),
-                        CarouselColumn(text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[3])]),
-                    ])
-                elif image_count == 5:
-                    carousel_template = CarouselTemplate(columns=[
-                        CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[0])]),
-                        CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[1])]),
-                        CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[2])]),
-                        CarouselColumn(text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[3])]),
-                        CarouselColumn(text=carousel_text[4][:60], thumbnail_image_url=header_pic[4], actions=[
-                            URITemplateAction(label='See detail..', uri=header_pic[4])]),
-                    ])
+                # Generate report about user information
+                report = [Lines.stalk_instagram("user information header")]
+                try:
+                    report.append(" ")
+                    report.append("Fullname : " + str(insta_fullname))
+                    report.append("Instagram username: " + str(insta_username))
+                    report.append(" ")
+                    report.append("Biography : " + str(insta_biography))
+                    report.append(" ")
+                    report.append("Follower : " + str(insta_follower))
+                    report.append("Following : " + str(insta_following))
+                except:
+                    pass
+
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            def send_insta_user_pic(insta_image_link_list, insta_image_caption_list, insta_image_like_list):
+                """ Function to send instagram page media (up to 5) """
+
+                image_count = len(insta_image_link_list)
+
+                carousel_text = []
+                header_pic = []
+                alt_text = ("Stalking " + keyword + "'s instagram...")
+                # Generate and format the data used by carousel
+                for i in range(0, image_count):
+
+                    # Format image likes count
+                    image_like_count = str(insta_image_like_list[i])+" ♥"
+
+                    # Format image caption
+                    if len(insta_image_caption_list[i]) > 45:
+                        image_caption = str("\"" + insta_image_caption_list[i][:45] + "...\"")
+                    else:
+                        image_caption = str("\"" + insta_image_caption_list[i] + "\"")
+
+                    # Join them together and append to carousel text
+                    carousel_text.append(str(image_like_count) + "\n" + image_caption)
+
+                    # Append image link to header pic
+                    header_pic.append(insta_image_link_list[i])
+
+                if image_count == 0:
+                    report = Lines.stalk_instagram("picture count 0")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
                 else:
-                    return
 
-                template_message = TemplateSendMessage(alt_text=alt_text, template=carousel_template)
-                line_bot_api.push_message(address, template_message)
+                    if image_count == 1:
+                        carousel_template = CarouselTemplate(columns=[
+                            CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[0])]),
+                        ])
+                    elif image_count == 2:
+                        carousel_template = CarouselTemplate(columns=[
+                            CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[0])]),
+                            CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[1])]),
+                        ])
+                    elif image_count == 3:
+                        carousel_template = CarouselTemplate(columns=[
+                            CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[0])]),
+                            CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[1])]),
+                            CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[2])]),
+                        ])
+                    elif image_count == 4:
+                        carousel_template = CarouselTemplate(columns=[
+                            CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[0])]),
+                            CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[1])]),
+                            CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[2])]),
+                            CarouselColumn(text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[3])]),
+                        ])
+                    elif image_count == 5:
+                        carousel_template = CarouselTemplate(columns=[
+                            CarouselColumn(text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[0])]),
+                            CarouselColumn(text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[1])]),
+                            CarouselColumn(text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[2])]),
+                            CarouselColumn(text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[3])]),
+                            CarouselColumn(text=carousel_text[4][:60], thumbnail_image_url=header_pic[4], actions=[
+                                URITemplateAction(label='See detail..', uri=header_pic[4])]),
+                        ])
+                    else:
+                        return
 
-        cont = True
-        json_rawdata = None
+                    template_message = TemplateSendMessage(alt_text=alt_text, template=carousel_template)
+                    line_bot_api.push_message(address, template_message)
 
-        # Get the full version link
-        keyword = get_instagram_page_keyword()
-        page_url = "https://www.instagram.com/" + keyword + "/"
+            cont = True
+            json_rawdata = None
 
-        # If the keyword is not found, stop the process
-        if keyword == "keyword not found":
-            report = Lines.general_lines("search fail") % "instagram id"
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-            cont = False
+            # Get the full version link
+            keyword = get_instagram_page_keyword()
+            page_url = "https://www.instagram.com/" + keyword + "/"
 
-        # If full version link is available, try to get raw data
-        if cont:
-            send_header()
-            json_rawdata = get_insta_raw_data(page_url)
-
-            # If the data is unavailable, stop the process
-            if json_rawdata is None:
-                report = Lines.general_lines("failed to open page") % str(keyword + "'s instagram")
+            # If the keyword is not found, stop the process
+            if keyword == "keyword not found":
+                report = Lines.general_lines("search fail") % "instagram id"
                 line_bot_api.push_message(address, TextSendMessage(text=report))
                 cont = False
 
-        # If the raw data is available, crawl user information and check if it's private or not
-        if cont:
-            # Get and send insta page user information
-            insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private = get_insta_user_data(json_rawdata)
-            send_insta_user_info(insta_fullname, insta_username, insta_biography, insta_follower, insta_following)
+            # If full version link is available, try to get raw data
+            if cont:
+                send_header()
+                json_rawdata = get_insta_raw_data(page_url)
 
-            if insta_private:
-                report = Lines.stalk_instagram("private")
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-                cont = False
+                # If the data is unavailable, stop the process
+                if json_rawdata is None:
+                    report = Lines.general_lines("failed to open page") % str(keyword + "'s instagram")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    cont = False
 
-        # If it's not private, crawl top 5 pic and send it
-        if cont:
-            # Get and send insta page user media
-            insta_image_link_list, insta_image_caption_list, insta_image_like_list = get_insta_media_data(json_rawdata)
-            send_insta_user_pic(insta_image_link_list, insta_image_caption_list, insta_image_like_list)
+            # If the raw data is available, crawl user information and check if it's private or not
+            if cont:
+                # Get and send insta page user information
+                insta_fullname, insta_username, insta_biography, insta_follower, insta_following, insta_private = get_insta_user_data(json_rawdata)
+                send_insta_user_info(insta_fullname, insta_username, insta_biography, insta_follower, insta_following)
+
+                if insta_private:
+                    report = Lines.stalk_instagram("private")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    cont = False
+
+            # If it's not private, crawl top 5 pic and send it
+            if cont:
+                # Get and send insta page user media
+                insta_image_link_list, insta_image_caption_list, insta_image_like_list = get_insta_media_data(json_rawdata)
+                send_insta_user_pic(insta_image_link_list, insta_image_caption_list, insta_image_like_list)
+
+        except Exception as exception_detail:
+            function_name = "Stalk Instagram"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def hoax_or_fact():
         """ Function to check whether a part of text is truth or lie """
 
-        def get_keyword():
-            """ Function to crop keyword from text """
-            # Find the index of apostrophe
-            index_start = text.find("'") + 1
-            index_stop = text.rfind("'")
+        try:
 
-            # Determine whether 2 apostrophe are exist and the text exist
-            text_available = (index_stop - index_start) >= 1
-            if text_available:
-                keyword = text[index_start:index_stop]
-                return keyword
-            else:
-                return "keyword not found"
+            def get_keyword():
+                """ Function to crop keyword from text """
+                # Find the index of apostrophe
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
 
-        def get_analyser_result(keyword):
-            """ Function to return result from hoax analyser """
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
+                if text_available:
+                    keyword = text[index_start:index_stop]
+                    return keyword
+                else:
+                    return "keyword not found"
 
-            page_url = 'https://hprimary.lelah.ga/analyze'
-            # Try to open the page and input query to analyze
-            try:
-                sess = requests.Session()
-                r = sess.options(page_url)
-                params = {'query': keyword}
-                s = sess.post(page_url, json=params)
-                clean_json = s.json()
-            except:
-                report = Lines.general_lines("failed to open page") % page_url
+            def get_analyser_result(keyword):
+                """ Function to return result from hoax analyser """
+
+                page_url = 'https://hprimary.lelah.ga/analyze'
+                # Try to open the page and input query to analyze
+                try:
+                    sess = requests.Session()
+                    sess.options(page_url)
+                    params = {'query': keyword}
+                    s = sess.post(page_url, json=params)
+                    clean_json = s.json()
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Try to re-format the raw data
+                try:
+                    conclusion = clean_json["conclusion"]
+                    fact_point = clean_json["scores"][1]
+                    hoax_point = clean_json["scores"][2]
+                    unkw_point = clean_json["scores"][3]
+
+                    # Count the percentage of hoax / truth / unknown...
+                    percentage = max(fact_point, hoax_point, unkw_point) / (fact_point + hoax_point + unkw_point) * 100
+                    percentage = str(percentage)[:4]
+                    return conclusion, percentage
+
+                except:
+                    report = Lines.general_lines("formatting error") % "analyzer data"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+            cont = True
+            keyword = get_keyword()
+            # Check whether keyword available
+            if keyword == "keyword not found":
+                report = Lines.general_lines("search fail") % 'query'
                 line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
+                cont = False
 
-            # Try to re-format the raw data
-            try:
-                conclusion = clean_json["conclusion"]
-                fact_point = clean_json["scores"][1]
-                hoax_point = clean_json["scores"][2]
-                unkw_point = clean_json["scores"][3]
+            # If keyword is available
+            if cont:
+                conclusion, percentage = get_analyser_result(keyword)
 
-                # Count the percentage of hoax / truth / unknown...
-                percentage = max(fact_point, hoax_point, unkw_point) / (fact_point + hoax_point + unkw_point) * 100
-                percentage = str(percentage)[:4]
-                return conclusion, percentage
+                # Differentiate result base on conclusion
+                if conclusion == "fact":
+                    report = (Lines.hoax_or_fact("fact").format(percentage, keyword))
+                elif conclusion == "hoax":
+                    report = (Lines.hoax_or_fact("hoax").format(percentage, keyword))
+                else:
+                    report = Lines.hoax_or_fact("else")
 
-            except:
-                report = Lines.general_lines("formatting error") % "analyzer data"
                 line_bot_api.push_message(address, TextSendMessage(text=report))
-                raise
 
-        cont = True
-        keyword = get_keyword()
-        # Check whether keyword available
-        if keyword == "keyword not found":
-            report = Lines.general_lines("search fail") % 'query'
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-            cont = False
-
-        # If keyword is available
-        if cont:
-            conclusion, percentage = get_analyser_result(keyword)
-
-            # Differentiate result base on conclusion
-            if conclusion == "fact":
-                report = (Lines.hoax_or_fact("fact").format(percentage, keyword))
-            elif conclusion == "hoax":
-                report = (Lines.hoax_or_fact("hoax").format(percentage, keyword))
-            else:
-                report = Lines.hoax_or_fact("else")
-
-            line_bot_api.push_message(address, TextSendMessage(text=report))
+        except Exception as exception_detail:
+            function_name = "Hoax analyser"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     """ ==========  9 August 2017 last update ============== """
 
@@ -4415,7 +4426,7 @@ class OtherUtil:
                 if all(word in text for word in ["print", "userlist"]):
                     megumi_action = "Dev_mode_print_userlist"
 
-                elif any(word in text for word in ["print", "log"]):
+                elif all(word in text for word in ["print", "log"]):
                     megumi_action = "Dev_mode_print_logger"
 
                 elif any(word in text for word in ["turn ", "able", "tag notifier", "notif"]):
