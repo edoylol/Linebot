@@ -958,6 +958,19 @@ class Lines:  # class to store respond lines
                      "That titled songs are too long to play... ",
                      "Have I told you that the music duration has to be under 5 mins ?",
                      "I can't find any music that is under 5 mins... I'm sorry ... "]
+        elif cond == "footer plural":
+            lines = ["I'm not sure which one you want, but hope you enjoy it :> ",
+                     "Since I found a lot, I randomly pick some for you :)",
+                     "There's a lot of musics under that title, pick yourself kay.. :) ",
+                     "That's what I found, hope you enjoy it~ ",
+                     "I think I overdid a little bit.. #teehee..."]
+        elif cond == "footer singular":
+            lines = ["Hope you enjoy it :> ",
+                     "I only found one, so this must be it..",
+                     "This song isn't too popular is it ?",
+                     "That's what I found, hope you enjoy it~ ",
+                     "I'm not lazy kay..\nI did search and I only found one..."]
+
         else:
             lines = [""]
 

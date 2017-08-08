@@ -3334,14 +3334,20 @@ class Function:
 
             carousel_text = filtered_video_description
             columns = []
-
             for i in range(0, len(filtered_video_link)):
-                carousel_column = CarouselColumn(text=carousel_text[i][:60], actions=[URITemplateAction(label='Play', uri=filtered_video_link[i])])
+                carousel_column = CarouselColumn(text=carousel_text[i][:120], actions=[URITemplateAction(label='Play', uri=filtered_video_link[i])])
                 columns.append(carousel_column)
 
             carousel_template = CarouselTemplate(columns=columns)
             template_message = TemplateSendMessage(alt_text="Playing music..", template=carousel_template)
             line_bot_api.push_message(address, template_message)
+
+            # Send footer to end the request
+            if len(filtered_video_link) > 1:
+                report = Lines.play_music("footer plural")
+            else:
+                report = Lines.play_music("footer singular")
+            line_bot_api.push_message(address, TextSendMessage(text=report))
 
         cont = True
 
