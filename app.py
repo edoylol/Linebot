@@ -3383,6 +3383,7 @@ class Function:
                     # already over low border of time
                     # already get 3 videos
                     if (len(filtered_video_link) >= 3) or (video_time > 20) or (video_time + video_duration_minute * 3.5 > 25):
+                        print(video_time)
                         break
 
                 # If there's no video under 5 mins
