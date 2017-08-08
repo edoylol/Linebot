@@ -3284,7 +3284,7 @@ class Function:
 
                 return title, duration_minute, duration_second
 
-            def get_direct_play_link(youtube_link):
+            def get_direct_play_link(youtube_link, video_duration_minute):
                 """ Function to return direct .mp3 link for youtube link """
 
                 index_start = youtube_link.find("/watch?v=") + 9
@@ -3294,6 +3294,7 @@ class Function:
                 page_url = "http://o1.mp3you.tube:8080/convert/?vid=" + video_id
                 try:
                     req = requests.get(page_url)
+                    time.sleep(int(video_duration_minute)*3.5)
                     convert_data = req.json()
                     direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
                     return direct_play_link
@@ -3365,7 +3366,7 @@ class Function:
 
                     # Include the video to filtered video list if it's below 5 mins
                     if int(video_duration_minute) < 7:
-                        direct_download_link = get_direct_play_link(youtube_link)
+                        direct_download_link = get_direct_play_link(youtube_link, video_duration_minute)
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
 
                         # Append video direct link and also video default property
