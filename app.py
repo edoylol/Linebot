@@ -3342,6 +3342,16 @@ class Function:
             template_message = TemplateSendMessage(alt_text="Playing music..", template=carousel_template)
             line_bot_api.push_message(address, template_message)
 
+
+            buttons_template = ButtonsTemplate(text="test", thumbnail_image_url="https://i.ytimg.com/vi/4bmUFRxNEIg/maxresdefault.jpg", actions=[
+                PostbackTemplateAction(label='Count me in', data=''),
+                PostbackTemplateAction(label='No thanks', data=''),
+                PostbackTemplateAction(label='Decide later', data='')
+            ])
+            template_message = TemplateSendMessage(alt_text="test", template=buttons_template)
+            line_bot_api.push_message(address, template_message)
+
+
             # Send footer to end the request
             if len(filtered_video_link) > 1:
                 report = Lines.play_music("footer plural")

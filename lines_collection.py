@@ -970,7 +970,6 @@ class Lines:  # class to store respond lines
                      "This song isn't too popular is it ?",
                      "That's what I found, hope you enjoy it~ ",
                      "I'm not lazy kay..\nI did search and I only found one..."]
-
         else:
             lines = [""]
 

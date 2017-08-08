@@ -79,47 +79,6 @@ class OtherUtil:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 
-def get_youtube_video_property(page_url):
-    """ Return title and video duration of a youtube video """
-
-    # Try to open the page
-    try:
-        req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        page_source_code_text = con.read()
-        mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-
-    except:
-        report = Lines.general_lines("failed to open page") % page_url
-        #line_bot_api.push_message(address, TextSendMessage(text=report))
-        raise
-
-    # Get the video title
-    title = mod_page.find("title").text.strip()
-
-    # Remove ' - youtube ' from title
-    if "youtube" in title.lower():
-        index_stop = title.rfind(" - ")
-        title = title[:index_stop]
-
-    # Get the video raw duration
-    duration = mod_page.find("meta", {"itemprop": "duration"}).get("content")
-    duration_minute = 0
-    duration_second = 0
-
-    # Crop the 'minute'
-    index_start = duration.find("PT") + 2
-    index_stop = duration.find("M")
-    if (index_stop - index_start) >= 1:
-        duration_minute = duration[index_start:index_stop]
-
-    # Crop the 'second'
-    index_start = duration.find("M") + 1
-    index_stop = duration.find("S")
-    if (index_stop - index_start) >= 1:
-        duration_second = duration[index_start:index_stop]
-
-    return title, duration_minute, duration_second
 
 
 
