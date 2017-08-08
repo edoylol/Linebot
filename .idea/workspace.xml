@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8ccc0477-22e7-4a2c-b5cf-8af50e947efd" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app.py" afterPath="$PROJECT_DIR$/app.py" />
-    </list>
+    <list default="true" id="8ccc0477-22e7-4a2c-b5cf-8af50e947efd" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +37,8 @@
       <file leaf-file-name="app.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="3380" column="0" lean-forward="true" selection-start-line="3380" selection-start-column="0" selection-end-line="3380" selection-end-column="0" />
+            <state relative-caret-position="477">
+              <caret line="3372" column="49" lean-forward="true" selection-start-line="3372" selection-start-column="49" selection-end-line="3372" selection-end-column="49" />
               <folding>
                 <element signature="n#!!doc" expanded="false" />
                 <element signature="e#2379#2737#0" expanded="false" />
@@ -5581,8 +5579,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="3380" column="0" lean-forward="true" selection-start-line="3380" selection-start-column="0" selection-end-line="3380" selection-end-column="0" />
+        <state relative-caret-position="477">
+          <caret line="3372" column="49" lean-forward="true" selection-start-line="3372" selection-start-column="49" selection-end-line="3372" selection-end-column="49" />
           <folding>
             <element signature="n#!!doc" expanded="false" />
             <element signature="e#2379#2737#0" expanded="false" />
