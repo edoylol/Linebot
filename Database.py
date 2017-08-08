@@ -366,29 +366,34 @@ anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupl
                   "datafilehost": 84, "uptobox": 42, "katfile": 100}
 
 """ DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
-# Last updated 3 August 2017 : 22 Function listed
+# Last updated 8 August 2017 : 24 Function listed
 
 manual = {"title": ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities",
-                    "Still learning~", "Dev only :>", "Sorry, this is unavailable right now ~"],
-          "description": ["Some simple things I can do ~",
-                          "Some information about our lovely planet",
-                          "Most used function up until now..",
-                          "Some top secret about..",
-                          "Some other things I can help you with",
-                          "Well... the title describe it already :3",
-                          "Sorry,, this is for dev only",
-                          "Function that is unavailable right now"],
+                    "Last but not least", "Dev only :>", "Template or storage"],
+          "description": ["Some simple things I can do ~",  # Simpler better
+                          "Some information about our lovely planet",  # About the world
+                          "Most used function up until now..",  # Most used
+                          "Some top secret about..",  # Information about...
+                          "Some other things I can help you with",  # Utilities
+                          "Well... some features that usually forgotten :\">",  # Last but not least
+                          "Sorry,, this is for dev only",  # Dev only :>
+                          "Function that is unavailable right now"],  # Template or storage
           "function layout": [
-                    ["Random number", "Choose one", "Echo"],
-                    ["Time & Date", "Weather forecast", "Translate"],
-                    ["Anime download link", "Cinema's schedule", "Youtube download"],
-                    ["Wiki search", "Fact or Hoax", "Stalk instagram"],
-                    ["Default reply", "Manuals", "Report Bug"],
-                    ["ITB-ARC Database", "SW wiki", "Send Invite"],
-                    ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],
-                    ["<News>", "<something>", "<Convert>"]
+                    ["Random number", "Choose one", "Echo"],  # Simpler better
+                    ["Time & Date", "Weather forecast", "Translate"],  # About the world
+                    ["Anime download link", "Cinema's schedule", "Play music"],  # Most used
+                    ["Wiki search", "Fact or Hoax", "Stalk instagram"],  # Information about...
+                    ["Default reply", "Manuals", "Report Bug"],  # Utilities
+                    ["ITB-ARC Database", "SW wiki", "Youtube download"],  # Last but not least
+                    ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],  # Dev only :>
+                    ["Send Invite", "< News >", "< Convert >"]  # Template or storage
                     ]
           }
+
+manual_layout = {"row": 3, "format": {0: {"start": 0, "end": 2},
+                                      1: {"start": 2, "end": 4},
+                                      2: {"start": 4, "end": 6},
+                                      "dev": {"start": 6, "end": 8}}}
 
 functionlist = {
    "Anime download link": {
@@ -511,6 +516,17 @@ functionlist = {
          "touch~",
          "touch~",
          "touch~"
+      ]
+   },
+   "Play music": {
+      "description": "Play Music ~\n\nYes, megumi's able to search for a song and you can play it only with a single tap! :)",
+      "tips": "Try to say meg, play song <'title'> or meg, play music <'title'>  in any format..\n\nps : max duration is 5 mins ~ ",
+      "example": [
+         "Meg, please play song 'despacito j fla'",
+         "'rockabye j fla' please play this song meg",
+         "play song 'symphony clean bandit' meg",
+         "meg play song 'closer chainsmoker' please",
+         "meg, play music 'acoustic favourite' please"
       ]
    },
    "Random number": {

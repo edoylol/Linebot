@@ -4340,21 +4340,29 @@ class Function:
                     carousel_column = CarouselColumn(title=title[i], text=carousel_text[i][:60], actions=actions)
                     columns.append(carousel_column)
 
-                # Send default manual
-                carousel_template = CarouselTemplate(columns=columns[0:3])
-                template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
-                line_bot_api.push_message(address, template_message)
+                # Get manual format layout and prepare to send
+                layout_row = Database.manual_layout["row"]
+                for i in range(0, layout_row):
 
-                # Send default manual
-                carousel_template = CarouselTemplate(columns=columns[3:6])
-                template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
-                line_bot_api.push_message(address, template_message)
+                    # Gather manual format setting
+                    row_format = Database.manual_layout["format"][i]
+                    row_column_start = row_format["start"]
+                    row_column_end = row_format["end"]
+
+                    # Send default manual
+                    carousel_template = CarouselTemplate(columns=columns[row_column_start:row_column_end])
+                    template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
+                    line_bot_api.push_message(address, template_message)
 
                 enable_dev_mode_extension = dev_mode_extension_check()
                 if enable_dev_mode_extension:
 
+                    # Gather manual format setting
+                    row_column_start = Database.manual_layout["format"]["dev"]["start"]
+                    row_column_end = Database.manual_layout["format"]["dev"]["end"]
+
                     # Send extension manual
-                    carousel_template = CarouselTemplate(columns=columns[6:8])
+                    carousel_template = CarouselTemplate(columns=columns[row_column_start:row_column_end])
                     template_message = TemplateSendMessage(alt_text="Megumi's manual - extension ", template=carousel_template)
                     line_bot_api.push_message(address, template_message)
 
