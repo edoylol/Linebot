@@ -368,22 +368,23 @@ anime_hostlist = {"dropjify": 99, "zippyshare": 15, "solidfiles": 69, "clicknupl
 """ DICTIONARY TO STORE FUNCTION DESCRIPTION AND EXAMPLES """
 # Last updated 8 August 2017 : 24 Function listed
 
-manual = {"title": ["Simpler better", "About the world..", "Most used", "Information about...", "Utilities",
-                    "Last but not least", "Dev only :>", "Template or storage"],
+manual = {"title": ["Simpler better", "Most used", "About the world..",
+                    "Utilities", "Information about...", "Last but not least",
+                    "Dev only :>", "Template or storage"],
           "description": ["Some simple things I can do ~",  # Simpler better
-                          "Some information about our lovely planet",  # About the world
                           "Most used function up until now..",  # Most used
-                          "Some top secret about..",  # Information about...
+                          "Some information about our lovely planet",  # About the world
                           "Some other things I can help you with",  # Utilities
+                          "Some top secret about..",  # Information about...
                           "Well... some features that usually forgotten :\">",  # Last but not least
                           "Sorry,, this is for dev only",  # Dev only :>
                           "Function that is unavailable right now"],  # Template or storage
           "function layout": [
                     ["Random number", "Choose one", "Echo"],  # Simpler better
-                    ["Time & Date", "Weather forecast", "Translate"],  # About the world
                     ["Anime download link", "Cinema's schedule", "Play music"],  # Most used
-                    ["Wiki search", "Fact or Hoax", "Stalk instagram"],  # Information about...
+                    ["Time & Date", "Weather forecast", "Translate"],  # About the world
                     ["Default reply", "Manuals", "Report Bug"],  # Utilities
+                    ["Wiki search", "Fact or Hoax", "Stalk instagram"],  # Information about...
                     ["ITB-ARC Database", "SW wiki", "Youtube download"],  # Last but not least
                     ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],  # Dev only :>
                     ["Send Invite", "< News >", "< Convert >"]  # Template or storage
