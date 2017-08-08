@@ -3298,9 +3298,7 @@ class Function:
                     direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
                     return direct_play_link
                 except:
-                    report = Lines.general_lines("failed to open page") % "converter"
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    raise
+                    pass
 
             def send_header(keyword):
                 """ Function to send header (confirmation that request is under process) """
@@ -3379,7 +3377,7 @@ class Function:
                     # Stop conditions :
                     # already over low border of time
                     # already get 5 videos
-                    if (len(filtered_video_link) >= 5) or ((toc - tic) > 20):
+                    if (len(filtered_video_link) >= 5) or ((toc - tic) > 15):
                         print(toc - tic, video_duration_minute)
                         break
 
