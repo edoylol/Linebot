@@ -3356,7 +3356,7 @@ class Function:
             # If videos are available, try to filter it and get top 5 which are under 5 mins
             if cont:
 
-                # Filter videos that is below 5 minutes (enable auto download)
+                # Filter videos that is below 8 minutes (enable auto download)
                 filtered_video_link = []
                 filtered_video_description = []
                 video_time = 0
@@ -3364,8 +3364,8 @@ class Function:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
                     # Include the video to filtered video list if it's below 8 mins and there's still time for another request
-                    if int(video_duration_minute) < 8 and (video_time + int(video_duration_minute) * 3.5) < 25:
-
+                    if int(video_duration_minute) < 7 and (video_time + int(video_duration_minute) * 3) < 21:
+                        print(video_time)
                         # Do timer ! ( it's crucial )
                         tic = time.clock()
                         direct_download_link = get_direct_play_link(youtube_link)
@@ -3382,11 +3382,11 @@ class Function:
                     # Stop conditions :
                     # already over low border of time
                     # already get 3 videos
-                    if (len(filtered_video_link) >= 3) or (video_time > 20) or (video_time + int(video_duration_minute) * 3.5 > 25):
+                    if (len(filtered_video_link) >= 3) or (video_time > 20) or (video_time + int(video_duration_minute) * 3 > 21):
                         print(video_time)
                         break
 
-                # If there's no video under 5 mins
+                # If there's no video under 8 mins
                 if len(filtered_video_link) == 0:
                     report = Lines.play_music("nothing to play")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
