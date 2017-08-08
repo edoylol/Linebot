@@ -3300,6 +3300,7 @@ class Function:
                 except:
                     report = Lines.general_lines("failed to open page") % "converter"
                     line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
             def send_header(keyword):
                 """ Function to send header (confirmation that request is under process) """
@@ -3329,6 +3330,7 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
             cont = True
+            tic = time.clock()
 
             # Just to escape 'variable might be referenced before assignment' warning which will never happened
             youtube_videos = []
@@ -3359,18 +3361,14 @@ class Function:
                 # Filter videos that is below 8 minutes (enable auto download)
                 filtered_video_link = []
                 filtered_video_description = []
-                video_time = 0
                 for youtube_link in youtube_videos:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
                     # Include the video to filtered video list if it's below 8 mins and there's still time for another request
                     if int(video_duration_minute) < 7:
-                        print(video_time)
-                        # Do timer ! ( it's crucial )
-                        tic = time.clock()
+
                         direct_download_link = get_direct_play_link(youtube_link)
                         toc = time.clock()
-                        video_time += (toc - tic)
 
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
 
@@ -3382,8 +3380,8 @@ class Function:
                     # Stop conditions :
                     # already over low border of time
                     # already get 5 videos
-                    if (len(filtered_video_link) >= 5) or (video_time > 20):
-                        print(video_time, video_duration_minute)
+                    if (len(filtered_video_link) >= 5) or (toc - tic > 20):
+                        print(toc - tic, video_duration_minute)
                         break
 
                 # If there's no video under 8 mins
