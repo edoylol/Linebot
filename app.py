@@ -3368,8 +3368,6 @@ class Function:
                     if int(video_duration_minute) < 7:
 
                         direct_download_link = get_direct_play_link(youtube_link)
-                        toc = time.clock()
-
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
 
                         # Append video direct link and also video default property
