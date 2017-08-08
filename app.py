@@ -3378,9 +3378,9 @@ class Function:
                     # already over low border of time
                     # already get 5 videos
                     if (len(filtered_video_link) >= 5) or ((toc - tic) > 15):
-                        print(toc - tic, len(filtered_video_link))
                         break
 
+                    print(toc - tic, len(filtered_video_link))
                 # If there's no video under 8 mins
                 if len(filtered_video_link) == 0:
                     report = Lines.play_music("nothing to play")
