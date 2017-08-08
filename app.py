@@ -3381,8 +3381,8 @@ class Function:
 
                     # Stop conditions :
                     # already over low border of time
-                    # already get 3 videos
-                    if (len(filtered_video_link) >= 3) or (video_time > 20):
+                    # already get 5 videos
+                    if (len(filtered_video_link) >= 5) or (video_time > 20):
                         print(video_time, video_duration_minute)
                         break
 
