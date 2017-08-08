@@ -3284,6 +3284,23 @@ class Function:
 
                 return title, duration_minute, duration_second
 
+            def get_direct_play_link(youtube_link):
+                """ Function to return direct .mp3 link for youtube link """
+
+                index_start = youtube_link.find("/watch?v=") + 9
+                index_stop = index_start + 11
+                video_id = youtube_link[index_start:index_stop]
+
+                page_url = "http://o1.mp3you.tube:8080/convert/?vid=" + video_id
+                try:
+                    req = requests.get(page_url)
+                    convert_data = req.json()
+                    direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
+                    return direct_play_link
+                except:
+                    report = Lines.general_lines("failed to open page") % "converter"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
             def send_header(keyword):
                 """ Function to send header (confirmation that request is under process) """
 
@@ -3346,16 +3363,17 @@ class Function:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
                     # Include the video to filtered video list if it's below 5 mins
-                    if int(video_duration_minute) < 5:
-                        direct_download_link = "http://mp3you.tube/get/?direct=" + youtube_link
+                    if int(video_duration_minute) < 7:
+                        direct_download_link = get_direct_play_link(youtube_link)
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
 
                         # Append video direct link and also video default property
-                        filtered_video_link.append(direct_download_link)
-                        filtered_video_description.append(str(video_title + "\n" + str(video_duration)))
+                        if direct_download_link is not None:
+                            filtered_video_link.append(direct_download_link)
+                            filtered_video_description.append(str(video_title + "\n" + str(video_duration)))
 
                     # Cap the result to max 5 videos (limit of carousel)
-                    if len(filtered_video_link) >= 5:
+                    if len(filtered_video_link) >= 3:
                         break
 
                 # If there's no video under 5 mins
