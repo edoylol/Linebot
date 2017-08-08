@@ -3297,7 +3297,8 @@ class Function:
                     convert_data = req.json()
                     direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
                     return direct_play_link
-                except:
+                except Exception as e:
+                    print(e)
                     report = Lines.general_lines("failed to open page") % "converter"
                     line_bot_api.push_message(address, TextSendMessage(text=report))
 

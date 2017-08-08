@@ -521,7 +521,7 @@ functionlist = {
    },
    "Play music": {
       "description": "Play Music ~\n\nYes, megumi's able to search for a song and you can play it only with a single tap! :)",
-      "tips": "Try to say meg, play song <'title'> or meg, play music <'title'>  in any format..\n\nps : max duration is 5 mins ~ ",
+      "tips": "Try to say meg, play song <'title'> or meg, play music <'title'>  in any format..\n\nps : max duration is 7 mins ~ ",
       "example": [
          "Meg, please play song 'despacito j fla'",
          "'rockabye j fla' please play this song meg",

@@ -941,8 +941,8 @@ class Lines:  # class to store respond lines
     def play_music(cond):
 
         if cond == "header":  # Take 1 argument : keyword
-            lines = ["Sure.. Wait a second, searching for '{}'...",
-                     "'{}' ? Sure... Wait a second.. ",
+            lines = ["Sure.. Wait a minute, searching for '{}'...\nIt's gonna take a while",
+                     "'{}' ? Sure... Wait a minute.. ",
                      "Sure.. Let me find '{}' for you.. \nPlease wait :>",
                      "'{}' right ? Understood... \nLooking for the one you want...",
                      "Kay, I'll search for '{}'...please be patient :) "]
@@ -953,11 +953,11 @@ class Lines:  # class to store respond lines
                      "I don't see any song with '{}' title...",
                      "Did you misspelled ? No result for '{}' when I tried to search for it..."]
         elif cond == "nothing to play":
-            lines = ["Seems the song is too long... \nIt has to be under 5 mins...",
-                     "I'm sorry but I can't find song that's under 5 mins with that title...",
+            lines = ["Seems the song is too long... \nIt has to be under 7 mins...",
+                     "I'm sorry but I can't find song that's under 7 mins with that title...",
                      "That titled songs are too long to play... ",
-                     "Have I told you that the music duration has to be under 5 mins ?",
-                     "I can't find any music that is under 5 mins... I'm sorry ... "]
+                     "Have I told you that the music duration has to be under 7 mins ?",
+                     "I can't find any music that is under 7 mins... I'm sorry ... "]
         elif cond == "footer plural":
             lines = ["I'm not sure which one you want, but hope you enjoy it :> ",
                      "Since I found a lot, I randomly pick some for you :)",
