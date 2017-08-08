@@ -3356,7 +3356,7 @@ class Function:
             # If videos are available, try to filter it and get top 5 which are under 5 mins
             if cont:
 
-                # Filter videos that is below 8 minutes (enable auto download)
+                # Filter videos that is below 7 minutes (enable auto download)
                 filtered_video_link = []
                 filtered_video_description = []
                 for youtube_link in youtube_videos:
@@ -3377,7 +3377,7 @@ class Function:
                     # Stop conditions :
                     # already over low border of time
                     # already get 5 videos
-                    if (len(filtered_video_link) >= 5) or ((toc - tic) > 15):
+                    if (len(filtered_video_link) >= 3) or ((toc - tic) > 5):
                         break
 
                     print(toc - tic, len(filtered_video_link))

@@ -79,4 +79,8 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-print(0.005835999999999508 + 4 * 3 > 21)
+tic = time.clock()
+
+
+toc = time.clock()
+print("Time elapsed:",(toc - tic),"second(s)")
