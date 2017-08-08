@@ -3356,7 +3356,7 @@ class Function:
                 for youtube_link in youtube_videos:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
-                    # Include the video to filtered video list if it's below 8 mins and there's still time for another request
+                    # Include the video to filtered video list if it's below 7 mins
                     if int(video_duration_minute) < 7:
 
                         direct_download_link = get_direct_play_link(youtube_link)
