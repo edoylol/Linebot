@@ -3306,34 +3306,28 @@ class Function:
                 report = (Lines.play_music("header")).format(keyword)
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            def send_detail_result(filtered_video_link, filtered_video_description):
-                """ Function to send carousel of direct download link """
+            def send_footer(count):
+                """ Function to send footer to end the request, if not time out """
 
-                # Generate carousel
-                carousel_text = filtered_video_description
-                columns = []
-                for i in range(0, len(filtered_video_link)):
-                    carousel_column = CarouselColumn(text=carousel_text[i][:120], actions=[URITemplateAction(label='Play', uri=filtered_video_link[i])])
-                    columns.append(carousel_column)
-
-                carousel_template = CarouselTemplate(columns=columns)
-                template_message = TemplateSendMessage(alt_text="Playing music...", template=carousel_template)
-                line_bot_api.push_message(address, template_message)
-
-                # Send footer to end the request
-                if len(filtered_video_link) > 1:
+                if count > 1:
                     report = Lines.play_music("footer plural")
                 else:
                     report = Lines.play_music("footer singular")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
+            def send_detail_result(filtered_video_link, filtered_video_description, i):
+                """ Function to send carousel of direct download link """
+
+                # Generate and send button
+                carousel_text = filtered_video_description
+                buttons_template = ButtonsTemplate(text=carousel_text[i][:120], actions=[URITemplateAction(label='Play', uri=filtered_video_link[i])])
+                template_message = TemplateSendMessage(alt_text="Playing music...", template=buttons_template)
+                line_bot_api.push_message(address, template_message)
+
             cont = True
-            tic = time.clock()
 
             # Just to escape 'variable might be referenced before assignment' warning which will never happened
             youtube_videos = []
-            filtered_video_link = []
-            filtered_video_description = []
 
             # Get keyword from text
             keyword = get_keyword()
@@ -3373,23 +3367,19 @@ class Function:
                             filtered_video_link.append(direct_download_link)
                             filtered_video_description.append(str(video_title + "\n" + str(video_duration)))
 
-                    toc = time.clock()
-                    # Stop conditions :
-                    # already over low border of time
-                    # already get 5 videos
-                    if (len(filtered_video_link) >= 3) or ((toc - tic) > 5):
+                            # Send it one by one ( to avoid run time error )
+                            send_detail_result(filtered_video_link, filtered_video_description, i=(len(filtered_video_link)-1))
+
+                    # Stop if it's already 5 videos
+                    if len(filtered_video_link) >= 5:
                         break
 
-                    print(toc - tic, len(filtered_video_link))
-                # If there's no video under 8 mins
+                # If there's no video under 7 mins
                 if len(filtered_video_link) == 0:
                     report = Lines.play_music("nothing to play")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
-                    cont = False
-
-            # If there is/are music to play, send it to user
-            if cont:
-                send_detail_result(filtered_video_link, filtered_video_description)
+                else:
+                    send_footer(count=len(filtered_video_link))
 
         except Exception as exception_detail:
             function_name = "Play music"

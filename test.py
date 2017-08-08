@@ -81,6 +81,3 @@ class OtherUtil:
 
 tic = time.clock()
 
-
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
