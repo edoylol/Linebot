@@ -79,24 +79,4 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-tic = time.clock()
-youtube_link = "https://www.youtube.com/watch?v=6iN7EJ7ZdMM"
-index_start = youtube_link.find("/watch?v=") + 9
-index_stop = index_start + 11
-video_id = youtube_link[index_start:index_stop]
-page_url = "http://o1.mp3you.tube:8080/convert/?vid=" + video_id
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
-
-
-tic = time.clock()
-req = requests.get(page_url)
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
-
-
-tic = time.clock()
-convert_data = req.json()
-direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
-toc = time.clock()
-print("Time elapsed:",(toc - tic),"second(s)")
+print(0.005835999999999508 + 4 * 3 > 21)
