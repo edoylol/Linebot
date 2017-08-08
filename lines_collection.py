@@ -938,6 +938,32 @@ class Lines:  # class to store respond lines
         return random.choice(lines)
 
     @staticmethod
+    def play_music(cond):
+
+        if cond == "header":  # Take 1 argument : keyword
+            lines = ["Sure.. Wait a second, searching for '{}'...",
+                     "'{}' ? Sure... Wait a second.. ",
+                     "Sure.. Let me find '{}' for you.. \nPlease wait :>",
+                     "'{}' right ? Understood... \nLooking for the one you want...",
+                     "Kay, I'll search for '{}'...please be patient :) "]
+        elif cond == "video not found":  # Take 1 argument : keyword
+            lines = ["Seems there's no '{}' titled song..",
+                     "Are you sure about the title ({}) ? ",
+                     "How bout try other title? I can't find '{}'",
+                     "I don't see any song with '{}' title...",
+                     "Did you misspelled ? No result for '{}' when I tried to search for it..."]
+        elif cond == "nothing to play":
+            lines = ["Seems the song is too long... \nIt has to be under 5 mins...",
+                     "I'm sorry but I can't find song that's under 5 mins with that title...",
+                     "That titled songs are too long to play... ",
+                     "Have I told you that the music duration has to be under 5 mins ?",
+                     "I can't find any music that is under 5 mins... I'm sorry ... "]
+        else:
+            lines = [""]
+
+        return random.choice(lines)
+
+    @staticmethod
     def join(cond):
 
         if cond == "join":
