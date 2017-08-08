@@ -3370,6 +3370,7 @@ class Function:
                         tic = time.clock()
                         direct_download_link = get_direct_play_link(youtube_link)
                         toc = time.clock()
+                        print("time :",toc - tic)
                         video_time += (toc - tic)
 
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
