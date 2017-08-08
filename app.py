@@ -3284,7 +3284,7 @@ class Function:
 
                 return title, duration_minute, duration_second
 
-            def get_direct_play_link(youtube_link, video_duration_minute):
+            def get_direct_play_link(youtube_link):
                 """ Function to return direct .mp3 link for youtube link """
 
                 index_start = youtube_link.find("/watch?v=") + 9
@@ -3296,10 +3296,8 @@ class Function:
                     req = requests.get(page_url)
                     convert_data = req.json()
                     direct_play_link = str(convert_data["download_path"]).replace(" ", "%20")
-                    print("success")
                     return direct_play_link
-                except Exception as e:
-                    print(e)
+                except:
                     report = Lines.general_lines("failed to open page") % "converter"
                     line_bot_api.push_message(address, TextSendMessage(text=report))
 
@@ -3361,12 +3359,19 @@ class Function:
                 # Filter videos that is below 5 minutes (enable auto download)
                 filtered_video_link = []
                 filtered_video_description = []
+                video_time = 0
                 for youtube_link in youtube_videos:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
-                    # Include the video to filtered video list if it's below 5 mins
-                    if int(video_duration_minute) < 7:
-                        direct_download_link = get_direct_play_link(youtube_link, video_duration_minute)
+                    # Include the video to filtered video list if it's below 8 mins and there's still time for another request
+                    if int(video_duration_minute) < 8 and (video_time + video_duration_minute * 3.5) < 25:
+
+                        # Do timer ! ( it's crucial )
+                        tic = time.clock()
+                        direct_download_link = get_direct_play_link(youtube_link)
+                        toc = time.clock()
+                        video_time += (toc - tic)
+
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
 
                         # Append video direct link and also video default property
@@ -3374,8 +3379,10 @@ class Function:
                             filtered_video_link.append(direct_download_link)
                             filtered_video_description.append(str(video_title + "\n" + str(video_duration)))
 
-                    # Cap the result to max 5 videos (limit of carousel)
-                    if len(filtered_video_link) >= 3:
+                    # Stop conditions :
+                    # already over low border of time
+                    # already get 3 videos
+                    if (len(filtered_video_link) >= 3) or (video_time > 20) or (video_time + video_duration_minute * 3.5 > 25):
                         break
 
                 # If there's no video under 5 mins
