@@ -3364,13 +3364,12 @@ class Function:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
                     # Include the video to filtered video list if it's below 8 mins and there's still time for another request
-                    if int(video_duration_minute) < 7 and (video_time + int(video_duration_minute) * 3) < 21:
+                    if int(video_duration_minute) < 7:
                         print(video_time)
                         # Do timer ! ( it's crucial )
                         tic = time.clock()
                         direct_download_link = get_direct_play_link(youtube_link)
                         toc = time.clock()
-                        print("time :",toc - tic)
                         video_time += (toc - tic)
 
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
@@ -3383,7 +3382,7 @@ class Function:
                     # Stop conditions :
                     # already over low border of time
                     # already get 3 videos
-                    if (len(filtered_video_link) >= 3) or (video_time > 20) or (video_time + int(video_duration_minute) * 3 > 21):
+                    if (len(filtered_video_link) >= 3) or (video_time > 20):
                         print(video_time, video_duration_minute)
                         break
 
