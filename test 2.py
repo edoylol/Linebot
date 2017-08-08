@@ -79,28 +79,3 @@ class OtherUtil:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
-
-
-def get_youtube_video_property():
-    """ Return title and video duration of a youtube video """
-    page_url = "https://www.youtube.com/watch?v=4bmUFRxNEIg"
-    # Try to open the page
-    try:
-        req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-        con = urllib.request.urlopen(req)
-        page_source_code_text = con.read()
-        mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-
-    except:
-        report = Lines.general_lines("failed to open page") % page_url
-        # line_bot_api.push_message(address, TextSendMessage(text=report))
-        raise
-
-    thumbnail = mod_page.find("meta",{"property":"og:image"}).get("content")
-    print(thumbnail)
-
-
-
-
-
-get_youtube_video_property()

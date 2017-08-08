@@ -4328,30 +4328,20 @@ class Function:
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
                 # Generate default manual
-                carousel_template = CarouselTemplate(columns=[
-                    CarouselColumn(title=title[0], text=carousel_text[0][:60], actions=[
-                        PostbackTemplateAction(label=function_list[0][0], data=str(command+function_list[0][0])),
-                        PostbackTemplateAction(label=function_list[0][1], data=str(command+function_list[0][1])),
-                        PostbackTemplateAction(label=function_list[0][2], data=str(command+function_list[0][2]))]),
-                    CarouselColumn(title=title[1], text=carousel_text[1][:60], actions=[
-                        PostbackTemplateAction(label=function_list[1][0], data=str(command+function_list[1][0])),
-                        PostbackTemplateAction(label=function_list[1][1], data=str(command+function_list[1][1])),
-                        PostbackTemplateAction(label=function_list[1][2], data=str(command+function_list[1][2]))]),
-                    CarouselColumn(title=title[2], text=carousel_text[2][:60], actions=[
-                        PostbackTemplateAction(label=function_list[2][0], data=str(command+function_list[2][0])),
-                        PostbackTemplateAction(label=function_list[2][1], data=str(command+function_list[2][1])),
-                        PostbackTemplateAction(label=function_list[2][2], data=str(command+function_list[2][2]))]),
-                    CarouselColumn(title=title[3], text=carousel_text[3][:60], actions=[
-                        PostbackTemplateAction(label=function_list[3][0], data=str(command+function_list[3][0])),
-                        PostbackTemplateAction(label=function_list[3][1], data=str(command+function_list[3][1])),
-                        PostbackTemplateAction(label=function_list[3][2], data=str(command+function_list[3][2]))]),
-                    CarouselColumn(title=title[4], text=carousel_text[4][:60], actions=[
-                        PostbackTemplateAction(label=function_list[4][0], data=str(command+function_list[4][0])),
-                        PostbackTemplateAction(label=function_list[4][1], data=str(command+function_list[4][1])),
-                        PostbackTemplateAction(label=function_list[4][2], data=str(command+function_list[4][2]))])
-                    ])
+                columns = []
+                for i in range(0, len(title)):
+
+                    # Create each carousel column content
+                    actions = []
+                    for j in range(0, 3):
+                        action = PostbackTemplateAction(label=function_list[i][j], data=str(command + function_list[i][j]))
+                        actions.append(action)
+
+                    carousel_column = CarouselColumn(title=title[i], text=carousel_text[i][:60], actions=actions)
+                    columns.append(carousel_column)
 
                 # Send default manual
+                carousel_template = CarouselTemplate(columns=columns[0:5])
                 template_message = TemplateSendMessage(alt_text="Megumi's manual", template=carousel_template)
                 line_bot_api.push_message(address, template_message)
 
