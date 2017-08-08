@@ -3377,10 +3377,11 @@ class Function:
                             filtered_video_link.append(direct_download_link)
                             filtered_video_description.append(str(video_title + "\n" + str(video_duration)))
 
+                    toc = time.clock()
                     # Stop conditions :
                     # already over low border of time
                     # already get 5 videos
-                    if (len(filtered_video_link) >= 5) or (toc - tic > 20):
+                    if (len(filtered_video_link) >= 5) or ((toc - tic) > 20):
                         print(toc - tic, video_duration_minute)
                         break
 
