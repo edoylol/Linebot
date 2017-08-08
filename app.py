@@ -4341,11 +4341,11 @@ class Function:
                     columns.append(carousel_column)
 
                 # Get manual format layout and prepare to send
-                layout_row = Database.manual_layout["row"]
+                layout_row = Database.manual["manual layout"]["row"]
                 for i in range(0, layout_row):
 
                     # Gather manual format setting
-                    row_format = Database.manual_layout["format"][i]
+                    row_format = Database.manual["manual layout"]["format"][i]
                     row_column_start = row_format["start"]
                     row_column_end = row_format["end"]
 
@@ -4358,8 +4358,8 @@ class Function:
                 if enable_dev_mode_extension:
 
                     # Gather manual format setting
-                    row_column_start = Database.manual_layout["format"]["dev"]["start"]
-                    row_column_end = Database.manual_layout["format"]["dev"]["end"]
+                    row_column_start = Database.manual["manual layout"]["format"]["dev"]["start"]
+                    row_column_end = Database.manual["manual layout"]["format"]["dev"]["end"]
 
                     # Send extension manual
                     carousel_template = CarouselTemplate(columns=columns[row_column_start:row_column_end])

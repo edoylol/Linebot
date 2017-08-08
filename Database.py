@@ -387,13 +387,13 @@ manual = {"title": ["Simpler better", "About the world..", "Most used", "Informa
                     ["ITB-ARC Database", "SW wiki", "Youtube download"],  # Last but not least
                     ["Dev : Print userlist", "Dev : Set notifier", "Dev : Print logger"],  # Dev only :>
                     ["Send Invite", "< News >", "< Convert >"]  # Template or storage
-                    ]
+                    ],
+          "manual layout": {"row": 2, "format": {0: {"start": 0, "end": 3},
+                                                 1: {"start": 3, "end": 6},
+                                                 "dev": {"start": 6, "end": 8}}}
           }
 
-manual_layout = {"row": 3, "format": {0: {"start": 0, "end": 2},
-                                      1: {"start": 2, "end": 4},
-                                      2: {"start": 4, "end": 6},
-                                      "dev": {"start": 6, "end": 8}}}
+
 
 functionlist = {
    "Anime download link": {
