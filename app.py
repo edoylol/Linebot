@@ -2335,6 +2335,7 @@ class Function:
             # General variable
             cont = True
             req_format, req_quality_min, req_quality_max, default = get_spec()
+            print(req_format, req_quality_min, req_quality_max, default)
             youtube_links = []
 
             keyword = get_keyword()
