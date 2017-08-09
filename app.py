@@ -2091,7 +2091,7 @@ class Function:
                 # Determine whether 2 apostrophe are exist and the text exist
                 text_available = (index_stop - index_start) >= 1
                 if text_available:
-                    keyword = text[index_start:index_stop]
+                    keyword = original_text[index_start:index_stop]
                     return keyword
                 else:
                     return "keyword not found"
