@@ -2101,7 +2101,7 @@ class Function:
 
                 # Enable direct pass if keyword is a youtube link already
                 if "https://www.youtube.com/watch?v=" in keyword:
-                    return keyword
+                    return [keyword]
 
                 page_url = str("https://www.youtube.com/results?search_query=" + keyword + "&spf=navigate")
 
@@ -2345,7 +2345,7 @@ class Function:
 
             if cont:
                 youtube_links = get_youtube_videos(keyword)
-                print("YOUTUBE LINKS :",youtube_links)
+                print("YOUTUBE LINKS :", youtube_links)
 
                 # If youtube link is not available in text
                 if len(youtube_links) == 0:
