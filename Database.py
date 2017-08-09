@@ -589,10 +589,10 @@ functionlist = {
       "description": "Time & Date\n\nI wonder why dev teach me this,, but since I've learnt it, I will answer if you ask about time and date around the world right now..\n\nOh, I'm still memorizing country time zone, so maybe you can help me out by saying the timezone explicitly ? ",
       "tips": "Try to ask what time or day or date is today, you can add the timezone if you want to.. \nI know.. sound's useless right... .-.",
       "example": [
-         "What time is it in gmt+2 meg ?",
+         "What time is it in gmt +2 meg ?",
          "Meg, what day is today ?",
          "What time is it now meg ?",
-         "meg, what time is it in gmt-2 ?",
+         "meg, what time is it in gmt -2 ?",
          "tell me what time is it in gmt right now meg"
       ]
    },
