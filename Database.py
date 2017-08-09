@@ -630,14 +630,18 @@ functionlist = {
       ]
    },
    "Youtube download": {
-      "description": "Youtube download\n\nWell.. I heard that youtube doesn't give access to download their videos.. but no worries, I'm here to help you out~ \nJust put in the video link, (and maybe format or size you want) and hopla... I have the video right there... ^^",
-      "tips": "Try to say download youtube <link>, you can specify the quality like <min 360p> or <mp4>,, try it out yourself ;) \n\nDev's note : I forgot how to use this to be honest, I always let meg to decide the format ;)",
+      "description": "Youtube download\n\nWell.. I heard that youtube doesn't give access to download their videos.. but no worries, I'm here to help you out~ \nJust put in the video title or link, (and maybe format or size you want) and hopla... I have the video right there... ^^",
+      "tips": "Try to say 'download youtube' <link> or <title>, you can specify the quality like <min 360p> or <mp4>,, try it out yourself ;) \n\nDev's note : I forgot how to use this to be honest, I always let meg to decide the format ;)",
       "example": [
-         "meg, save this https://www.youtube.com/watch?v=i9OAv8-b3LY youtube video",
-         "meg, can you download this youtube video ?  https://www.youtube.com/watch?v=v1qjJuZV1H0",
-         "please download this youtube video : https://www.youtube.com/watch?v=V5BrhYHj2Vg meg",
-         "meg, can you download https://www.youtube.com/watch?v=3qa_czWTNIc (youtube video) ?",
-         "meg, can you download this youtube video ?  https://www.youtube.com/watch?v=v1qjJuZV1H0"
+         "meg, save this 'https://www.youtube.com/watch?v=i9OAv8-b3LY' youtube video",
+         "meg, can you download this youtube video ?  'https://www.youtube.com/watch?v=v1qjJuZV1H0'",
+         "please download this youtube video : 'https://www.youtube.com/watch?v=V5BrhYHj2Vg' meg",
+         "meg, can you download 'https://www.youtube.com/watch?v=3qa_czWTNIc' (youtube video) ?",
+         "meg, can you download this youtube video ?  'https://www.youtube.com/watch?v=v1qjJuZV1H0'",
+         "download youtube video 'happy penguin' meg",
+         "meg, download youtube video 'tuturu song'",
+         "meg please download youtube video 'mitchirineko march'",
+         "download youtube video 're zero stay alive piano cover' meg"
       ]
    }
 }

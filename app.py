@@ -2081,22 +2081,60 @@ class Function:
         """ Function to return download link for youtube video with certain specification """
 
         try:
-            def get_youtube_link():
-                """ Function to crop the youtube video link from text """
+            def get_keyword():
+                """ Function to return search keyword """
 
-                keyword = ["https://www.youtube.com/watch?v=", "https://youtu.be/"]
-                youtube_link = ""
-                text = original_text
+                # Find the index of apostrophe
+                index_start = text.find("'") + 1
+                index_stop = text.rfind("'")
 
-                # If the keyword is found in Original text (case sensitive)
-                if any(word in text.lower() for word in keyword):
-                    split_text = text.split(" ")
-                    for word in split_text:
-                        if any(x in word.lower() for x in keyword):
-                            # If the word that represent youtube link found, set it and return it
-                            youtube_link = word
+                # Determine whether 2 apostrophe are exist and the text exist
+                text_available = (index_stop - index_start) >= 1
+                if text_available:
+                    keyword = text[index_start:index_stop]
+                    return keyword
+                else:
+                    return "keyword not found"
 
-                return youtube_link
+            def get_youtube_videos(keyword):
+                """ Function to return a list of videos found on youtube matching search keyword """
+
+                # Enable direct pass if keyword is a youtube link already
+                if "https://www.youtube.com/watch?v=" in keyword:
+                    return keyword
+
+                page_url = str("https://www.youtube.com/results?search_query=" + keyword + "&spf=navigate")
+
+                # Try to open the page
+                try:
+                    super_raw_json = requests.get(page_url).json()
+                    super_raw_content = super_raw_json[1]["body"]["content"]
+                    mod_page = BeautifulSoup(super_raw_content, "html.parser")
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Try to parse the web for information, search key and listed videos
+                try:
+                    found_videos = []
+
+                    # Use REGEX to get the youtube video id
+                    for m in re.finditer('/watch\?v=', str(mod_page)):
+                        index_start = m.start()
+                        index_stop = m.end() + 11
+                        youtube_link = "https://www.youtube.com" + str(mod_page)[index_start:index_stop]
+
+                        found_videos.append(youtube_link)
+
+                    # Remove duplicates and return the list and the search key
+                    found_videos = set(found_videos)
+                    return found_videos
+
+                except:
+                    report = Lines.general_lines("formatting error") % "youtube link list"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
 
             def get_spec():
                 """ Function to get requested video's spec and format from the text """
@@ -2148,17 +2186,61 @@ class Function:
 
                 return vid_format.upper(), vid_quality_min, vid_quality_max, default
 
-            def get_genyoutube(youtube_link):
-                """ Function to return genyoutube link from youtube link """
+            def get_genyoutube(youtube_links):
+                """ Function to return genyoutube links from youtube link """
 
-                if "https://www.youtube.com/watch?v=" in youtube_link:
-                    video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
-                elif "https://youtu.be/" in youtube_link:
-                    video_id = youtube_link.replace("https://youtu.be/", "")
-                else:
-                    video_id = "not found"
+                genyoutube_links = []
+                for youtube_link in youtube_links:
+                    if "https://www.youtube.com/watch?v=" in youtube_link:
+                        video_id = youtube_link.replace("https://www.youtube.com/watch?v=", "")
+                    elif "https://youtu.be/" in youtube_link:
+                        video_id = youtube_link.replace("https://youtu.be/", "")
+                    else:
+                        video_id = "not found"
 
-                return "http://video.genyoutube.net/" + video_id
+                    genyoutube_links.append("http://video.genyoutube.net/" + str(video_id))
+
+                return genyoutube_links
+
+            def get_genyoutube_video_option(page_url):
+                """ Function to return list of video options and video links found for each youtube link """
+
+                video_option = []
+                video_links = []
+                # Try to open the genyoutube page
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    report = Lines.download_youtube("page not found")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # If the genyoutube page is opened, parse the page
+                try:
+                    links = mod_page.find_all("a", {"rel": "nofollow"})
+                    for link in links:
+                        href = link.get("href")
+                        vid_keyword = "http://redirector.googlevideo.com"
+
+                        # If found link has video keyword listed above, try to get the link data and format
+                        if vid_keyword in href:
+                            link_data = str(BeautifulSoup(str(link), "html.parser").find('span', {"class": "infow"}))
+                            data = get_download_data(link_data)
+
+                            # If found data fulfil the requirements format, put it in the final result
+                            if approved_vid(data, req_format, req_quality_min, req_quality_max):
+                                video_option.append(" ".join(data))
+                                video_links.append(href)
+                except:
+                    report = Lines.download_youtube("gathering video data failed")
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                return video_option, video_links
 
             def get_download_data(link_data):
                 """ Function to return video data (ex : .mp4 720 )"""
@@ -2193,6 +2275,17 @@ class Function:
 
                 # Return boolean that represent if video's format fulfil requirements
                 return (vid_format == req_format) and (vid_quality >= req_quality_min) and (vid_quality <= req_quality_max)
+
+            def send_header(req_format, req_quality_min, req_quality_max, default):
+                """ Function to send header """
+
+                if default:
+                    report = Lines.download_youtube("send option header") % "default settings"
+                else:
+                    settings = ("format : " + str(req_format) + ", min : " + str(req_quality_min) + "p, max : " + str(req_quality_max) + "p")
+                    report = Lines.download_youtube("send option header") % settings
+
+                line_bot_api.push_message(address, TextSendMessage(text=report))
 
             def send_vid_option(video_option, video_links):
                 """ Function to send the video download link to user in form of button template """
@@ -2240,65 +2333,44 @@ class Function:
                 line_bot_api.push_message(address, template_message)
 
             # General variable
+            cont = True
             req_format, req_quality_min, req_quality_max, default = get_spec()
-            video_option = []
-            video_links = []
-            youtube_link = get_youtube_link()
+            youtube_links = []
 
-            # If youtube link is not available in text
-            if youtube_link == "":
-                report = Lines.download_youtube("page not found")
+            keyword = get_keyword()
+            if keyword == "keyword not found":
+                report = Lines.general_lines("search fail") % "keyword"
                 line_bot_api.push_message(address, TextSendMessage(text=report))
+                cont = False
 
-            # If youtube link is available, try to open genyoutube version
-            else:
-                page_url = get_genyoutube(youtube_link)
+            if cont:
+                youtube_links = get_youtube_videos(keyword)
 
-                # Try to open the genyoutube page
-                try:
-                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                    con = urllib.request.urlopen(req)
-                    page_source_code_text = con.read()
-                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
-
-                except:
+                # If youtube link is not available in text
+                if len(youtube_links) == 0:
                     report = Lines.download_youtube("page not found")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
-                    raise
+                    cont = False
 
-                # If the genyoutube page is opened, parse the page
-                try:
-                    links = mod_page.find_all("a", {"rel": "nofollow"})
-                    for link in links:
-                        href = link.get("href")
-                        vid_keyword = "http://redirector.googlevideo.com"
+            # If youtube link is available, try to open genyoutube version
+            if cont:
+                page_urls = get_genyoutube(youtube_links)
+                no_video_sent_yet = True  # Create a boolean so header only sent once
+                # Check for every youtube link found
+                for page_url in page_urls:
+                    video_option, video_links = get_genyoutube_video_option(page_url)
 
-                        # If found link has video keyword listed above, try to get the link data and format
-                        if vid_keyword in href:
-                            link_data = str(BeautifulSoup(str(link), "html.parser").find('span', {"class": "infow"}))
-                            data = get_download_data(link_data)
+                    # If there's at least 1 video found and fulfil the requirements
+                    if len(video_option) > 0:
 
-                            # If found data fulfil the requirements format, put it in the final result
-                            if approved_vid(data, req_format, req_quality_min, req_quality_max):
-                                video_option.append(" ".join(data))
-                                video_links.append(href)
-                except:
-                    report = Lines.download_youtube("gathering video data failed")
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    raise
+                        # Send header only once
+                        if no_video_sent_yet:
+                            send_header(req_format, req_quality_min, req_quality_max, default)
+                            no_video_sent_yet = False
 
-                # If there's at least 1 video found and fulfil the requirements
-                if len(video_option) > 0:
-                    if default:
-                        report = Lines.download_youtube("send option header") % "default settings"
-                    else:
-                        settings = ("format : " + str(req_format) + ", min : " + str(req_quality_min) + "p, max : " + str(req_quality_max) + "p")
-                        report = Lines.download_youtube("send option header") % settings
+                        send_vid_option(video_option, video_links)
 
-                    line_bot_api.push_message(address, TextSendMessage(text=report))
-                    send_vid_option(video_option, video_links)
-
-                else:
+                if no_video_sent_yet:
                     report = Lines.download_youtube("no video found")
                     line_bot_api.push_message(address, TextSendMessage(text=report))
 
