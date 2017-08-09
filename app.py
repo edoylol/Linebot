@@ -2128,7 +2128,7 @@ class Function:
                         found_videos.append(youtube_link)
 
                     # Remove duplicates and return the list and the search key
-                    found_videos = set(found_videos)
+                    found_videos = set(found_videos)[:3]
                     return found_videos
 
                 except:
