@@ -2345,6 +2345,7 @@ class Function:
 
             if cont:
                 youtube_links = get_youtube_videos(keyword)
+                print("YOUTUBE LINKS :",youtube_links)
 
                 # If youtube link is not available in text
                 if len(youtube_links) == 0:
@@ -2355,11 +2356,12 @@ class Function:
             # If youtube link is available, try to open genyoutube version
             if cont:
                 page_urls = get_genyoutube(youtube_links)
+                print("PAGE URLS :", page_urls)
                 no_video_sent_yet = True  # Create a boolean so header only sent once
                 # Check for every youtube link found
                 for page_url in page_urls:
                     video_option, video_links = get_genyoutube_video_option(page_url)
-
+                    print("VIDEO OPTION , VIDEO LINK :",video_option, video_links)
                     # If there's at least 1 video found and fulfil the requirements
                     if len(video_option) > 0:
 
