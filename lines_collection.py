@@ -381,12 +381,12 @@ class Lines:  # class to store respond lines
                      "Seems the page is unavailable...",
                      "I can't find the youtube page you requested..",
                      "The youtube page is unavailable, I think..."]
-        elif cond == "no video found":
-            lines = ["There's no video with that format...",
-                     "I don't see any video available to download...",
-                     "Seems this video doesn't meet the requested format..",
-                     "Seems this video is not available in that format..",
-                     "I can't find any video to download...try other format(?) "]
+        elif cond == "no video found":  # Takes 3 argument : 0.format, 1.min , 2.max
+            lines = ["There's no video with that format ({0}, {1}p - {2}p) ...",
+                     "I don't see any video in {0}, ({1}p - {2}p) available to download...",
+                     "Seems this video doesn't meet the requested format ({0}, {1}p - {2}p)..",
+                     "Seems this video is not available in {0}, ({1}p - {2}p) format..",
+                     "I can't find any video to download...\nno result for {0}, ({1}p - {2}p)...try other format(?) "]
         elif cond == "gathering video data failed":
             lines = ["The page is so slow, I can't gather any data...",
                      "Gomen, seems the video download data corrupted..",
@@ -405,13 +405,19 @@ class Lines:  # class to store respond lines
                      "Those videos passed %s as filter",
                      "I tried to filter with %s and these are the result..",
                      "I tried to use %s as filter, and found those..."]
-        elif cond == "header":
+        elif cond == "roger":  # Take 1 argument : keyword
+            lines = ["Sure.. Wait a minute, searching for '{}' ...\nIt's gonna take a while",
+                     "'{}' ? Sure... Wait a minute.. ",
+                     "Sure.. Let me find '{}' for you.. \nPlease wait :>",
+                     "'{}' right ? Understood... \nLooking for the one you want...",
+                     "Kay, I'll search for '{}'...please be patient :) "]
+        elif cond == "header : too much option":
             lines = ["This is the list of available formats...\n",
                      "Try to include one of the format next time...\n",
                      "These are the available formats... \n",
                      "Why did you make such a wide filtering ? Try to narrow it down..\n",
                      "I wonder which one do you want...\n"]
-        elif cond == "footer":
+        elif cond == "footer : too much option":
             lines = ["\n ♦ ＼(＾∀＾)  end   (＾∀＾)ノ ♦ ",
                      "\n Hope you find the one you want ~",
                      "\n (=^ ◡ ^=) end 	(=^ ◡ ^=)",

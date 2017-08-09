@@ -2136,6 +2136,31 @@ class Function:
                     line_bot_api.push_message(address, TextSendMessage(text=report))
                     raise
 
+            def get_youtube_video_title(page_url):
+                """ Return the title of a youtube video """
+
+                # Try to open the page
+                try:
+                    req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
+                    con = urllib.request.urlopen(req)
+                    page_source_code_text = con.read()
+                    mod_page = BeautifulSoup(page_source_code_text, "html.parser")
+
+                except:
+                    report = Lines.general_lines("failed to open page") % page_url
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+                    raise
+
+                # Get the video title
+                title = mod_page.find("title").text.strip()
+
+                # Remove ' - youtube ' from title
+                if "youtube" in title.lower():
+                    index_stop = title.rfind(" - ")
+                    title = title[:index_stop]
+
+                return title
+
             def get_spec():
                 """ Function to get requested video's spec and format from the text """
 
@@ -2276,66 +2301,60 @@ class Function:
                 # Return boolean that represent if video's format fulfil requirements
                 return (vid_format == req_format) and (vid_quality >= req_quality_min) and (vid_quality <= req_quality_max)
 
+            def send_confirmation(keyword):
+                """ Function to send header as confirmation that request is on process """
+
+                report = (Lines.download_youtube("roger")).format(keyword)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
             def send_header(req_format, req_quality_min, req_quality_max, default):
                 """ Function to send header """
 
                 if default:
-                    report = Lines.download_youtube("send option header") % "default settings"
+                    report = Lines.download_youtube("send option header") % "default settings (mp4 720p)"
                 else:
                     settings = ("format : " + str(req_format) + ", min : " + str(req_quality_min) + "p, max : " + str(req_quality_max) + "p")
                     report = Lines.download_youtube("send option header") % settings
 
                 line_bot_api.push_message(address, TextSendMessage(text=report))
 
-            def send_vid_option(video_option, video_links):
+            def send_vid_option(video_option, video_links, video_title):
                 """ Function to send the video download link to user in form of button template """
 
                 # Generate button header
-                title = "Youtube download"
-                text = Lines.download_youtube("pick one to download")
-                header_pic = Picture.header("background")
+                text = str(video_title + "\n" + Lines.download_youtube("pick one to download"))
 
                 # Button row proportionate to how many videos available for download
                 option = len(video_option)
-                if option == 1:
-
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0]))]
-
-                elif option == 2:
-
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
-                               URITemplateAction(label=video_option[1], uri=str(video_links[1]))]
-
-                elif option == 3:
-
-                    actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
-                               URITemplateAction(label=video_option[1], uri=str(video_links[1])),
-                               URITemplateAction(label=video_option[2], uri=str(video_links[2]))]
 
                 # Options more than 3
-                else:
+                if option > 3:
 
                     # Create list of other videos option
-                    reply = [Lines.download_youtube("header")]
+                    report = [Lines.download_youtube("header : too much option")]
                     for i in range(0, len(video_option)):
-                        reply.append(video_option[i])
-                    reply.append(Lines.download_youtube("footer"))
-                    reply = "\n".join(reply)
+                        report.append(video_option[i])
+                    report.append(Lines.download_youtube("footer : too much option"))
+                    report = "\n".join(report)
 
                     actions = [URITemplateAction(label=video_option[0], uri=str(video_links[0])),
                                URITemplateAction(label=video_option[1], uri=str(video_links[1])),
                                URITemplateAction(label=video_option[2], uri=str(video_links[2])),
-                               MessageTemplateAction(label='Others...', text=reply)]
+                               MessageTemplateAction(label='Others...', text=report)]
+
+                else:
+                    actions = []
+                    for i in range(0, option):
+                        actions.append(URITemplateAction(label=video_option[i], uri=str(video_links[i])))
 
                 # Send the final result to user
-                buttons_template = ButtonsTemplate(title=title, text=text, thumbnail_image_url=header_pic, actions=actions)
+                buttons_template = ButtonsTemplate(text=text, actions=actions)
                 template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
             # General variable
             cont = True
             req_format, req_quality_min, req_quality_max, default = get_spec()
-            print(req_format, req_quality_min, req_quality_max, default)
             youtube_links = []
 
             keyword = get_keyword()
@@ -2345,8 +2364,8 @@ class Function:
                 cont = False
 
             if cont:
+                send_confirmation(keyword)
                 youtube_links = get_youtube_videos(keyword)
-                print("YOUTUBE LINKS :", youtube_links)
 
                 # If youtube link is not available in text
                 if len(youtube_links) == 0:
@@ -2357,12 +2376,14 @@ class Function:
             # If youtube link is available, try to open genyoutube version
             if cont:
                 page_urls = get_genyoutube(youtube_links)
-                print("PAGE URLS :", page_urls)
                 no_video_sent_yet = True  # Create a boolean so header only sent once
+
                 # Check for every youtube link found
-                for page_url in page_urls:
-                    video_option, video_links = get_genyoutube_video_option(page_url)
-                    print("VIDEO OPTION , VIDEO LINK :",video_option, video_links)
+                for i in range(0, len(page_urls)):
+
+                    video_option, video_links = get_genyoutube_video_option(page_urls[i])
+                    video_title = get_youtube_video_title(youtube_links[i])
+
                     # If there's at least 1 video found and fulfil the requirements
                     if len(video_option) > 0:
 
@@ -2371,10 +2392,10 @@ class Function:
                             send_header(req_format, req_quality_min, req_quality_max, default)
                             no_video_sent_yet = False
 
-                        send_vid_option(video_option, video_links)
+                        send_vid_option(video_option, video_links, video_title)
 
                 if no_video_sent_yet:
-                    report = Lines.download_youtube("no video found")
+                    report = (Lines.download_youtube("no video found")).format(req_format, req_quality_min, req_quality_max)
                     line_bot_api.push_message(address, TextSendMessage(text=report))
 
         except Exception as exception_detail:
