@@ -80,5 +80,6 @@ class OtherUtil:
             line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
 
 
-
+alist = [2,3,2,4,1,2,5,3,6,23,4,1,23,23,4,53,2]
+print(list(set(alist[:5])))
 
