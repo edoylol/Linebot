@@ -2352,6 +2352,15 @@ class Function:
                 template_message = TemplateSendMessage(alt_text=text, template=buttons_template)
                 line_bot_api.push_message(address, template_message)
 
+            def send_footer(count):
+                """ Function to send footer to end the request, if not time out """
+
+                if count > 1:
+                    report = Lines.download_youtube("footer plural")
+                else:
+                    report = Lines.download_youtube("footer singular")
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
             # General variable
             cont = True
             req_format, req_quality_min, req_quality_max, default = get_spec()
@@ -2376,7 +2385,7 @@ class Function:
             # If youtube link is available, try to open genyoutube version
             if cont:
                 page_urls = get_genyoutube(youtube_links)
-                no_video_sent_yet = True  # Create a boolean so header only sent once
+                video_sent_count = 0
 
                 # Check for every youtube link found
                 for i in range(0, len(page_urls)):
@@ -2388,15 +2397,17 @@ class Function:
                     if len(video_option) > 0:
 
                         # Send header only once
-                        if no_video_sent_yet:
+                        if video_sent_count == 0:
                             send_header(req_format, req_quality_min, req_quality_max, default)
-                            no_video_sent_yet = False
 
                         send_vid_option(video_option, video_links, video_title)
+                        video_sent_count += 1
 
-                if no_video_sent_yet:
+                if video_sent_count == 0:
                     report = (Lines.download_youtube("no video found")).format(req_format, req_quality_min, req_quality_max)
                     line_bot_api.push_message(address, TextSendMessage(text=report))
+                else:
+                    send_footer(video_sent_count)
 
         except Exception as exception_detail:
             function_name = "Youtube download"
@@ -3446,14 +3457,14 @@ class Function:
             # If videos are available, try to filter it and get top 5 which are under 5 mins
             if cont:
 
-                # Filter videos that is below 7 minutes (enable auto download)
+                # Filter videos that is below 8 minutes (enable auto download)
                 filtered_video_link = []
                 filtered_video_description = []
                 for youtube_link in youtube_videos:
                     video_title, video_duration_minute, video_duration_second = get_youtube_video_property(youtube_link)
 
-                    # Include the video to filtered video list if it's below 7 mins
-                    if int(video_duration_minute) < 7:
+                    # Include the video to filtered video list if it's below 8 mins
+                    if int(video_duration_minute) < 8:
 
                         direct_download_link = get_direct_play_link(youtube_link)
                         video_duration = "[ " + video_duration_minute + ":" + video_duration_second + " ]"
@@ -3466,11 +3477,11 @@ class Function:
                             # Send it one by one ( to avoid run time error )
                             send_detail_result(filtered_video_link, filtered_video_description, i=(len(filtered_video_link)-1))
 
-                    # Stop if it's already 5 videos
-                    if len(filtered_video_link) >= 5:
+                    # Stop if it's already 3 videos
+                    if len(filtered_video_link) >= 3:
                         break
 
-                # If there's no video under 7 mins
+                # If there's no video under 8 mins
                 if len(filtered_video_link) == 0:
                     report = Lines.play_music("nothing to play")
                     line_bot_api.push_message(address, TextSendMessage(text=report))

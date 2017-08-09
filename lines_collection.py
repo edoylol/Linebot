@@ -424,6 +424,18 @@ class Lines:  # class to store respond lines
                      "\n \(＾• ω •＾) found it ?  ",
                      "\n      ヾ(・ω・)メ(・ω・)ノ    ",
                      ]
+        elif cond == "footer plural":
+            lines = ["I'm not sure which one you want, but hope you enjoy it :> ",
+                     "Since I found a lot, I randomly pick some for you :)",
+                     "There's a lot of videos under that title, pick yourself kay.. :) ",
+                     "That's what I found, hope you enjoy it~ ",
+                     "I think I overdid a little bit.. #teehee..."]
+        elif cond == "footer singular":
+            lines = ["Hope you enjoy it :> ",
+                     "I only found one, so this must be it..",
+                     "This video isn't too popular is it ?",
+                     "That's what I found, hope you enjoy it~ ",
+                     "I'm not lazy kay..\nI did search and I only found one..."]
         else:
             lines = [""]
 
@@ -959,11 +971,11 @@ class Lines:  # class to store respond lines
                      "I don't see any song with '{}' title...",
                      "Did you misspelled ? No result for '{}' when I tried to search for it..."]
         elif cond == "nothing to play":
-            lines = ["Seems the song is too long... \nIt has to be under 7 mins...",
-                     "I'm sorry but I can't find song that's under 7 mins with that title...",
+            lines = ["Seems the song is too long... \nIt has to be under 8 mins...",
+                     "I'm sorry but I can't find song that's under 8 mins with that title...",
                      "That titled songs are too long to play... ",
-                     "Have I told you that the music duration has to be under 7 mins ?",
-                     "I can't find any music that is under 7 mins... I'm sorry ... "]
+                     "Have I told you that the music duration has to be under 8 mins ?",
+                     "I can't find any music that is under 8 mins... I'm sorry ... "]
         elif cond == "footer plural":
             lines = ["I'm not sure which one you want, but hope you enjoy it :> ",
                      "Since I found a lot, I randomly pick some for you :)",
