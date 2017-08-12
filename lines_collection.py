@@ -997,14 +997,14 @@ class Lines:  # class to store respond lines
     def join(cond):
 
         if cond == "join":
-            lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend!",
+            lines = [" Thanks for adding me ^^",
                      " Thanks for inviting Megumi :3 ",
                      " Yoroshiku onegaishimasu~ ^^ ",
-                     " Megumi desu ! \nyoroshiku nee ~ ^^",
-                     " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends~ :> ",
-                     " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
-                     " Konichiwa... Megumi desu ! ehehehe",
-                     " Supp xD .. Megumi desu :3 ,, \nyoroshiku nee~  #teehee"]
+                     " Megumi desu ! ^^",
+                     " Megumi desu, you can call me kato or meg aswell... :> ",
+                     " Megumi desu, just call me kato or meg  ^^ ~",
+                     " Megumi desu ! ehehehe",
+                     " Supp xD .. Megumi desu :3 ,,"]
         elif cond == "report":  # Take 1 argument : group id
             lines = ["Master, Megumi joined a group ~ :> \n\nGroup id : %s",
                      "Master, I'm leaving for a while ,kay? ^^ \n\nGroup id : %s",
@@ -1110,14 +1110,14 @@ class Lines:  # class to store respond lines
     def added(cond):
 
         if cond == "added":
-            lines = [" Nyaann~ Thanks for adding me ^^ \nhope we can be friend !",
+            lines = [" Thanks for adding me ^^ \nhope we can be friend !",
                      " Thanks for adding Megumi :3 \nHope we can be friend ^^",
-                     " Konichiwa ,.. Megumi desu~ \nYoroshiku onegaishimasu \(^.^)/ ",
-                     " Megumi desu ! \nyoroshiku nee ~ ^^",
+                     " Megumi desu~ \(^.^)/ ",
+                     " Megumi desu ! yoroshiku nee ~ ^^",
                      " Megumi desu, you can call me kato or meg aswell.. \nhope we can be friends ~ :> ",
-                     " Megumi desu, just call me kato or meg  ^^,, \nyoroshiku nee ~ ",
-                     " Konichiwa... Megumi desu ! ehehehe",
-                     " Megumi desu :3 ,, \nyoroshiku nee ~  #teehee"
+                     " Megumi desu, just call me kato or meg  ^^ ~ ",
+                     " Megumi desu ! ehehehe",
+                     " Megumi desu :3 ,,yoroshiku nee ~ "
                      ]
         elif cond == "report":  # Takes 2 argument : username , userid
             lines = ["Master, Megumi got a new friend named %s ~ ^^\n\nUser id : %s",
