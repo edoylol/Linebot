@@ -319,7 +319,7 @@ def handle_postback(event):
         elif all(word in text for word in ["manual : "])                                : Function.show_manual("postback")
 
         elif all(word in text for word in ["megumi dev mode print userlist"])           :
-            if Function.dev_authority_check(event)                                          :
+            if Function.dev_authority_check()                                          :
                 if all(word in text for word in ["print", "userlist"])                          : Function.dev_print_userlist()
                 else                                                                            : Function.false()
 
@@ -2008,7 +2008,7 @@ class Function:
 
                 if all(word in text for word in ["dev", "mode"]):
                     if hostid == 15:  # Only available for zippyshare
-                        dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                        dev_extension_user_check = Function.dev_authority_check()
                         if dev_extension_user_check:
                             return True
 
@@ -4427,7 +4427,7 @@ class Function:
                     """ Function to check whether dev mode extension is enabled """
 
                     if all(word in text for word in ["dev", "mode"]):
-                            dev_extension_user_check = Function.dev_authority_check(address, cond="address")
+                            dev_extension_user_check = Function.dev_authority_check()
                             if dev_extension_user_check:
                                 return True
 
@@ -4687,7 +4687,7 @@ class OtherUtil:
 
         elif all(word in text for word in ["dev", "mode"]):
 
-            if Function.dev_authority_check(event):
+            if Function.dev_authority_check():
 
                 if all(word in text for word in ["print", "userlist"]):
                     megumi_action = "Dev_mode_print_userlist"
