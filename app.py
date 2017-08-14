@@ -85,9 +85,9 @@ def callback():
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    user_id = body["events"][0]["source"]["userId"]
+    user_id = json.loads(body)["events"][0]["source"]["userId"]
     print(user_id)
-    
+
     # Handle webhook body
     try:
         handler.handle(body, signature)
