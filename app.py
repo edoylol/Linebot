@@ -84,6 +84,8 @@ def callback():
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
+    print(body)
+
     # Handle webhook body
     try:
         handler.handle(body, signature)
@@ -162,10 +164,6 @@ def message_text(event):
 
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
-
-    print(MessageEvent)
-    print("=====")
-    print(event)
 
     # Get general information from event
     original_text = event.message.text
