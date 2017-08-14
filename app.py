@@ -77,6 +77,7 @@ MEGUMI_ONLINE = True
 @app.route("/callback", methods=['POST'])
 def callback():
     """ Get X-Line-Signature header value """
+    global user_id
 
     signature = request.headers['X-Line-Signature']
 
@@ -84,8 +85,9 @@ def callback():
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    print(body)
-
+    user_id = body["events"][0]["source"]["userId"]
+    print(user_id)
+    
     # Handle webhook body
     try:
         handler.handle(body, signature)
