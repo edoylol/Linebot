@@ -87,19 +87,15 @@ def callback():
 
     # Try to get user's id
     try:
-        print(json.loads(body))
         user_id = json.loads(body)["events"][0]["source"]["userId"]
-
     except:
         user_id = ""
-        print("user id error")
 
     # Try to get user's name
     try:
         user_name = line_bot_api.get_profile(user_id).display_name
     except:
         user_name = "someone"
-        print("user name error")
 
     # Handle webhook body
     try:
