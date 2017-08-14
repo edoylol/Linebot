@@ -85,8 +85,19 @@ def callback():
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    user_id = json.loads(body)["events"][0]["source"]["userId"]
-    user_name = line_bot_api.get_profile(user_id).display_name
+    # Try to get user's id
+    try:
+        user_id = json.loads(body)["events"][0]["source"]["userId"]
+    except:
+        user_id = ""
+        print("user id error")
+
+    # Try to get user's name
+    try:
+        user_name = line_bot_api.get_profile(user_id).display_name
+    except:
+        user_name = "someone"
+        print("user name error")
 
     # Handle webhook body
     try:
