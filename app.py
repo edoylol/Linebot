@@ -88,6 +88,7 @@ def callback():
     # Try to get user's id
     try:
         user_id = json.loads(body)["events"][0]["source"]["userId"]
+        print(json.loads(body))
     except:
         user_id = ""
         print("user id error")
