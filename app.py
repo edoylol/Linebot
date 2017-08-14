@@ -4127,6 +4127,17 @@ class Function:
         report = Lines.join("join")
         line_bot_api.push_message(address, TextSendMessage(text=report))
 
+        # Send prompt to show megumi's manual
+        report = Lines.show_manual("see manual?")
+        ans_yes = Labels.confirmation("yes")
+        ans_no = Labels.confirmation("no")
+        command = "show megumi manual"
+        confirm_template = ConfirmTemplate(text=report, actions=[
+            PostbackTemplateAction(label=ans_yes, text=ans_yes, data=command),
+            MessageTemplateAction(label=ans_no, text=ans_no)])
+        template_message = TemplateSendMessage(alt_text=report, template=confirm_template)
+        line_bot_api.push_message(address, template_message)
+
         # Send report to devs
         report = Lines.join("report") % str(address)
         for dev_user in Database.devlist:
