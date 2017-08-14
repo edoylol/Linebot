@@ -77,7 +77,7 @@ MEGUMI_ONLINE = True
 @app.route("/callback", methods=['POST'])
 def callback():
     """ Get X-Line-Signature header value """
-    global user_id
+    global user_id, user_name
 
     signature = request.headers['X-Line-Signature']
 
@@ -86,7 +86,7 @@ def callback():
     app.logger.info("Request body: " + body)
 
     user_id = json.loads(body)["events"][0]["source"]["userId"]
-    print(user_id)
+    user_name = line_bot_api.get_profile(user_id).display_name
 
     # Handle webhook body
     try:
@@ -128,9 +128,7 @@ def update_user_list(event):
 
         try:
             # Get the user data
-            user_id = event.source.user_id
-            user = line_bot_api.get_profile(event.source.user_id).display_name
-            userlist.update({user_id: user})
+            userlist.update({user_id: user_name})
 
             # If there's an update
             if len(userlist.keys()) != userlist_init_count:
@@ -149,7 +147,7 @@ def update_user_list(event):
                         line_bot_api.push_message(dev_user, template_message)
 
                     # Send report contain new user only
-                    report = str("New user : \n'"+user_id+"': '"+user+"'")
+                    report = str("New user : \n'"+user_id+"': '"+user_name+"'")
                     for dev_user in Database.devlist:
                         line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
@@ -184,7 +182,7 @@ def message_text(event):
 
             # Try to use rules type action-mapping
             megumi_action = OtherUtil.function_rules_based_mapping(event)
-            OtherUtil.megumi_logger(megumi_action, "Rules")
+            # OtherUtil.megumi_logger(megumi_action, "Rules")
             print("ACTION :", megumi_action, "BY RULES")
 
             # Send the input text to API.AI for further natural language processing
@@ -195,7 +193,7 @@ def message_text(event):
                     print("ACTION :", megumi_action)
                 except:
                     megumi_action = "Function_false"
-                OtherUtil.megumi_logger(megumi_action, "AIAPI")
+                # OtherUtil.megumi_logger(megumi_action, "AIAPI")
 
             # If API.AI failed again, try to check whether it's a default chat type input by sending to megumi II
             if megumi_action == "Function_false":
@@ -227,13 +225,13 @@ def message_text(event):
             elif megumi_action == "Function_play_music"             : Function.play_music()
             elif megumi_action == "Function_hoax_analyser"          : Function.hoax_or_fact()
 
-            elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check(event)
+            elif megumi_action == "Enable_dev_mode"                 : Function.dev_authority_check()
             elif megumi_action == "Dev_mode_print_userlist"         :
-                if Function.dev_authority_check(event)                  : Function.dev_print_userlist()
+                if Function.dev_authority_check()                      : Function.dev_print_userlist()
             elif megumi_action == "Dev_mode_set_tag_notifier"       :
-                if Function.dev_authority_check(event)                  : Function.dev_mode_set_tag_notifier()
-            elif megumi_action == "Dev_mode_print_logger"       :
-                if Function.dev_authority_check(event)                  : Function.dev_print_megumi_logger()
+                if Function.dev_authority_check()                      : Function.dev_mode_set_tag_notifier()
+            elif megumi_action == "Dev_mode_print_logger"           :
+                if Function.dev_authority_check()                      : Function.dev_print_megumi_logger()
 
             elif megumi_action == "Function_false"                  : Function.false()
             else                                                    : Function.send_default_reply()
@@ -245,7 +243,7 @@ def message_text(event):
 
     # Special tag / mention function
     if tag_notifier_on:
-        Function.tag_notifier(event)
+        Function.tag_notifier()
 
 # @handler.add(MessageEvent, message=StickerMessage)
 # what does people do when being sent a sticker ???
@@ -4187,13 +4185,13 @@ class Function:
             line_bot_api.push_message(address, TextSendMessage(text=report))
 
     @staticmethod
-    def tag_notifier(event):
+    def tag_notifier():
         """ Function to send notice to certain user if their name is called """
 
         # Check if a message contain specific user determined keyword
         if any(word in text for word in Lines.jessin()):
             try:
-                sender = line_bot_api.get_profile(event.source.user_id).display_name
+                sender = user_name
             except:
                 sender = "someone"
 
@@ -4309,20 +4307,11 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     @staticmethod
-    def dev_authority_check(event, cond="default"):
+    def dev_authority_check():
         """ Function to check whether the user is dev.
-        If dev mode is tried to be accessed in group or by non-dev, it will send report to dev.
-         default = use event as parameter
-         address = use address as parameter """
+        If dev mode is tried to be accessed in group or by non-dev, it will send report to dev."""
 
         try:
-            # Get the user id and user name
-            if cond == "address":
-                user_id = event
-            else:
-                user_id = event.source.user_id
-            user = userlist[user_id]
-
             # If the user is listed in Dev list
             if user_id in Database.devlist:
                 return True
@@ -4331,18 +4320,16 @@ class Function:
             else:
                 report = Lines.dev_mode_authority_check("reject")
                 line_bot_api.push_message(address, TextSendMessage(text=report))
-                report = Lines.dev_mode_authority_check("notify report") % user
-                line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+
+                report = Lines.dev_mode_authority_check("notify report") % user_name
+                for dev_user in Database.devlist:
+                    line_bot_api.push_message(dev_user, TextSendMessage(text=report))
                 return False
 
         # If Dev Mode tried to be accessed in group / room / failed
-        except:
-            user = "someone"
-            report = Lines.dev_mode_authority_check("failed")
-            line_bot_api.push_message(address, TextSendMessage(text=report))
-            report = Lines.dev_mode_authority_check("notify report") % user
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
-            return False
+        except Exception as exception_detail:
+            function_name = "Authority check"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
     def dev_print_megumi_logger():
