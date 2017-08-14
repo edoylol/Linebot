@@ -219,7 +219,7 @@ def message_text(event):
             elif megumi_action == "Function_download_youtube"       : Function.download_youtube()
             elif megumi_action == "Function_echo"                   : Function.echo()
             elif megumi_action == "Function_send_invite"            : Function.send_invite(event)
-            elif megumi_action == "Function_report_bug"             : Function.report_bug(event)
+            elif megumi_action == "Function_report_bug"             : Function.report_bug()
             elif megumi_action == "Function_leave"                  : Function.leave(event)
             elif megumi_action == "Function_stalk_instagram"        : Function.stalk_instagram()
             elif megumi_action == "Function_play_music"             : Function.play_music()
@@ -4096,19 +4096,12 @@ class Function:
     """====================== Sub Function List ============================="""
 
     @staticmethod
-    def report_bug(event):
+    def report_bug():
         """ Function to enable bugs report. Original text will be sent to Devs """
-
-        # Get the user's id and user's name if possible
-        try:
-            user_id = event.source.user_id
-            user = userlist[user_id]
-        except:
-            user = "Anonymous"
 
         # Send the report to Devs
         try:
-            report = Lines.report_bug("report") % (original_text, user)
+            report = Lines.report_bug("report") % (original_text, user_name)
             for dev_user in Database.devlist:
                 line_bot_api.push_message(dev_user, TextSendMessage(text=report))
             report = Lines.report_bug("success")
