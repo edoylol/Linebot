@@ -870,7 +870,7 @@ class Lines:  # class to store respond lines
                      "Sure..Megumi's manuals coming~",
                      "Summoning Megumi's manuals ~"]
         elif cond == "tips":
-            lines = ["\nfriendly tips : I can handle many different input format, try it out yourself ~"
+            lines = ["\nfriendly tips : I can handle many different input format, try it out yourself ~",
                      "\nfriendly tips : Don't let me disappoint you, I learn every time you talk to me",
                      "\nfriendly tips : Try out other way to call my functions, there're lots of different ways to do it",
                      "\nfriendly tips : You have to include my name, otherwise I won't help you :3",

@@ -163,6 +163,10 @@ def message_text(event):
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
+    print(MessageEvent)
+    print("=====")
+    print(event)
+
     # Get general information from event
     original_text = event.message.text
     text = original_text.lower()
