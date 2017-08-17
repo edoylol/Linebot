@@ -190,7 +190,7 @@ def message_text(event):
             # megumi_bot_mode = "bot" in text[:5]
 
             # Try to use rules type action-mapping
-            megumi_action = OtherUtil.function_rules_based_mapping(event)
+            megumi_action = OtherUtil.function_rules_based_mapping()
             # OtherUtil.megumi_logger(megumi_action, "Rules")
             print("ACTION :", megumi_action, "BY RULES")
 
@@ -2535,8 +2535,8 @@ class Function:
                 """ Function to return available language for translation """
 
                 # Try to open the page
+                page_url = "https://msdn.microsoft.com/en-us/library/hh456380.aspx"
                 try:
-                    page_url = "https://msdn.microsoft.com/en-us/library/hh456380.aspx"
                     req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
                     con = urllib.request.urlopen(req)
                     page_source_code_text = con.read()
@@ -3003,10 +3003,10 @@ class Function:
                     rawdatas = max(temp, key=len)
 
                     # Crop the pre-json part
-                    text = rawdatas
-                    index_start = text.find("{")
-                    index_stop = text.rfind("}") + 1
-                    rawdatas = str(text[index_start:index_stop])
+                    json_raw_text = str(rawdatas)
+                    index_start = json_raw_text.find("{")
+                    index_stop = json_raw_text.find("}") + 1
+                    rawdatas = str(json_raw_text[index_start:index_stop])
 
                 except:
                     report = Lines.general_lines("formatting error") % "instagram's page"
@@ -4498,6 +4498,30 @@ class Function:
 class OtherUtil:
 
     @staticmethod
+    def get_user_info_backup(event):
+        """ Function to check availability and get user id and user name
+        :parameter event
+        :return None
+        """
+
+        global user_id, user_name
+
+        if user_id == "":
+            try:
+                user_id = event.source.user_id
+            except:
+                pass
+
+        if user_name == "someone":
+            try:
+                if user_id != "":
+                    user_name = userlist[user_id]
+                else:
+                    user_name = userlist[address]
+            except:
+                pass
+
+    @staticmethod
     def api_ai(api_ai_access_token, text):
         """ Function to send text to API.AI and receive JSON data of processed text """
 
@@ -4588,7 +4612,7 @@ class OtherUtil:
             megumi_logger.write(cond + "_" + megumi_action + " : " + original_text + "\n")
 
     @staticmethod
-    def function_rules_based_mapping(event):
+    def function_rules_based_mapping():
         """ Function to provide manual mapping of action if NLP API.AI fail to detect the intent """
 
         megumi_action = "Function_false"
