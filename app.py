@@ -171,6 +171,9 @@ def message_text(event):
 
     global token, original_text, text, jessin_userid, user, tag_notifier_on, api_ai_response
 
+    # Make sure user information is available
+    OtherUtil.get_user_info_backup(event)
+
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
@@ -227,7 +230,7 @@ def message_text(event):
             elif megumi_action == "Function_show_manual"            : Function.show_manual()
             elif megumi_action == "Function_download_youtube"       : Function.download_youtube()
             elif megumi_action == "Function_echo"                   : Function.echo()
-            elif megumi_action == "Function_send_invite"            : Function.send_invite(event)
+            elif megumi_action == "Function_send_invite"            : Function.send_invite()
             elif megumi_action == "Function_report_bug"             : Function.report_bug()
             elif megumi_action == "Function_leave"                  : Function.leave(event)
             elif megumi_action == "Function_stalk_instagram"        : Function.stalk_instagram()
@@ -293,6 +296,9 @@ def handle_postback(event):
 
     global token, original_text, text, jessin_userid, user, tag_notifier_on
 
+    # Make sure user information is available
+    OtherUtil.get_user_info_backup(event)
+
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
@@ -310,9 +316,9 @@ def handle_postback(event):
             line_bot_api.reply_message(token, TextSendMessage(text='pong'))
 
         elif all(word in text for word in ["confirmation invitation"]):
-            if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond(event, "yes")
-            elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond(event, "no")
-            elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond(event, "pending")
+            if all(word in text for word in ['confirmation invitation : yes'])              : Function.invite_respond("yes")
+            elif all(word in text for word in ['confirmation invitation : no'])             : Function.invite_respond("no")
+            elif all(word in text for word in ['confirmation invitation : pending'])        : Function.invite_respond("pending")
 
         elif all(word in text for word in ["request", "cinema list please"])            :
             if all(word in text for word in ["xxi"])                                        : Function.show_cinema_list("xxi")
@@ -344,6 +350,9 @@ def handle_join(event):
 
     global token, jessin_userid
 
+    # Make sure user information is available
+    OtherUtil.get_user_info_backup(event)
+
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
 
@@ -359,13 +368,16 @@ def handle_follow(event):
     """ Function to handle follow event (when someone add this bot) """
     global token, jessin_userid
 
+    # Make sure user information is available
+    OtherUtil.get_user_info_backup(event)
+
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     update_user_list(event)
     token = event.reply_token
 
     # Special function dedicated for follow event
-    Function.added(event)
+    Function.added()
 
 
 @handler.add(UnfollowEvent)
@@ -373,12 +385,15 @@ def handle_unfollow(event):
     """ Function to handle follow event (when someone block this bot) """
     global jessin_userid
 
+    # Make sure user information is available
+    OtherUtil.get_user_info_backup(event)
+
     # Dev / your user id
     jessin_userid = "U77035fb1a3a4a460be5631c408526d0b"
     update_user_list(event)
 
     # Special function dedicated for unfollow event
-    Function.removed(event)
+    Function.removed()
 
 
 """"===================================== Usable Function List ==================================================="""
@@ -642,7 +657,7 @@ class Function:
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
-    def send_invite(event):
+    def send_invite():
         """ Function to send button template as invitation. Detail and participant list is given in text.
          Usage example : meg, can you send invite 'Go to the beach' to close-friend ? """
 
@@ -714,11 +729,8 @@ class Function:
                 title = 'Invitation'
 
                 # Get the sender information
-                try:
-                    invitation_sender_id = event.source.user_id
-                    invitation_sender = userlist[invitation_sender_id]
-                except Exception:
-                    invitation_sender = "someone"
+                invitation_sender_id = user_id
+                invitation_sender = user_name
 
                 # Generate the invitation
                 buttons_template = ButtonsTemplate(title=title, text=desc, thumbnail_image_url=header_pic, actions=[
@@ -758,7 +770,7 @@ class Function:
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
     @staticmethod
-    def invite_respond(event, cond):
+    def invite_respond(cond):
         """ Function to notice the invitation sender about the response from participants.
          Usage example: (none : passive function) """
 
@@ -772,12 +784,8 @@ class Function:
                 sender_known = False
 
             # Get the responder data
-            try:
-                responder_id = event.source.user_id
-                responder = userlist[responder_id]
-            except Exception:
-                responder_id = address
-                responder = "someone"
+            responder_id = user_id
+            responder = user_name
 
             # Send report to responder if their respond is recorded
             report = Lines.invite_report("respond recorded")
@@ -3503,7 +3511,358 @@ class Function:
             function_name = "Play music"
             OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
 
-    """ ==========  8 August 2017 last update ============== """
+    @staticmethod
+    def weather_forecast():
+        """ Function to return weather condition or weather forecast for certain location """
+
+        try:
+            def get_search_keyword():
+                """ Function to get location keyword (use filtering method)
+                :return filtered_text
+                """
+
+                keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'bad', 'be',
+                           'city', 'cold', 'cond', 'condition', 'do', 'does', 'for', 'forecast', 'going',
+                           'gonna', 'good', 'have', 'hot', 'how', "how's", 'in', 'information', 'is', 'it',
+                           'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,', 'megumi', 'megumi,',
+                           'morning', 'near', 'nearby', 'now', 'please', 'pls', 'rain', 'said', 'show', 'sky',
+                           'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
+                           'weathers', 'what', "what's", 'whats', 'will', 'you'
+                           ]
+
+                filtered_text = OtherUtil.filter_words(text)
+                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
+
+                return filtered_text
+
+            def get_lat_long():
+                """ Function to extract latitude and longitude from text
+                :return latitude, longitude
+                """
+
+                # Getting the coordinate only
+                geo_text = text[text.find("(") + 1: text.find(")")]
+
+                # Crop the latitude
+                lat_start = geo_text.find("(") + 1
+                lat_end = geo_text.find(",")
+                latitude = geo_text[lat_start:lat_end].strip()
+
+                # Crop the longitude
+                long_start = geo_text.find(",") + 1
+                long_end = geo_text.find(")")
+                longitude = geo_text[long_start:long_end].strip()
+
+                return latitude, longitude
+
+            def is_lat_long_valid():
+                """ Function to check whether latitude and longitude valid
+                :return use_coordinate, cont
+                """
+
+                use_coordinate = False
+                cont = True
+
+                # try to get geo location
+                if all(word in text for word in ['(', ')', ',']):
+                    latitude, longitude = get_lat_long()
+
+                    # Check if coordinate is usable
+                    try:
+                        float(latitude)
+                        float(longitude)
+                        use_coordinate = True
+                    except:
+                        cont = False
+                else:
+                    cont = False
+
+                return use_coordinate, cont
+
+            def get_city_id(keyword, database="citylist.json"):
+                """ Function to get city id in the database
+                :parameter keyword
+                :type keyword: list
+                :parameter database: "citylist.json
+                :return city_id_list, city_name_list
+                """
+
+                city_id_list = []
+                city_name_list = []
+
+                # If keyword is not found
+                if len(keyword) == 0:
+                    nonlocal default_keyword
+
+                    # Set default location,( Bandung )
+                    city_id_list.append(1650357)
+                    default_keyword = True
+
+                else:
+                    # Try to open database to search for city ID
+                    with open(database, encoding='utf8') as city_list:
+                        data = json.load(city_list)
+                        found = False
+
+                        # Iterate through data to find city with exact name
+                        for city in keyword:
+                            for item in data:
+                                if city.lower() == item['name'].lower():
+                                    city_id_list.append(item['id'])
+                                    city_name_list.append(item['name'])
+                                    found = True
+                                else:
+                                    pass
+
+                        # Try again to find city with similar name
+                        if not found:
+                            for city in keyword:
+                                for item in data:
+                                    if city.lower() in item['name'].lower():
+                                        city_id_list.append(item['id'])
+                                        city_name_list.append(item['name'])
+                                        found = True
+                                    else:
+                                        pass
+
+                        if not found:
+                            city_id_list.append("not_found")
+
+                return city_id_list, city_name_list
+
+            def request_type():
+                """ Function to determine request type (forecast / weather condition)
+                :return: req_type
+                """
+
+                if "forecast" in text.lower():
+                    req_type = "forecast"
+                else:
+                    req_type = "weather"
+
+                return req_type
+
+            def send_header(city_id_list, city_name_list):
+                """
+                :param city_id_list: list of city id
+                :param city_name_list: list of city name
+                :return: None
+                """
+
+                # Generate header
+                report = [Lines.weatherforecast("header")]
+
+                # Differentiate header by amount of city found
+                if len(city_id_list) > 2:
+                    report.append(" ")
+                    report.append(Lines.weatherforecast("city search : 3 or more cities"))
+                    for name in city_name_list:
+                        report.append(name)
+                    report.append(" ")
+                elif len(city_name_list) == 2:
+                    report.append(" ")
+                    report.append(Lines.weatherforecast("city search : 2 cities") % city_name_list[1])
+                    report.append(" ")
+
+                if default_keyword:
+                    report.append(" ")
+                    report.append(Lines.weatherforecast("default location") % default_location)
+
+                report = "\n".join(report)
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            def get_detail_page(city_id, city_name):
+                """
+                :param city_id:
+                :type city_id: string
+                :param city_name:
+                :type city_name: string
+                :return: owm_detail_page: detail information for certain city
+                """
+
+                if city_id != "not_found":
+                    owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
+
+                else:
+                    city_id_list, city_name_list = get_city_id([city_name])
+                    city_id = city_id_list[0]
+                    owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
+
+                return owm_detail_page
+
+            def send_weather():
+                """
+                Function to send weather condition
+
+                :return: None
+                """
+
+                # Get the weather condition data
+                try:
+                    city_name = weather_data["name"]
+                except:
+                    city_name = "Undefined"
+                try:
+                    city_weather_type = weather_data["weather"][0]['main']
+                    city_weather_description = weather_data["weather"][0]['description']
+                except:
+                    city_weather_type = "Undefined"
+                    city_weather_description = "Undefined"
+                try:
+                    city_temp = weather_data["main"]['temp']
+                    city_temp_min = weather_data["main"]['temp_min']
+                    city_temp_max = weather_data["main"]['temp_max']
+                except:
+                    city_temp = "Undefined"
+                    city_temp_min = "Undefined"
+                    city_temp_max = "Undefined"
+
+                # Re-formatting data to send
+                send_header(city_id_list, city_name_list)
+                owm_detail_page = get_detail_page(city_id, city_name)
+                title = "[ " + city_name + " ]"
+                temp_description = " [ " + str(city_temp) + "°C ]" + "\n" + "Temp vary from " + str(city_temp_min) + "°C to " + str(city_temp_max) + "°C"
+                button_text = city_weather_description + temp_description
+                header_pic = Picture.weatherforecast(city_weather_type.lower())
+                buttons_template = ButtonsTemplate(title=title, text=button_text[:60], thumbnail_image_url=header_pic,
+                                                   actions=[URITemplateAction(label='See detail info', uri=owm_detail_page)])
+
+                # Sending button and report
+                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
+                line_bot_api.push_message(address, template_message)
+
+                report = Lines.weatherforecast_tips(city_weather_type.lower())
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+            def send_forecast():
+                """ Function to send forecast
+                :return: None
+                """
+
+                # Get the forecast information
+                try:
+                    city_name = weather_data['city']['name']
+                except:
+                    city_name = "Undefined"
+
+                city_weather_type = []
+                city_weather_description = []
+                city_temp = []
+                city_temp_min = []
+                city_temp_max = []
+                city_date = []
+
+                # Loop through 5 times to get 5 data set
+                for i in range(0, 5):
+                    try:
+                        city_weather_type.append(weather_data['list'][i]['weather'][0]['main'])
+                    except:
+                        city_weather_type.append(" ")
+                    try:
+                        city_weather_description.append(weather_data['list'][i]['weather'][0]['description'])
+                    except:
+                        city_weather_description.append(" ")
+                    try:
+                        city_temp.append(weather_data['list'][i]['main']['temp'])
+                    except:
+                        city_temp.append(" ")
+                    try:
+                        city_temp_min.append(weather_data['list'][i]['main']['temp_min'])
+                    except:
+                        city_temp_min.append(" ")
+                    try:
+                        city_temp_max.append(weather_data['list'][i]['main']['temp_max'])
+                    except:
+                        city_temp_max.append(" ")
+                    try:
+                        city_date.append(weather_data['list'][i]['dt_txt'])
+                    except:
+                        city_date.append(" ")
+
+                # Generating carousel title to send
+                title = []
+                for i in range(0, 5):
+                    title.append(city_name + "  " + city_date[i][5:16])
+
+                # Generating carousel text to send
+                owm_detail_page = get_detail_page(city_id, city_name)
+                carousel_text = []
+                for i in range(0, 5):
+                    temp_description = " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temp vary from " + str(city_temp_min[i]) + "°C to " + str(
+                        city_temp_max[i]) + "°C"
+                    carousel_text.append(
+                        city_weather_description[i] + temp_description)
+
+                # Generating carousel header pict to send
+                header_pic = []
+                for i in range(0, 5):
+                    header_pic.append(Picture.weatherforecast(city_weather_type[i].lower()))
+
+                send_header(city_id_list, city_name_list)
+
+                # Generating carousel template
+                columns = []
+                for i in range(0, len(carousel_text)):
+                    carousel_column = CarouselColumn(title=title[i], text=carousel_text[i][:60], thumbnail_image_url=header_pic[i], actions=[
+                        URITemplateAction(label='See detail..', uri=owm_detail_page)])
+                    columns.append(carousel_column)
+                carousel_template = CarouselTemplate(columns=columns)
+
+                # Sending carousel and report
+                template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
+                line_bot_api.push_message(address, template_message)
+
+            # General variable """
+            owm_key_list = [
+                "4d7355141b9838b1ac5799247095f61d", "48d8f519014923226491c62098640295", "32efe2580b5ec0d2767e55a9c2d581d1",
+                "79f9585bf82fb571946ce4b0f1101665", "30128b74832097ef3ed57c642d56ebe8", "eb1b1af47cbca59d0b17c729071d1088",
+                "aaae7f35207db74b0bde707b2ff54c81", "adcb9836b69d955ec042ffc8d6300feb", "a16c1867404a31a617abb68f86ffbedc"
+            ]
+            open_weather_map_key = random.choice(owm_key_list)
+            default_location = "Bandung"
+            cont = True
+            default_keyword = False
+            latitude, longitude = 0, 0
+
+            # Getting keyword and city id based on text
+            keyword = get_search_keyword()
+            city_id_list, city_name_list = get_city_id(keyword)
+            city_id = city_id_list[0]
+            request_type = request_type()
+
+            # If there is at least one city which id match the keyword given,
+            use_city_id = city_id != "not_found"
+
+            # Wrong keyword or the city is not available, thus try to use geo location
+            if not use_city_id:
+                latitude, longitude = get_lat_long()
+                use_coordinate, cont = is_lat_long_valid()  # create flags by validating latitude and longitude
+
+            # If either city id or lat long is available
+            if cont:
+                owm_call_head = "http://api.openweathermap.org/data/2.5/" + request_type
+                owm_call_tail = "&units=metric&appid=" + str(open_weather_map_key)
+
+                if use_city_id:
+                    owm_weather_call = owm_call_head + "?id=" + str(city_id) + owm_call_tail
+                else:
+                    owm_weather_call = owm_call_head + "?lat=" + str(latitude) + "&lon=" + str(longitude) + owm_call_tail
+
+                weather_data = requests.get(owm_weather_call).json()
+
+                # only get the condition right now ( 1 data each )
+                if request_type == "weather":
+                    send_weather()
+
+                # get 5 conditions every 3 hours ( data stored as list )
+                elif request_type == "forecast":
+                    send_forecast()
+
+        except Exception as exception_detail:
+            function_name = "Weather forecast"
+            OtherUtil.random_error(function_name=function_name, exception_detail=exception_detail)
+
+    """ ==========  17 August 2017 unchecked function ============== """
 
     @staticmethod
     def summonerswar_wiki(cond="default"):
@@ -3819,289 +4178,6 @@ class Function:
             function_name = "SW wiki"
             OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
 
-    @staticmethod
-    def weather_forecast():
-
-        try:
-            def get_search_keyword():
-                keyword = ['', ' ', '?', 'about', 'afternoon', 'are', 'area', 'around', 'at', 'bad', 'be',
-                           'city', 'cold', 'cond', 'condition', 'do', 'does', 'for', 'forecast', 'going',
-                           'gonna', 'good', 'have', 'hot', 'how', "how's", 'in', 'information', 'is', 'it',
-                           'kato', 'kato,', 'like', 'look', 'looks', 'me', 'meg', 'meg,', 'megumi', 'megumi,',
-                           'morning', 'near', 'nearby', 'now', 'please', 'pls', 'rain', 'said', 'show', 'sky',
-                           'sunny', 'the', 'think', 'this', 'to', 'today', 'tomorrow', 'tonight', 'weather',
-                           'weathers', 'what', "what's", 'whats', 'will', 'you'
-                           ]
-
-                filtered_text = OtherUtil.filter_words(text)
-                filtered_text = OtherUtil.filter_keywords(filtered_text, keyword)
-
-                return filtered_text
-
-            def get_lat_long():
-                geo_text = text[text.find("(") + 1: text.find(")")]  # getting the coordinate only
-                lat_start = geo_text.find("(") + 1
-                lat_end = geo_text.find(",")
-                long_start = geo_text.find(",") + 1
-                long_end = geo_text.find(")")
-                latitude = geo_text[lat_start:lat_end].strip()
-                longitude = geo_text[long_start:long_end].strip()
-                return latitude, longitude
-
-            def is_lat_long_valid():
-                use_coordinate = False
-                cont = True
-
-                if all(word in text for word in ['(', ')', ',']):  # try to use geo location
-                    latitude, longitude = get_lat_long()
-                    try:
-                        float(latitude)
-                        float(longitude)
-                        use_coordinate = True  # flag if coordinate is usable
-                    except:
-                        cont = False
-                else:
-                    cont = False
-
-                return use_coordinate, cont
-
-            def get_city_id(keyword, database="citylist.json"):
-                city_id_list = []
-                city_name_list = []
-
-                if keyword == []:  # default location is Bandung
-                    nonlocal default_keyword
-                    city_id_list.append(1650357)
-                    default_keyword = True
-
-                else:
-                    with open(database, encoding='utf8') as city_list:
-                        data = json.load(city_list)
-                        found = False
-                        for city in keyword:
-                            for item in data:
-                                if city.lower() == item['name'].lower():
-                                    city_id_list.append(item['id'])
-                                    city_name_list.append(item['name'])
-                                    found = True
-                                else:
-                                    pass
-                        if not (found): # second attempt
-                            for city in keyword:
-                                for item in data:
-                                    if city.lower() in item['name'].lower():
-                                        city_id_list.append(item['id'])
-                                        city_name_list.append(item['name'])
-                                        found = True
-                                    else:
-                                        pass
-                        if not (found):
-                            city_id_list.append("not_found")
-
-                return city_id_list, city_name_list
-
-            def request_type():
-
-                if "forecast" in text.lower():
-                    req_type = "forecast"
-                else:
-                    req_type = "weather"
-
-                return req_type
-
-            def send_header(city_id_list,city_name_list):
-                report = []
-                report.append(Lines.weatherforecast("header"))
-                if len(city_id_list) > 2:
-                    report.append(" ")
-                    report.append(Lines.weatherforecast("city search : 3 or more cities"))
-                    for name in city_name_list:
-                        report.append(name)
-                    report.append(" ")
-                elif len(city_name_list) == 2:
-                    report.append(" ")
-                    report.append(Lines.weatherforecast("city search : 2 cities") % city_name_list[1])
-                    report.append(" ")
-
-                if default_keyword :
-                    report.append(" ")
-                    report.append(Lines.weatherforecast("default location") % default_location)
-
-                report = "\n".join(report)
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-
-            def get_detail_page(city_id,city_name):
-                if city_id != "not_found" :
-                    owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
-                else :
-                    city_id_list,city_name_list = get_city_id(city_name)
-                    city_id = city_id_list[0]
-                    owm_detail_page = "http://openweathermap.org/city/" + str(city_id)
-
-                return owm_detail_page
-
-            def send_weather():
-                try:
-                    city_name = weather_data["name"]
-                except:
-                    city_name = "Undefined"
-                try:
-                    city_weather_type = weather_data["weather"][0]['main']
-                    city_weather_description = weather_data["weather"][0]['description']
-                except:
-                    city_weather_type = "Undefined"
-                    city_weather_description = "Undefined"
-                try:
-                    city_temp = weather_data["main"]['temp']
-                    city_temp_min = weather_data["main"]['temp_min']
-                    city_temp_max = weather_data["main"]['temp_max']
-                except:
-                    city_temp = "Undefined"
-                    city_temp_min = "Undefined"
-                    city_temp_max = "Undefined"
-
-                """ Re-formating data to send """
-                send_header(city_id_list, city_name_list)
-                owm_detail_page = get_detail_page(city_id, city_name)
-                title = "[ " + city_name + " ]"
-                button_text = city_weather_description + " [ " + str(city_temp) + "°C ]" + "\n" + "Temp vary from " + str(city_temp_min) + "°C to " + str(city_temp_max) + "°C"
-                header_pic = Picture.weatherforecast(city_weather_type.lower())
-                buttons_template = ButtonsTemplate(title=title, text=button_text[:60], thumbnail_image_url=header_pic,
-                                                   actions=[URITemplateAction(label='See detail info', uri=owm_detail_page)])
-
-                """ Sending button and report """
-                template_message = TemplateSendMessage(alt_text=button_text, template=buttons_template)
-                line_bot_api.push_message(address, template_message)
-
-                report = Lines.weatherforecast_tips(city_weather_type.lower())
-                line_bot_api.push_message(address, TextSendMessage(text=report))
-
-            def send_forecast():
-                try:
-                    city_name = weather_data['city']['name']
-                except:
-                    city_name = "Undefined"
-
-                city_weather_type = []
-                city_weather_description = []
-                city_temp = []
-                city_temp_min = []
-                city_temp_max = []
-                city_date = []
-
-                for i in range(0, 5):  # 5 is the max number of carousels allowed by line
-                    try:
-                        city_weather_type.append(weather_data['list'][i]['weather'][0]['main'])
-                    except:
-                        city_weather_type.append(" ")
-                    try:
-                        city_weather_description.append(weather_data['list'][i]['weather'][0]['description'])
-                    except:
-                        city_weather_description.append(" ")
-                    try:
-                        city_temp.append(weather_data['list'][i]['main']['temp'])
-                    except:
-                        city_temp.append(" ")
-                    try:
-                        city_temp_min.append(weather_data['list'][i]['main']['temp_min'])
-                    except:
-                        city_temp_min.append(" ")
-                    try:
-                        city_temp_max.append(weather_data['list'][i]['main']['temp_max'])
-                    except:
-                        city_temp_max.append(" ")
-                    try:
-                        city_date.append(weather_data['list'][i]['dt_txt'])
-                    except:
-                        city_date.append(" ")
-
-                """ Re-formating data to send """
-                title = []
-                for i in range(0, 5):
-                    title.append(city_name + "  " + city_date[i][5:16])
-
-                owm_detail_page = get_detail_page(city_id, city_name)
-                carousel_text = []
-                for i in range(0, 5):
-                    carousel_text.append(
-                        city_weather_description[i] + " [ " + str(city_temp[i]) + "°C ]" + "\n" + "Temp vary from " + str(
-                            city_temp_min[i]) + "°C to " + str(city_temp_max[i]) + "°C")
-
-                header_pic = []
-                for i in range(0, 5):
-                    header_pic.append(Picture.weatherforecast(city_weather_type[i].lower()))
-
-                send_header(city_id_list, city_name_list)
-
-                carousel_template = CarouselTemplate(columns=[
-                    CarouselColumn(title=title[0], text=carousel_text[0][:60], thumbnail_image_url=header_pic[0], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
-                    CarouselColumn(title=title[1], text=carousel_text[1][:60], thumbnail_image_url=header_pic[1], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
-                    CarouselColumn(title=title[2], text=carousel_text[2][:60], thumbnail_image_url=header_pic[2], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
-                    CarouselColumn(title=title[3], text=carousel_text[3][:60], thumbnail_image_url=header_pic[3], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
-                    CarouselColumn(title=title[4], text=carousel_text[4][:60], thumbnail_image_url=header_pic[4], actions=[
-                        URITemplateAction(label='See detail..', uri=owm_detail_page)]),
-                ])
-
-                """ Sending carousel and report """
-                template_message = TemplateSendMessage(alt_text=carousel_text[0], template=carousel_template)
-                line_bot_api.push_message(address, template_message)
-
-            """ basic flags and variable """
-            owm_key_list = [
-                "4d7355141b9838b1ac5799247095f61d", "48d8f519014923226491c62098640295", "32efe2580b5ec0d2767e55a9c2d581d1",
-                "79f9585bf82fb571946ce4b0f1101665", "30128b74832097ef3ed57c642d56ebe8", "eb1b1af47cbca59d0b17c729071d1088",
-                "aaae7f35207db74b0bde707b2ff54c81", "adcb9836b69d955ec042ffc8d6300feb", "a16c1867404a31a617abb68f86ffbedc"
-            ]
-            open_weather_map_key = random.choice(owm_key_list)
-            default_location = "Bandung"
-            cont = True
-            use_coordinate = False
-            use_city_id = False
-            default_keyword = False
-
-
-            """ getting keyword and city id based on text """
-            keyword = get_search_keyword()
-            city_id_list, city_name_list = get_city_id(keyword)
-            city_id = city_id_list[0]
-            request_type = request_type()
-
-            # If there is at least one city which id match the keyword given,
-            if city_id != "not_found":
-                use_city_id = True
-
-            # Wrong keyword or the city is not available, thus try to use geo location
-            else:
-                latitude, longitude = get_lat_long()
-                use_coordinate, cont = is_lat_long_valid()  # create flags by validating latitude and longitude
-
-            if cont:  # If either city id or lat long is available
-                owm_call_head = "http://api.openweathermap.org/data/2.5/" + request_type
-                owm_call_tail = "&units=metric&appid=" + str(open_weather_map_key)
-
-                if use_city_id:
-                    owm_weather_call = owm_call_head + "?id=" + str(city_id) + owm_call_tail
-                elif use_coordinate:
-                    owm_weather_call = owm_call_head + "?lat=" + str(latitude) + "&lon=" + str(longitude) + owm_call_tail
-
-                weather_data = requests.get(owm_weather_call).json()
-
-                # only get the condition right now ( 1 data each )
-                if request_type == "weather":
-                    send_weather()
-
-                # get 5 conditions every 3 hours ( data stored as list )
-                elif request_type == "forecast":
-                    send_forecast()
-
-        except Exception as exception_detail:
-            function_name = "Weather forecast"
-            OtherUtil.random_error(function_name=function_name,exception_detail=exception_detail)
-
     """====================== Sub Function List ============================="""
 
     @staticmethod
@@ -4207,17 +4283,9 @@ class Function:
         line_bot_api.reply_message(token, TextSendMessage(text=reply))
 
     @staticmethod
-    def added(event):
+    def added():
         """ Function to send first greeting when added.
             Send notice to devs """
-
-        # Get the user's id and user's name
-        try:
-            user_id = event.source.user_id
-            user = userlist[user_id]
-        except:
-            user_id = address
-            user = "someone"
 
         # Send greetings when added
         report = Lines.added("added")
@@ -4235,23 +4303,16 @@ class Function:
         line_bot_api.push_message(user_id, template_message)
 
         # Send notice when someone added
-        report = Lines.added("report") % (user, user_id)
+        report = Lines.added("report") % (user_name, user_id)
         for dev_user in Database.devlist:
             line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
     @staticmethod
-    def removed(event):
+    def removed():
         """ Function to send send notice to devs when someone block / un-follow """
 
-        # Get the user's id and user's name
-        try:
-            user_id = event.source.user_id
-            user = userlist[user_id]
-        except:
-            user = "someone"
-
         # Send notice to devs
-        report = Lines.removed("report") % user
+        report = Lines.removed("report") % user_name
         for dev_user in Database.devlist:
             line_bot_api.push_message(dev_user, TextSendMessage(text=report))
 
