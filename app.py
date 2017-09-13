@@ -851,7 +851,7 @@ class Function:
                         # Open the XXI page
                         try:
                             print(" try to open theaters page")
-                            req = requests.get(page_url, timeout=10, proxies={"http": "182.253.131.39:8080"})  # Proxy Indonesia
+                            req = requests.get(page_url, proxies={"http": "182.253.131.39:8080"})  # Proxy Indonesia
                             print(" open theaters page success")
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
@@ -886,7 +886,7 @@ class Function:
 
                         # Open the page to parse
                         try:
-                            req = requests.get(cinema, timeout=10, proxies={"http": "182.253.131.39:8080"})
+                            req = requests.get(cinema, proxies={"http": "182.253.131.39:8080"})
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                             mod_schedule_table = BeautifulSoup(
