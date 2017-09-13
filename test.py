@@ -116,10 +116,10 @@ def show_cinema_movie_schedule():
 
                     # Open the XXI page
                     try:
-                        req = urllib.request.Request(page_url, headers={'User-Agent': "Magic Browser"})
-                        print(" open theaters page sucess")
-                        con = urllib.request.urlopen(req)
-                        page_source_code_text = con.read()
+                        print(" try to open theaters page")
+                        req = requests.get(page_url)
+                        print(" open theaters page success")
+                        page_source_code_text = req.content
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
                     # Failed to open the XXI page
