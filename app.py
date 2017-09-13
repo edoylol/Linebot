@@ -851,7 +851,7 @@ class Function:
                         # Open the XXI page
                         try:
                             print(" try to open theaters page")
-                            req = requests.get(page_url, proxies={"https": "202.154.19.17: 3128"})  # Proxy Indonesia
+                            req = requests.get(page_url, proxies={"https": "204.12.155.204: 3128"})  # Proxy Indonesia
                             print(" open theaters page success")
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")

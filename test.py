@@ -117,7 +117,7 @@ def show_cinema_movie_schedule():
                     # Open the XXI page
                     try:
                         print(" try to open theaters page")
-                        req = requests.get(page_url, proxies={"https": "202.154.19.17: 3128"})
+                        req = requests.get(page_url, proxies={"https": "204.12.155.204: 3128"})
                         print(" open theaters page success")
                         page_source_code_text = req.content
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
