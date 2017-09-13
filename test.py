@@ -12,7 +12,6 @@ from xml.etree import ElementTree
 
 import wikipedia
 
-
 class OtherUtil:
 
     @staticmethod
@@ -72,11 +71,16 @@ class OtherUtil:
 
         # Report to let group or other normal user know that something unexpected happened
         report = Lines.dev_mode_general_error("common")
-        line_bot_api.push_message(address, TextSendMessage(text=report))
+        print(report)
 
         # Send back up notification to Dev, to let Dev know that something unexpected happened
-        if address != jessin_userid:
+        if True:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
-            line_bot_api.push_message(jessin_userid, TextSendMessage(text=report))
+            print(report)
 
 
+
+
+
+
+text = "meg show xxi ciwalk movie schedule"

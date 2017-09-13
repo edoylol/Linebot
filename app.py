@@ -3013,7 +3013,7 @@ class Function:
                     # Crop the pre-json part
                     json_raw_text = str(rawdatas)
                     index_start = json_raw_text.find("{")
-                    index_stop = json_raw_text.find("}") + 1
+                    index_stop = json_raw_text.rfind("}") + 1
                     rawdatas = str(json_raw_text[index_start:index_stop])
 
                 except:
