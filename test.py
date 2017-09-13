@@ -117,7 +117,7 @@ def show_cinema_movie_schedule():
                     # Open the XXI page
                     try:
                         print(" try to open theaters page")
-                        req = requests.get(page_url, proxies={"https": "204.12.155.204: 3128"})
+                        req = requests.get(page_url, proxies={"http": "182.253.131.39:8080"})
                         print(" open theaters page success")
                         page_source_code_text = req.content
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
@@ -140,7 +140,7 @@ def show_cinema_movie_schedule():
                     if len(cinemas) > 1:
                         cinemas = set(cinemas)
 
-                    print("\n", cinemas)
+
                     return cinemas
 
                 def get_movie_data(cinema):
@@ -154,14 +154,12 @@ def show_cinema_movie_schedule():
                     # Open the page to parse
                     try:
                         req = urllib.request.Request(cinema, headers={'User-Agent': "Magic Browser"})
-                        print(" open theaters page sucess")
+
                         con = urllib.request.urlopen(req)
                         page_source_code_text = con.read()
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                         mod_schedule_table = BeautifulSoup(
                             str(mod_page.find("table", {"class": "table-theater-det"})), "html.parser")
-
-                        print("\n",mod_schedule_table)
 
                     # If failed to open the page
                     except Exception:
