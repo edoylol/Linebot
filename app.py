@@ -850,9 +850,7 @@ class Function:
 
                         # Open the XXI page
                         try:
-                            print(" try to open theaters page")
                             req = requests.get(page_url, proxies={"http": "182.253.131.39:8080"})  # Proxy Indonesia
-                            print(" open theaters page success")
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
@@ -962,6 +960,12 @@ class Function:
                         # Send the template
                         line_bot_api.push_message(address, template_message)
 
+                    def send_header(search_keyword):
+                        """ Function to send header to user as his/her request is accepted """
+
+                        report = Lines.show_cinema_movie_schedule("header") % (" ".join(search_keyword))
+                        line_bot_api.push_message(address, TextSendMessage(text=report))
+
                     search_keyword = get_cinema_keyword()
 
                     # If the cinema keyword is unspecified
@@ -972,6 +976,9 @@ class Function:
 
                     # If keyword is found
                     else:
+                        # Request accepted confirmation
+                        send_header(search_keyword)
+
                         cinemas = get_cinema_list(search_keyword)
 
                         # Process the cinemas found
@@ -987,7 +994,7 @@ class Function:
                         else:
 
                             # Generate header for every type of reply
-                            report = [Lines.show_cinema_movie_schedule("header") % str(", ".join(search_keyword))]
+                            report = [Lines.show_cinema_movie_schedule("information header") % str(", ".join(search_keyword))]
 
                             # Re-formatting data before sending
                             try:
@@ -1144,6 +1151,12 @@ class Function:
                         template_message = TemplateSendMessage(alt_text=confirmation, template=buttons_template)
                         line_bot_api.push_message(address, template_message)
 
+                    def send_header(search_keyword):
+                        """ Function to send header to user as his/her request is accepted """
+
+                        report = Lines.show_cinema_movie_schedule("header") % (" ".join(search_keyword))
+                        line_bot_api.push_message(address, TextSendMessage(text=report))
+
                     # First filter of keywords and default text filter
                     keyword = ['are', 'at', 'can', 'cgv', 'film', 'help', 'is', 'kato', 'list', 'me',
                                'meg', 'megumi', 'movie', 'movies', 'playing', 'please', 'pls',
@@ -1159,6 +1172,9 @@ class Function:
 
                     # If keyword is found
                     else:
+                        # Request accepted confirmation
+                        send_header(search_keyword)
+
                         # Get cinema's name and cinema's url in a list
                         cinemas = get_cinema_list(search_keyword)
 

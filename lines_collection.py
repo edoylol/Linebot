@@ -220,7 +220,14 @@ class Lines:  # class to store respond lines
     @staticmethod
     def show_cinema_movie_schedule(cond):
 
-        if cond == "header":  # Take 1 argument : tag list
+        if cond == "header":  # Take 1 argument : search keyword
+            lines = ["sure, %s's cinema schedule coming...",
+                     "%s right? Let me check first... ",
+                     "Sure, wait a second,.. looking for %s's cinema movie list...",
+                     "Okay, please wait... searching for %s's cinema schedules...",
+                     "%s?? Wait... let me check..."
+                     ]
+        elif cond == "information header":  # Take 1 argument : tag list
             lines = ["Here's the information Megumi found while using '%s' as tag..\n",
                      "I tried using '%s' as tag, and found those...\n",
                      "Here's the information you requested ^^\n(using '%s' as tag)\n",
