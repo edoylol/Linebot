@@ -851,7 +851,7 @@ class Function:
                         # Open the XXI page
                         try:
                             print(" try to open theaters page")
-                            req = requests.get(page_url)
+                            req = requests.get(page_url, proxies={'103.253.147.9':'8080'})
                             print(" open theaters page success")
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
@@ -874,6 +874,7 @@ class Function:
                         if len(cinemas) > 1:
                             cinemas = set(cinemas)
 
+                        print("\n", cinemas)
                         return cinemas
 
                     def get_movie_data(cinema):
