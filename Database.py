@@ -3,7 +3,7 @@
 
 """ DICTIONARY TO USERLIST DICTIONARY """
 
-userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D','U1265fef08e2f0b5a562c013dcd2e0393': 'jefferson tantya','U42747c0fb0cc5d2cbb5d31f384697f8d': 'Adiwena','U7c3eabe7592a55fe7cd57c428265e04d': 'Nicholas Wijaya','U4976f401ca25d390e72aad4dec256076': 'Nancy','U12a58b73c45836107faa87f4ffdc0931': 'Jonathan Christopher', 'Ubd609793f36b54db7ce9fbe175b18db2': 'arvel', 'U86bb289de3a717627a10660344848785': '❄ Mansen ゆき', 'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi', 'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
+userlist = {'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D','U45ce5ea334d75de86019fc75f969ce05': 'Shandy','U94c2add6ec77a032f2753f6eeccce6aa': 'Joseph Salimin','U414c419f5ec7b47aeb60f272b65e75cb': 'KL51 Ivan Setiawan','U1265fef08e2f0b5a562c013dcd2e0393': 'jefferson tantya','U42747c0fb0cc5d2cbb5d31f384697f8d': 'Adiwena','U7c3eabe7592a55fe7cd57c428265e04d': 'Nicholas Wijaya','U4976f401ca25d390e72aad4dec256076': 'Nancy','U12a58b73c45836107faa87f4ffdc0931': 'Jonathan Christopher', 'Ubd609793f36b54db7ce9fbe175b18db2': 'arvel', 'U86bb289de3a717627a10660344848785': '❄ Mansen ゆき', 'U7aae3ead1d135a698a90ce36460085ed': 'Ryan Ozora', 'Ue93cccad22d1bff67371b9bdad100653': 'Shiori', 'U4bcb4dd4ae2cd44c03d4aa91b2f26a6c': 'Han', 'Ufb20f88482e503b801c8a59cd7f188d4': 'novi', 'U0fe49d2df3234e208613722242921cc2': 'Nadya R. G'}
 
 aloy_goes_to_afaid = {
     'U77035fb1a3a4a460be5631c408526d0b': 'Jessin D',
