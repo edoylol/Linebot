@@ -28,7 +28,7 @@ list_dictionary = {"userlist": userlist, "aloy_afaid": aloy_goes_to_afaid, "fami
 
 
 """ DICTIONARY TO STORE PROXY LIST """
-proxies = {"indonesia": [{"https": "202.169.46.114:3128"}, {"http": "180.252.76.166:80"}, {"https": "36.66.64.74:8081"}]}
+proxies = {"indonesia": [{"https": "36.66.64.74:8081"}, {"http": "36.74.218.94:8080"}, {"https": "182.253.191.114:8080"}, {"https": "139.193.135.135:8080"}]}
 
 
 """ DICTIONARY TO STORE ANIME DOWNLOAD DICTIONARY """
