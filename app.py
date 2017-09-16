@@ -852,7 +852,7 @@ class Function:
                         # Open the XXI page
                         try:
                             proxy = random.choice(proxies)
-                            req = requests.get(page_url)
+                            req = requests.get(page_url, proxies=proxy)
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
@@ -887,7 +887,7 @@ class Function:
                         # Open the page to parse
                         try:
                             proxy = random.choice(proxies)
-                            req = requests.get(cinema)
+                            req = requests.get(cinema, proxies=proxy)
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                             mod_schedule_table = BeautifulSoup(
@@ -1257,7 +1257,7 @@ class Function:
                     page_url = "http://www.21cineplex.com/theaters"
                     try:
                         proxy = random.choice(proxies)
-                        req = requests.get(page_url)
+                        req = requests.get(page_url, proxies=proxy)
                         page_source_code_text = req.content
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                     except:
