@@ -68,6 +68,7 @@ line_bot_api = LineBotApi(channel_access_token)
 handler = WebhookHandler(channel_secret)
 
 userlist = Database.userlist
+proxies = Database.proxies
 
 userlist_update_count = 0
 tag_notifier_on = True
@@ -850,7 +851,8 @@ class Function:
 
                         # Open the XXI page
                         try:
-                            req = requests.get(page_url, proxies={"http": "182.253.131.39:8080"})  # Proxy Indonesia
+                            proxy = random.choice(proxies["indonesia"])
+                            req = requests.get(page_url, proxies=proxy)  # Proxy Indonesia
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
 
@@ -884,7 +886,8 @@ class Function:
 
                         # Open the page to parse
                         try:
-                            req = requests.get(cinema, proxies={"http": "182.253.131.39:8080"})
+                            proxy = random.choice(proxies["indonesia"])
+                            req = requests.get(cinema, proxies=proxy)
                             page_source_code_text = req.content
                             mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                             mod_schedule_table = BeautifulSoup(
@@ -1253,7 +1256,8 @@ class Function:
                     cinemas = []
                     page_url = "http://www.21cineplex.com/theaters"
                     try:
-                        req = requests.get(page_url, timeout=10, proxies={"http": "182.253.131.39:8080"})  # Proxy Indonesia
+                        proxy = random.choice(proxies["indonesia"])
+                        req = requests.get(page_url, proxies=proxy)
                         page_source_code_text = req.content
                         mod_page = BeautifulSoup(page_source_code_text, "html.parser")
                     except:

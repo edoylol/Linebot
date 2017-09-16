@@ -27,6 +27,8 @@ dummy_account = {'U77035fb1a3afewefbe5631c408526d0b': 'test bot'}
 list_dictionary = {"userlist": userlist, "aloy_afaid": aloy_goes_to_afaid, "family": family, "dev": devlist, "dummy": dummy_account}
 
 
+""" DICTIONARY TO STORE PROXY LIST """
+proxies = {"indonesia": [{"http": "180.254.223.102:8080"}, {"http": "180.252.76.166:80"}, {"http": "36.66.64.74:8081"}]}
 
 
 """ DICTIONARY TO STORE ANIME DOWNLOAD DICTIONARY """
