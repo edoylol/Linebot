@@ -832,6 +832,11 @@ class Function:
                 # The cinema is one of the XXI cinemas
                 if "xxi" in text:
 
+                    # TEMPORARY ERROR NOTICE
+                    report = Lines.show_cinema_movie_schedule("failed to open the the page")+"\n\n\nDev note: can't reach xxi web server (code 0X170925)"
+                    line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                    '''
                     def get_cinema_keyword():
                         """ Function to get cinema's name keyword from text """
 
@@ -1033,6 +1038,7 @@ class Function:
                     # If there's some problem with cinema's name, ask to send cinema list
                     if ask_for_request:
                         request_cinema_list()
+                    '''
 
                 # The cinema is one of the CGV cinemas
                 elif "cgv" in text:
@@ -1249,6 +1255,11 @@ class Function:
             # The requested list if XXI cinemas
             if cond == "xxi":
 
+                # TEMPORARY ERROR NOTICE
+                report = Lines.show_cinema_movie_schedule("failed to open the the page") + "\n\n\nDev note: can't reach xxi web server (code 0X170925)"
+                line_bot_api.push_message(address, TextSendMessage(text=report))
+
+                '''
                 def get_cinema_list():
                     """ Function to get raw data of cinema list """
 
@@ -1313,6 +1324,7 @@ class Function:
                     line_bot_api.push_message(address, TextSendMessage(text=report2))
                 else:
                     line_bot_api.push_message(address, TextSendMessage(text=report))
+                '''
 
             # The requested list if XXI cinemas
             elif cond == "cgv":
@@ -1834,6 +1846,9 @@ class Function:
                 cont = True
                 enable_dev_mode_extension = dev_mode_extension_check()
 
+                # TEMPORARY ERROR NOTICE
+                adfly_error_notified = False
+
                 # Check if the starting episode is available, if not, send notification
                 latest_episode_count = len(primary_download_link_list)
                 if start_ep > latest_episode_count:
@@ -1855,9 +1870,16 @@ class Function:
                             shortened_link = primary_download_link[index_start:].strip()
                             download_link, status = unshortenit.unshorten_only(shortened_link)
 
+                            # TEMPORARY ERROR NOTICE
+                            if status != 200 and not adfly_error_notified:
+                                report = "Sorry, the page link is decoded from server..will fix it as soon as possible\n\n\n\nDev note: can't bypass adf.ly (code 0X170925)"
+                                line_bot_api.push_message(address, TextSendMessage(text=report))
+                                adfly_error_notified = True
+                                break
+
                         # If there's error when trying to get mirrorcreator link, just pass it and go to next one
                         except Exception:
-                            break
+                            raise
 
                         # Get the file id from the mirrorcreator link found before
                         file_id, file_id_found = get_file_id(download_link)
