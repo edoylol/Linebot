@@ -78,4 +78,3 @@ class OtherUtil:
         if True:
             report = (Lines.dev_mode_general_error("dev") % (function_name, exception_detail))
             print(report)
-
