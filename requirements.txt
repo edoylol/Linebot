@@ -1,0 +1,15 @@
+Flask==0.12
+future==0.16.0
+gunicorn==19.6.0
+itsdangerous==0.24
+Jinja2==2.9.5
+line-bot-sdk==1.1.0
+MarkupSafe==0.23
+psycopg2==2.6.1
+requests==2.13.0
+urllib3==1.20
+Werkzeug==0.11.15
+beautifulsoup4==4.6.0
+unshortenit==0.3.0
+apiai==1.2.3
+wikipedia==1.4.0
