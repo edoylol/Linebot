@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Flask Echo
 
 Sample echo-bot using [Flask](http://flask.pocoo.org/)
@@ -23,6 +24,10 @@ Run WebhookHandler sample
 ```
 $ python app_with_handler.py
 ```
+=======
+# Linebot
+Simply as it said, LINE bot
+>>>>>>> 99ae4b054127d335448a4d8658077580e76bb4fe
 =======
 # Linebot
 Simply as it said, LINE bot
