@@ -4059,10 +4059,11 @@ class Function:
                 skills_upgrade = skills_data.find_all("ul")
                 skill_upgrade_list = []
                 for skill in skills_upgrade:
-                    split_lv = skill.text.strip().split("Lv")
+                    split_lv = skill.text.split("Lv")
                     for upgrade_lv in split_lv:
-                        if len(upgrade_lv.strip()) > 2:
-                            skill_upgrade_list.append(str("Lv" + upgrade_lv))
+                        print(upgrade_lv)
+
+
 
                 """ combining both of them """
                 skills = []
