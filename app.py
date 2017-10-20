@@ -4061,17 +4061,14 @@ class Function:
                 for skill in skills_upgrade:
                     split_lv = skill.text.split("Lv")
 
+                    # Re - format the skill's upgrades, all skills up combined as 1 in skill upgrade list
                     skill_upgrade_temp = []
                     for upgrade_lv in split_lv:
                         if len(upgrade_lv.strip()) > 2:
                             skill_upgrade_temp.append(str("Lv"+upgrade_lv))
-
                     skill = "\n".join(skill_upgrade_temp)
+
                     skill_upgrade_list.append(skill)
-
-                for x in skill_upgrade_list:
-                    print(x)
-
 
                 """ combining both of them """
                 skills = []
