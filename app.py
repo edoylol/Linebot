@@ -4060,13 +4060,17 @@ class Function:
                 skill_upgrade_list = []
                 for skill in skills_upgrade:
                     split_lv = skill.text.split("Lv")
+
+                    skill_upgrade_temp = []
                     for upgrade_lv in split_lv:
-                        print(upgrade_lv)
                         if len(upgrade_lv.strip()) > 2:
-                            skill_upgrade_list.append(str("Lv" + upgrade_lv))
+                            skill_upgrade_temp.append(str("Lv"+upgrade_lv))
+
+                    skill = "\n".join(skill_upgrade_temp)
+                    skill_upgrade_list.append(skill)
 
                 for x in skill_upgrade_list:
-                    print("-" + x)
+                    print(x)
 
 
                 """ combining both of them """
@@ -4075,26 +4079,25 @@ class Function:
                     skill_upgrade_list.insert(0, " ")
 
                 for i in range(0, len(skill_desc_list)):
-                    try :
+                    try:
                         is_passive = "passive" in skill_desc_list[i].lower()
                     except :
                         is_passive = False
 
-                    try :
+                    try:
                         has_passive_upgrade = all(word in skill_upgrade_list[i].lower() for word in ['lv','2'])
                     except :
                         has_passive_upgrade = False
 
                     if is_passive and (not has_passive_upgrade) :
                             skill = (skill_desc_list[i], " ")
-                    else : # not passive or passive with upgrade
+                    else: # not passive or passive with upgrade
                         try :
                             skill = (skill_desc_list[i], skill_upgrade_list[i])
                         except :
                             skill = (skill_desc_list[i], " ")
 
                     skills.append(skill)
-
 
                 return skills
 
@@ -4107,7 +4110,7 @@ class Function:
                     procons.append(argument)
                 return procons
 
-            try :
+            try:
                 report = []
                 if cond == "default":
                     page_url = get_page()
