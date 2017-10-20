@@ -4062,13 +4062,17 @@ class Function:
                     split_lv = skill.text.split("Lv")
                     for upgrade_lv in split_lv:
                         print(upgrade_lv)
+                        if len(upgrade_lv.strip()) > 2:
+                            skill_upgrade_list.append(str("Lv" + upgrade_lv))
 
+                for x in skill_upgrade_list:
+                    print("-" + x)
 
 
                 """ combining both of them """
                 skills = []
                 if "leader skill" in skill_desc_list[0].lower():
-                    skill_upgrade_list.insert(0," ")
+                    skill_upgrade_list.insert(0, " ")
 
                 for i in range(0, len(skill_desc_list)):
                     try :
