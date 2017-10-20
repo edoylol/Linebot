@@ -1872,9 +1872,9 @@ class Function:
 
                             # TEMPORARY ERROR NOTICE
                             if status != 200 and not adfly_error_notified:
-                                report = "Sorry, the page link is decoded from server..will fix it as soon as possible\n\n\n\nDev note: can't bypass adf.ly (code 0X170925)"
+                                report = "Sorry, the page link is decoded from server..will fix it as soon as possible" \
+                                         "\n\n\n\nDev note: can't bypass adf.ly (code 0X170925)"
                                 line_bot_api.push_message(address, TextSendMessage(text=report))
-                                adfly_error_notified = True
                                 break
 
                         # If there's error when trying to get mirrorcreator link, just pass it and go to next one
@@ -4056,15 +4056,13 @@ class Function:
                             skill_desc_list.append(skill)
 
                 """ getting the skills up part """
-                skills_level = skills_data.find_all("ul")
+                skills_upgrade = skills_data.find_all("ul")
                 skill_upgrade_list = []
-                for skill in skills_level:
-                    skill = skill.text.strip()
-                    print(skill)
-                    print()
-                    skill_upgrade_list.append(skill)
-
-
+                for skill in skills_upgrade:
+                    split_lv = skill.text.strip().split("Lv")
+                    for upgrade_lv in split_lv:
+                        if len(upgrade_lv.strip()) > 2:
+                            skill_upgrade_list.append(str("Lv" + upgrade_lv))
 
                 """ combining both of them """
                 skills = []
