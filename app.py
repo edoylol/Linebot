@@ -4060,7 +4060,11 @@ class Function:
                 skill_upgrade_list = []
                 for skill in skills_level:
                     skill = skill.text.strip()
+                    print(skill)
+                    print()
                     skill_upgrade_list.append(skill)
+
+
 
                 """ combining both of them """
                 skills = []
