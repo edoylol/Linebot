@@ -1816,7 +1816,7 @@ class Function:
                 # Append found link to list
                 download_link_list_filtered = []
                 for link in download_link_list:
-                    if "http" in link:
+                    if "http" in link and "youtube" not in link:
                         download_link_list_filtered.append(link)
 
                 return download_link_list_filtered
@@ -1868,7 +1868,12 @@ class Function:
                         try:
                             index_start = primary_download_link.find("http")
                             shortened_link = primary_download_link[index_start:].strip()
-                            download_link, status = unshortenit.unshorten_only(shortened_link)
+
+                            status = 0
+                            repeat = 0
+                            while status != 200 and repeat < 15:
+                                download_link, status = unshortenit.unshorten_only(shortened_link)
+                                repeat += 1
 
                             # TEMPORARY ERROR NOTICE
                             if status != 200 and not adfly_error_notified:
