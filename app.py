@@ -60,8 +60,8 @@ from lines_collection import Lines, Labels, Picture
 
 app = Flask(__name__)
 
-channel_secret = "9b665635f2f8e005e0e9eed13ef18124"
-channel_access_token = "ksxtpzGYTb1Nmbgx8Nj8hhkUR5ZueNWdBSziqVlJ2fPNblYeXV7/52HWvey/MhXjgtbml0LFuwQHpJHCP6jN7W0gaKZVUOlA88AS5x58IhqzLZ4Qt91cV8DhXztok9yyBQKAOSxh/uli4cP4lj+2YQdB04t89/1O/w1cDnyilFU="
+channel_secret = "e7130e1ea7d36818b3512cacb599d6a8"
+channel_access_token = "HllzR7lQE3rKqkVx7QmFCTqQ2et2HaiQbKwKAQOeksfm4Ypg5xEdGcFva4qjtkhZqPrxg1S+V/ouHm3FOepJ7cdWm/imHI8gceuK1AxzcEgH3e/xW+ctwAdcaDSwjDOLoW59stZCbjSD+XR8OnGbcgdB04t89/1O/w1cDnyilFU="
 api_ai_access_token = '4ead94fa71234f82af81f8e92e72962a'
 api_ai_access_token_megumi_II = "0e51518979fe4d7eba6b09d4d5ae0d41"
 line_bot_api = LineBotApi(channel_access_token)
